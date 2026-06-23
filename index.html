@@ -749,10 +749,57 @@
   </div>
 </div>
 
+<!-- MODAL: DESCARGAR REPORTE CLOSER ACTIVO -->
+<div class="overlay" id="mReporteCloser">
+  <div class="modal" style="max-width:480px">
+    <div class="mh"><h3>📊 Descargar reporte de closer</h3><button class="mh-close" onclick="closeM('mReporteCloser')">✕</button></div>
+    <div class="mb">
+      <div class="alert a-info">Filtra por período para obtener el reporte de actividad</div>
+      <div class="g2">
+        <div class="fgroup"><label>Desde</label><input class="finput" type="date" id="repDesde"></div>
+        <div class="fgroup"><label>Hasta</label><input class="finput" type="date" id="repHasta"></div>
+      </div>
+      <div id="repPreview" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:14px;font-size:12px;color:var(--text2)">
+        <div>Total ventas: <strong id="repTotalV" class="text">0</strong></div>
+        <div>Recaudado: <strong id="repTotalR" class="text">$0</strong></div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-secondary" onclick="closeM('mReporteCloser')">Cancelar</button>
+      <button class="btn btn-primary" onclick="downloadCloserReportActive()">⬇ Descargar CSV</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ELIMINAR CLOSER CON ARCHIVO -->
+<div class="overlay" id="mDeleteCloser">
+  <div class="modal" style="max-width:520px">
+    <div class="mh"><h3>⚠️ Eliminar closer</h3><button class="mh-close" onclick="closeM('mDeleteCloser')">✕</button></div>
+    <div class="mb">
+      <div class="alert a-warn">Se eliminará del sistema pero se archivará toda su información</div>
+      <div id="delPreview" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px;margin:16px 0">
+        <div style="margin-bottom:12px"><strong id="delName"></strong></div>
+        <div class="fs12 c2" id="delEmail" style="margin-bottom:14px"></div>
+        <hr class="divider">
+        <div class="g2" style="gap:8px;margin-top:12px">
+          <div><div class="dl">Ventas totales</div><div class="fw7" id="delVentas">0</div></div>
+          <div><div class="dl">Recaudado</div><div class="fw7 ca" id="delRecaudado">$0</div></div>
+          <div><div class="dl">Clientes únicos</div><div class="fw7" id="delClientes">0</div></div>
+        </div>
+      </div>
+      <div class="alert a-info" style="font-size:12px">📋 Se generará un CSV con toda su actividad y se guardará en Firestore</div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-secondary" onclick="closeM('mDeleteCloser')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmDeleteCloser()">Eliminar y archivar</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-import { getFirestore, collection, doc, addDoc, getDocs, updateDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 import { getStorage, ref as sref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
 
 const FC = {
@@ -1149,17 +1196,177 @@ function renderClosers() {
         </div>
         <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
           <span class="badge ${c.activo!==false?'b-green':'b-red'}">${c.activo!==false?'Activo':'Inactivo'}</span>
-          ${canManage()&&c.activo!==false?`<button class="btn btn-danger btn-sm" onclick="deactivateCloser('${c.id}')">Desactivar</button>`:''}
+          ${canManage()?`<button class="btn btn-secondary btn-sm" onclick="openReporteCloser('${c.id}','${c.nombre} ${c.apellido}')">📊 Reporte</button>`:''}
+          ${canManage()?`<button class="btn btn-danger btn-sm" onclick="openDeleteCloser('${c.id}')">🗑️ Eliminar</button>`:''}
         </div>
       </div>`;
     }).join('')}</div>`;
 }
 
-window.deactivateCloser = async (id) => {
-  if(!confirm('¿Desactivar este closer?')) return;
-  await updateDoc(doc(db,'closers',id),{activo:false});
-  const i=CLOSERS.findIndex(c=>c.id===id); CLOSERS[i].activo=false;
-  renderClosers(); toast('Closer desactivado','w');
+// Variables globales para modales
+let CLOSER_SELECTED = null;
+
+// ── GENERAR CSV DEL CLOSER ──
+function generateCloserCSV(closer, ventas, tipo) {
+  const fecha = new Date().toLocaleDateString('es-ES');
+  const ahora = new Date().toLocaleString('es-ES');
+  
+  const recaudado = ventas.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.totalPagado||0),0);
+  const clientesUnicos = new Set(ventas.map(v=>v.clienteCorreo)).size;
+  
+  let csv = 'REPORTE DE ACTIVIDAD — CLOSER\n';
+  csv += `Nombre,${closer.nombre} ${closer.apellido}\n`;
+  csv += `Email,${closer.email}\n`;
+  csv += `Rol,${roleLabel(closer.rol)}\n`;
+  csv += `Generado,${ahora}\n`;
+  csv += `\n`;
+  
+  csv += 'RESUMEN\n';
+  csv += `Total ventas,${ventas.length}\n`;
+  csv += `Ventas validadas,${ventas.filter(v=>v.estadoVenta==='VALIDADA').length}\n`;
+  csv += `Total recaudado USD,$${fmt(recaudado)}\n`;
+  csv += `Clientes únicos,${clientesUnicos}\n`;
+  csv += `\n`;
+  
+  csv += 'DETALLE DE VENTAS\n';
+  csv += 'Cliente,Producto,Monto USD,Recaudado,Metodo Pago,Estado,Fecha\n';
+  
+  ventas.forEach(v => {
+    csv += `"${v.clienteNombre} ${v.clienteApellido||''}","${v.producto}","${fmt(v.valorTotal)}","${fmt(v.totalPagado||0)}","${mLabel(v.metodoPago)}","${v.estadoVenta}","${fDate(v.fechaVenta)}"\n`;
+  });
+  
+  return csv;
+}
+
+// ── ABRIR MODAL REPORTE CLOSER ACTIVO ──
+window.openReporteCloser = (id, nombre) => {
+  const c = CLOSERS.find(x=>x.id===id);
+  if(!c) return;
+  CLOSER_SELECTED = c;
+  
+  const hoy = new Date().toISOString().split('T')[0];
+  const hace30 = new Date(Date.now()-30*24*60*60*1000).toISOString().split('T')[0];
+  
+  document.getElementById('repDesde').value = hace30;
+  document.getElementById('repHasta').value = hoy;
+  
+  updateReportPreview();
+  openM('mReporteCloser');
+};
+
+window.updateReportPreview = () => {
+  if(!CLOSER_SELECTED) return;
+  const desde = document.getElementById('repDesde').value;
+  const hasta = document.getElementById('repHasta').value;
+  
+  let vs = VENTAS.filter(v=>v.closerEmail===CLOSER_SELECTED.email);
+  if(desde) vs = vs.filter(v=>v.fechaVenta>=desde);
+  if(hasta) vs = vs.filter(v=>v.fechaVenta<=hasta);
+  
+  const validadas = vs.filter(v=>v.estadoVenta==='VALIDADA');
+  const recaudado = validadas.reduce((s,v)=>s+(v.totalPagado||0),0);
+  
+  document.getElementById('repTotalV').textContent = vs.length;
+  document.getElementById('repTotalR').textContent = '$'+fmt(recaudado);
+};
+
+document.addEventListener('change',e=>{
+  if(e.target.id==='repDesde' || e.target.id==='repHasta') updateReportPreview();
+});
+
+// ── DESCARGAR REPORTE CLOSER ACTIVO ──
+window.downloadCloserReportActive = () => {
+  if(!CLOSER_SELECTED) return;
+  const desde = document.getElementById('repDesde').value;
+  const hasta = document.getElementById('repHasta').value;
+  
+  let vs = VENTAS.filter(v=>v.closerEmail===CLOSER_SELECTED.email);
+  if(desde) vs = vs.filter(v=>v.fechaVenta>=desde);
+  if(hasta) vs = vs.filter(v=>v.fechaVenta<=hasta);
+  
+  const csv = generateCloserCSV(CLOSER_SELECTED, vs, 'activo');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const link = document.createElement('a');
+  const fecha = new Date().toISOString().split('T')[0];
+  link.setAttribute('href', URL.createObjectURL(blob));
+  link.setAttribute('download', `Reporte_${CLOSER_SELECTED.nombre}_${fecha}.csv`);
+  link.click();
+  
+  toast('✅ Reporte descargado','s');
+  closeM('mReporteCloser');
+};
+
+// ── ABRIR MODAL ELIMINAR CLOSER ──
+window.openDeleteCloser = (id) => {
+  const c = CLOSERS.find(x=>x.id===id);
+  if(!c) return;
+  CLOSER_SELECTED = c;
+  
+  const vc = VENTAS.filter(v=>v.closerEmail===c.email);
+  const validadas = vc.filter(v=>v.estadoVenta==='VALIDADA');
+  const recaudado = validadas.reduce((s,v)=>s+(v.totalPagado||0),0);
+  const clientesUnicos = new Set(vc.map(v=>v.clienteCorreo)).size;
+  
+  document.getElementById('delName').textContent = `${c.nombre} ${c.apellido}`;
+  document.getElementById('delEmail').textContent = c.email;
+  document.getElementById('delVentas').textContent = vc.length;
+  document.getElementById('delRecaudado').textContent = '$'+fmt(recaudado);
+  document.getElementById('delClientes').textContent = clientesUnicos;
+  
+  openM('mDeleteCloser');
+};
+
+// ── CONFIRMAR ELIMINACIÓN ──
+window.confirmDeleteCloser = async () => {
+  if(!CLOSER_SELECTED) return;
+  
+  const btn = document.querySelector('#mDeleteCloser .mf .btn-danger');
+  btn.disabled = true;
+  btn.textContent = 'Procesando...';
+  
+  try {
+    const vc = VENTAS.filter(v=>v.closerEmail===CLOSER_SELECTED.email);
+    
+    // Generar CSV
+    const csv = generateCloserCSV(CLOSER_SELECTED, vc, 'eliminado');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const link = document.createElement('a');
+    const fecha = new Date().toISOString().split('T')[0];
+    link.setAttribute('href', URL.createObjectURL(blob));
+    link.setAttribute('download', `Archivo_${CLOSER_SELECTED.nombre}_${fecha}.csv`);
+    link.click();
+    
+    // Guardar en Firestore colección closers_archivados
+    const archivoData = {
+      id: CLOSER_SELECTED.id,
+      nombre: CLOSER_SELECTED.nombre,
+      apellido: CLOSER_SELECTED.apellido,
+      email: CLOSER_SELECTED.email,
+      rol: CLOSER_SELECTED.rol,
+      totalVentas: vc.length,
+      totalRecaudado: vc.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.totalPagado||0),0),
+      clientesUnicos: new Set(vc.map(v=>v.clienteCorreo)).size,
+      ventasIds: vc.map(v=>v.id),
+      fechaEliminacion: new Date().toISOString(),
+      csvData: csv
+    };
+    
+    await addDoc(collection(db,'closers_archivados'), archivoData);
+    
+    // Eliminar closer
+    await deleteDoc(doc(db,'closers',CLOSER_SELECTED.id));
+    CLOSERS = CLOSERS.filter(c=>c.id!==CLOSER_SELECTED.id);
+    
+    renderClosers();
+    closeM('mDeleteCloser');
+    toast('🗑️ Closer eliminado y archivado — CSV descargado','s');
+    
+  } catch(e) {
+    toast('Error: '+e.message,'e');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Eliminar y archivar';
+  }
 };
 
 // ── SAVE VENTA ──
