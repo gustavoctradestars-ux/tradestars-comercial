@@ -661,7 +661,7 @@
   <div class="modal">
     <div class="mh"><h3>Nuevo closer</h3><button class="mh-close" onclick="closeM('mCloser')">✕</button></div>
     <div class="mb">
-      <div class="alert a-warn">Acceso creado automáticamente con contraseña <strong>Tradestars2026*</strong></div>
+      <div class="alert a-warn">Se generará una contraseña temporal que deberás compartir con el closer</div>
       <div class="g2">
         <div class="fgroup"><label>Nombre *</label><input class="finput" id="cN" placeholder="Juan"></div>
         <div class="fgroup"><label>Apellido *</label><input class="finput" id="cA" placeholder="Pérez"></div>
@@ -678,6 +678,31 @@
     <div class="mf">
       <button class="btn btn-secondary" onclick="closeM('mCloser')">Cancelar</button>
       <button class="btn btn-primary" id="btnSaveC" onclick="saveCloser()">Crear closer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: MOSTRAR CONTRASEÑA -->
+<div class="overlay" id="mShowPwd">
+  <div class="modal">
+    <div class="mh"><h3>✅ Closer creado</h3><button class="mh-close" onclick="closeM('mShowPwd');renderClosers()">✕</button></div>
+    <div class="mb">
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Correo</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text)" id="pwdEmail"></div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Contraseña temporal</div>
+        <div style="font-family:monospace;font-size:16px;font-weight:700;color:var(--green);word-break:break-all" id="pwdShow"></div>
+      </div>
+      <div style="margin-top:16px;font-size:13px;color:var(--text2);line-height:1.6">
+        📋 Copia la contraseña y comparte con el closer vía WhatsApp, Email o Slack.<br>
+        El closer debe cambiarla en su primer login.
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-secondary" onclick="closeM('mShowPwd');renderClosers()">Listo</button>
+      <button class="btn btn-primary" onclick="copyPwd()">📋 Copiar contraseña</button>
     </div>
   </div>
 </div>
@@ -1194,6 +1219,11 @@ window.saveVenta = async () => {
 };
 
 // ── SAVE CLOSER ──
+function genPwd(){
+  const c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%';
+  let p=''; for(let i=0;i<12;i++) p+=c.charAt(Math.floor(Math.random()*c.length));
+  return p;
+}
 window.openCloserModal = () => openM('mCloser');
 window.saveCloser = async () => {
   const N=document.getElementById('cN').value.trim();
@@ -1203,19 +1233,25 @@ window.saveCloser = async () => {
   if(!N||!E){ toast('Nombre y correo son obligatorios','e'); return; }
   const btn=document.getElementById('btnSaveC'); btn.disabled=true; btn.textContent='Creando...';
   try {
+    const pwd=genPwd();
     const {initializeApp:ia2}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js");
     const {getAuth:ga2,createUserWithEmailAndPassword:cu2,signOut:so2}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js");
     const a2=ia2(FC,'sec-'+Date.now()); const au2=ga2(a2);
-    await cu2(au2,E,'Tradestars2026*'); await so2(au2);
+    await cu2(au2,E,pwd); await so2(au2);
     const data={nombre:N,apellido:A,email:E,rol:R,activo:true,fechaCreacion:new Date().toISOString()};
     const ref2=await addDoc(collection(db,'closers'),data);
     CLOSERS.push({id:ref2.id,...data});
     document.getElementById('fVCloser').innerHTML+= `<option value="${E}">${N} ${A}</option>`;
-    closeM('mCloser'); renderClosers();
-    toast(`✅ ${roleLabel(R)} ${N} creado con acceso al CRM`,'s');
+    document.getElementById('pwdShow').innerHTML=`<strong>${pwd}</strong>`;
+    document.getElementById('pwdEmail').innerHTML=E;
+    closeM('mCloser'); openM('mShowPwd');
     ['cN','cA','cE'].forEach(id=>document.getElementById(id).value='');
   } catch(e){ toast('Error: '+e.message,'e'); }
   btn.disabled=false; btn.textContent='Crear closer';
+};
+window.copyPwd = () => {
+  const p=document.getElementById('pwdShow').textContent;
+  navigator.clipboard.writeText(p).then(()=>toast('✅ Contraseña copiada','s'));
 };
 
 // ── SAVE LZ ──
