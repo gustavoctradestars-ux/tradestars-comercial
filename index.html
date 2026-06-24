@@ -598,16 +598,23 @@
         </div>
 
         <div style="display:flex;align-items:center;gap:10px;margin:16px 0;padding:12px;background:var(--bg2);border-radius:8px">
-          <input type="checkbox" id="vLiberar" onchange="toggleLiberar()">
-          <label for="vLiberar" style="margin:0;cursor:pointer;flex:1">¿Cliente a liberar?</label>
+          <input type="checkbox" id="vTercero" onchange="toggleTercero()">
+          <label for="vTercero" style="margin:0;cursor:pointer;flex:1">¿Pago de un tercero?</label>
         </div>
-        
-        <div id="liberarFields" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:14px">
-          <div class="g2">
-            <div class="fgroup"><label>Nombre a liberar</label><input class="finput" id="vLiberarN" placeholder="María"></div>
-            <div class="fgroup"><label>Apellido a liberar</label><input class="finput" id="vLiberarA" placeholder="García"></div>
+
+        <div id="terceroSection" style="display:none">
+          <div style="display:flex;align-items:center;gap:10px;margin:16px 0;padding:12px;background:var(--bg2);border-radius:8px">
+            <input type="checkbox" id="vLiberar" onchange="toggleLiberar()">
+            <label for="vLiberar" style="margin:0;cursor:pointer;flex:1">¿Cliente a liberar?</label>
           </div>
-          <div class="fgroup"><label>Correo a liberar</label><input class="finput" type="email" id="vLiberarE" placeholder="maria@email.com"></div>
+          
+          <div id="liberarFields" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:14px">
+            <div class="g2">
+              <div class="fgroup"><label>Nombre a liberar</label><input class="finput" id="vLiberarN" placeholder="María"></div>
+              <div class="fgroup"><label>Apellido a liberar</label><input class="finput" id="vLiberarA" placeholder="García"></div>
+            </div>
+            <div class="fgroup"><label>Correo a liberar</label><input class="finput" type="email" id="vLiberarE" placeholder="maria@email.com"></div>
+          </div>
         </div>
 
         <div class="tr mt20"><button class="btn btn-primary" onclick="swTabById('tc2')">Siguiente →</button></div>
@@ -1222,6 +1229,12 @@ window.openVentaModal = () => {
 window.toggleLzField = () => {
   document.getElementById('vLzGroup').style.display = document.getElementById('vF').value==='LANZAMIENTO'?'block':'none';
 };
+window.toggleTercero = () => {
+  const activo = document.getElementById('vTercero').checked;
+  document.getElementById('terceroSection').style.display = activo?'block':'none';
+  if(!activo) document.getElementById('vLiberar').checked = false;
+  toggleLiberar();
+};
 window.toggleLiberar = () => {
   document.getElementById('liberarFields').style.display = document.getElementById('vLiberar').checked?'block':'none';
 };
@@ -1245,6 +1258,7 @@ window.saveVenta = async () => {
       clienteNombre:N, clienteApellido:A, clienteCorreo:C,
       clienteTelefono:document.getElementById('vT').value.trim(),
       clientePais:document.getElementById('vP').value,
+      pagoPorTercero:document.getElementById('vTercero').checked,
       clienteLiberar:document.getElementById('vLiberar').checked,
       clienteLiberarNombre:document.getElementById('vLiberar').checked?document.getElementById('vLiberarN').value.trim():'',
       clienteLiberarApellido:document.getElementById('vLiberar').checked?document.getElementById('vLiberarA').value.trim():'',
