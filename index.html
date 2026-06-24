@@ -446,11 +446,9 @@
           </select>
           <select class="finput" id="fVFuente" onchange="renderVentas()">
             <option value="">Todas las fuentes</option>
-            <option value="EMBUDO">Embudo</option>
             <option value="LANZAMIENTO">Lanzamiento</option>
-            <option value="LLAMADA_FRIA">Llamada fría</option>
-            <option value="LLAMADA_CALIENTE">Llamada caliente</option>
-            <option value="INSTAGRAM">Instagram</option>
+            <option value="REDES_SOCIALES">Redes Sociales</option>
+            <option value="PERPETUOS">Perpetuos</option>
           </select>
         </div>
         <div class="card">
@@ -619,11 +617,9 @@
         <div class="fgroup"><label>Fuente del lead *</label>
           <select class="finput" id="vF" onchange="toggleLzField()">
             <option value="">Seleccionar...</option>
-            <option value="EMBUDO">Embudo (Hotmart/página)</option>
             <option value="LANZAMIENTO">Lanzamiento</option>
-            <option value="LLAMADA_FRIA">Llamada fría</option>
-            <option value="LLAMADA_CALIENTE">Llamada caliente</option>
-            <option value="INSTAGRAM">Instagram</option>
+            <option value="REDES_SOCIALES">Redes Sociales</option>
+            <option value="PERPETUOS">Perpetuos</option>
           </select>
         </div>
         <div class="fgroup" id="vLzGroup" style="display:none"><label>Lanzamiento</label>
@@ -933,7 +929,7 @@ function renderDashboard() {
   // Fuentes
   const byF = {}; vMes.forEach(v=>{ const f=v.fuenteLead||'OTRO'; byF[f]=(byF[f]||0)+1; });
   const totalF = Object.values(byF).reduce((s,v)=>s+v,0)||1;
-  const fColors = {EMBUDO:'var(--accent)',LANZAMIENTO:'var(--accent2)',LLAMADA_FRIA:'var(--blue)',LLAMADA_CALIENTE:'var(--green)',INSTAGRAM:'var(--purple)'};
+  const fColors = {LANZAMIENTO:'var(--accent2)',REDES_SOCIALES:'var(--blue)',PERPETUOS:'var(--green)'};
   const fEl = document.getElementById('dFuente');
   fEl.innerHTML = Object.keys(byF).length===0 ? '<div class="empty"><div class="e-ico">📡</div><p>Sin datos este mes</p></div>'
     : Object.entries(byF).sort((a,b)=>b[1]-a[1]).map(([f,c])=>`<div class="fuente-item"><div class="flex justify-b fs12" style="margin-bottom:4px"><span>${fLabel(f)}</span><span class="fw7">${c} (${Math.round(c/totalF*100)}%)</span></div><div class="prog-bg"><div class="prog-fill" style="width:${c/totalF*100}%;background:${fColors[f]||'var(--text3)'}"></div></div></div>`).join('');
@@ -1373,7 +1369,7 @@ function bProd(p){
   return `<span class="badge ${colorMap[p]||'b-gray'}">${labelMap[p]||p||'—'}</span>`;
 }
 function bEstado(e){ const m={PENDIENTE:'b-yellow',VALIDADA:'b-green',RECHAZADA:'b-red'}; return `<span class="badge ${m[e]||'b-gray'}">${e||'—'}</span>`; }
-function fLabel(f){ return {EMBUDO:'Embudo',LANZAMIENTO:'Lanzamiento',LLAMADA_FRIA:'Llamada fría',LLAMADA_CALIENTE:'Llamada caliente',INSTAGRAM:'Instagram',OTRO:'Otro'}[f]||f||'—'; }
+function fLabel(f){ return {LANZAMIENTO:'Lanzamiento',REDES_SOCIALES:'Redes Sociales',PERPETUOS:'Perpetuos',OTRO:'Otro'}[f]||f||'—'; }
 function mLabel(m){ return {BANCOLOMBIA:'Bancolombia',BCP_PERU:'BCP Perú',BANESCO_PANAMA:'Banesco Panamá',IFB_USA:'IFB USA',ZELLE:'Zelle',BANCO_VENEZUELA:'Banco Venezuela',CIELO_BRASIL:'Cielo',BRADESCO:'Bradesco',CRYPTO:'Crypto',HOTMART:'Hotmart',PAYPAL:'PayPal',OTRO:'Otro'}[m]||m||'—'; }
 function fDate(d){ if(!d) return '—'; try{ return new Date(d+(d.length===10?'T12:00':'')).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'}); } catch{ return d; } }
 function fmt(n){ return Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
