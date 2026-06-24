@@ -756,57 +756,10 @@
   </div>
 </div>
 
-<!-- MODAL: DESCARGAR REPORTE CLOSER ACTIVO -->
-<div class="overlay" id="mReporteCloser">
-  <div class="modal" style="max-width:480px">
-    <div class="mh"><h3>📊 Descargar reporte de closer</h3><button class="mh-close" onclick="closeM('mReporteCloser')">✕</button></div>
-    <div class="mb">
-      <div class="alert a-info">Filtra por período para obtener el reporte de actividad</div>
-      <div class="g2">
-        <div class="fgroup"><label>Desde</label><input class="finput" type="date" id="repDesde"></div>
-        <div class="fgroup"><label>Hasta</label><input class="finput" type="date" id="repHasta"></div>
-      </div>
-      <div id="repPreview" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:14px;font-size:12px;color:var(--text2)">
-        <div>Total ventas: <strong id="repTotalV" class="text">0</strong></div>
-        <div>Recaudado: <strong id="repTotalR" class="text">$0</strong></div>
-      </div>
-    </div>
-    <div class="mf">
-      <button class="btn btn-secondary" onclick="closeM('mReporteCloser')">Cancelar</button>
-      <button class="btn btn-primary" onclick="downloadCloserReportActive()">⬇ Descargar CSV</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: ELIMINAR CLOSER CON ARCHIVO -->
-<div class="overlay" id="mDeleteCloser">
-  <div class="modal" style="max-width:520px">
-    <div class="mh"><h3>⚠️ Eliminar closer</h3><button class="mh-close" onclick="closeM('mDeleteCloser')">✕</button></div>
-    <div class="mb">
-      <div class="alert a-warn">Se eliminará del sistema pero se archivará toda su información</div>
-      <div id="delPreview" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px;margin:16px 0">
-        <div style="margin-bottom:12px"><strong id="delName"></strong></div>
-        <div class="fs12 c2" id="delEmail" style="margin-bottom:14px"></div>
-        <hr class="divider">
-        <div class="g2" style="gap:8px;margin-top:12px">
-          <div><div class="dl">Ventas totales</div><div class="fw7" id="delVentas">0</div></div>
-          <div><div class="dl">Recaudado</div><div class="fw7 ca" id="delRecaudado">$0</div></div>
-          <div><div class="dl">Clientes únicos</div><div class="fw7" id="delClientes">0</div></div>
-        </div>
-      </div>
-      <div class="alert a-info" style="font-size:12px">📋 Se generará un CSV con toda su actividad y se guardará en Firestore</div>
-    </div>
-    <div class="mf">
-      <button class="btn btn-secondary" onclick="closeM('mDeleteCloser')">Cancelar</button>
-      <button class="btn btn-danger" onclick="confirmDeleteCloser()">Eliminar y archivar</button>
-    </div>
-  </div>
-</div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-import { getFirestore, collection, doc, addDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, getDocs, updateDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 import { getStorage, ref as sref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
 
 const FC = {
@@ -878,10 +831,10 @@ function setupNav() {
   document.getElementById('uName').textContent = `${n} ${a}`.trim();
   document.getElementById('uRole').textContent = roleLabel(ROLE);
   document.getElementById('phBadgeRole').innerHTML = `<span class="badge b-indigo">${roleLabel(ROLE)}</span>`;
-  if (isCloser()) { document.getElementById('snCuentas').style.display='flex'; document.getElementById('dMisVentas').style.display='block'; }
   if (canValidate()) { document.getElementById('snFinanciero').style.display='block'; document.getElementById('snValidar').style.display='flex'; document.getElementById('snReporte').style.display='flex'; }
   if (isLeader()) { document.getElementById('snAdmin').style.display='block'; document.getElementById('snRendimiento').style.display='flex'; }
   if (canManage()) { document.getElementById('snLanzamientos').style.display='flex'; document.getElementById('snClosers').style.display='flex'; }
+  if (isCloser()) { document.getElementById('snCuentas').style.display='flex'; document.getElementById('dMisVentas').style.display='block'; }
 }
 
 // NAV
@@ -893,11 +846,6 @@ window.gotoPage = (p) => {
   const renders = { dashboard: renderDashboard, ventas: renderVentas, clientes: renderClientes, cuentas: renderCuentas, validar: renderValidar, reporte: renderReporte, rendimiento: renderRendimiento, lanzamientos: renderLz, closers: renderClosers };
   renders[p]?.();
 };
-
-// FUNCIONES DE CUENTAS
-function renderCuentas() {
-  document.getElementById('cuentasBody').innerHTML = '<div style="padding: 40px 20px; text-align: center; color: var(--text2);"><div style="font-size: 40px; margin-bottom: 10px;">💳</div>Cuentas de pago - Información bancaria</div>';
-}
 
 // LOAD
 async function loadAll() {
@@ -1112,4 +1060,276 @@ function renderClientes() {
   const tb = document.getElementById('tClientes');
   tb.innerHTML = list.length===0 ? `<tr><td colspan="7"><div class="empty"><div class="e-ico">👥</div><p>Sin clientes registrados</p></div></td></tr>`
     : list.map(c=>`<tr><td><div class="td-main">${c.clienteNombre} ${c.clienteApellido||''}</div><div class="td-sub">${c.clienteCorreo||''}</div></td>
-      <td class="fs12">${c.clientePais||'—'}</td><td cla
+      <td class="fs12">${c.clientePais||'—'}</td><td class="fs12">${c.clienteTelefono||'—'}</td>
+      <td>${[...c.prods].map(bProd).join(' ')}</td>
+      <td class="fw7 ca">$${fmt(c.total)}</td><td class="tc2">${c.ventas.length}</td>
+      <td class="fs12">${c.closerNombre||'—'}</td></tr>`).join('');
+}
+
+// ── REPORTE ──
+function renderReporte() {
+  const d = document.getElementById('rfD')?.value; const h = document.getElementById('rfH')?.value;
+  let vs = VENTAS.filter(v=>v.estadoVenta==='VALIDADA');
+  if(d) vs=vs.filter(v=>v.fechaVenta>=d); if(h) vs=vs.filter(v=>v.fechaVenta<=h);
+  const total = vs.reduce((s,v)=>s+(v.totalPagado||0),0);
+  const saldo = VENTAS.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.saldoPendiente||0),0);
+  const rech = VENTAS.filter(v=>v.estadoVenta==='RECHAZADA').length;
+  document.getElementById('rfK1').textContent='$'+fmt(total);
+  document.getElementById('rfK2').textContent=vs.length;
+  document.getElementById('rfK3').textContent='$'+fmt(saldo);
+  document.getElementById('rfK4').textContent=rech;
+  const byM={}; vs.forEach(v=>{const m=v.metodoPago||'OTRO'; byM[m]=(byM[m]||0)+(v.totalPagado||0);});
+  document.getElementById('rfMetodos').innerHTML=Object.entries(byM).sort((a,b)=>b[1]-a[1]).map(([m,t])=>`<div class="flex justify-b fs12" style="padding:9px 0;border-bottom:1px solid var(--border)"><span>${mLabel(m)}</span><strong class="ca">$${fmt(t)}</strong></div>`).join('')||'<div class="c2 fs12">Sin datos</div>';
+  const byMon={}; vs.forEach(v=>{const m=v.moneda||'USD'; byMon[m]=(byMon[m]||0)+(v.montoOriginal||v.totalPagado||0);});
+  document.getElementById('rfMonedas').innerHTML=Object.entries(byMon).sort((a,b)=>b[1]-a[1]).map(([m,t])=>`<div class="flex justify-b fs12" style="padding:9px 0;border-bottom:1px solid var(--border)"><span>${m}</span><strong>${t.toLocaleString()}</strong></div>`).join('')||'<div class="c2 fs12">Sin datos</div>';
+  document.getElementById('rfDetalle').innerHTML=vs.map(v=>`<tr><td>${v.clienteNombre} ${v.clienteApellido||''}</td><td>${bProd(v.producto)}</td><td>${mLabel(v.metodoPago)}</td><td>${v.moneda||'USD'}</td><td>${v.montoOriginal?v.montoOriginal.toLocaleString():'—'}</td><td class="ca fw7">$${fmt(v.totalPagado||0)}</td><td>${v.closerNombre||'—'}</td><td class="c2 fs12">${fDate(v.fechaValidacion)}</td></tr>`).join('')||'<tr><td colspan="8" class="tc2 c2" style="padding:20px">Sin ventas validadas</td></tr>';
+}
+window.renderReporte = renderReporte;
+
+// ── RENDIMIENTO ──
+function renderRendimiento() {
+  const d = document.getElementById('rnD')?.value; const h = document.getElementById('rnH')?.value;
+  let vs = VENTAS;
+  if(d) vs=vs.filter(v=>v.fechaVenta>=d); if(h) vs=vs.filter(v=>v.fechaVenta<=h);
+  const val=vs.filter(v=>v.estadoVenta==='VALIDADA');
+  const ticket=val.length>0?val.reduce((s,v)=>s+(v.valorTotal||0),0)/val.length:0;
+  const compl=vs.filter(v=>v.estadoPago==='COMPLETO').length;
+  document.getElementById('rnK1').textContent=vs.length;
+  document.getElementById('rnK2').textContent='$'+fmt(Math.round(ticket));
+  document.getElementById('rnK3').textContent=vs.length>0?Math.round(val.length/vs.length*100)+'%':'—';
+  document.getElementById('rnK4').textContent=compl;
+  const byC={}; vs.forEach(v=>{const k=v.closerNombre||'—'; if(!byC[k]) byC[k]={t:0,v:0,m:0}; byC[k].t++; if(v.estadoVenta==='VALIDADA'){byC[k].v++;byC[k].m+=v.totalPagado||0;}});
+  document.getElementById('rnClosers').innerHTML=Object.entries(byC).sort((a,b)=>b[1].m-a[1].m).map(([n,d])=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div class="flex justify-b"><span class="fw7">${n}</span><span class="ca fw7">$${fmt(d.m)}</span></div><div class="fs11 c2">${d.t} ventas · ${d.t>0?Math.round(d.v/d.t*100):0}% conversión</div></div>`).join('')||'<div class="c2 fs12">Sin datos</div>';
+  const byF={}; vs.forEach(v=>{const f=v.fuenteLead||'OTRO'; if(!byF[f]) byF[f]={t:0,v:0}; byF[f].t++; if(v.estadoVenta==='VALIDADA') byF[f].v++;});
+  document.getElementById('rnFuentes').innerHTML=Object.entries(byF).sort((a,b)=>b[1].t-a[1].t).map(([f,d])=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div class="flex justify-b"><span class="fw7">${fLabel(f)}</span><span>${d.t} leads</span></div><div class="fs11 c2">${d.t>0?Math.round(d.v/d.t*100):0}% convertidos</div></div>`).join('')||'<div class="c2 fs12">Sin datos</div>';
+}
+window.renderRendimiento = renderRendimiento;
+
+// ── LANZAMIENTOS ──
+function renderLz() {
+  const el = document.getElementById('lzBody');
+  el.innerHTML = LZS.length===0 ? '<div class="empty"><div class="e-ico">🚀</div><p>No hay lanzamientos creados</p></div>'
+    : LZS.map(l=>{
+      const vl=VENTAS.filter(v=>v.lanzamientoId===l.id);
+      const rec=vl.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.totalPagado||0),0);
+      const pct=l.meta>0?Math.min(100,rec/l.meta*100):0;
+      return `<div class="card" style="margin-bottom:12px">
+        <div class="flex justify-b items-c" style="flex-wrap:wrap;gap:12px">
+          <div><div class="fw8" style="font-size:15px">${l.nombre}</div>
+            <div class="fs12 c2 mt14">${fDate(l.fechaInicio)} → ${fDate(l.fechaFin)}</div>
+            ${l.bono?`<div class="fs12" style="margin-top:4px">🎁 ${l.bono}</div>`:''}
+          </div>
+          <div class="flex gap8 items-c">
+            <span class="badge ${l.activo?'b-green':'b-gray'}">${l.activo?'🟢 Activo':'⚪ Inactivo'}</span>
+            ${canManage()?`<button class="btn btn-secondary btn-sm" onclick="toggleLz('${l.id}',${!l.activo})">${l.activo?'Cerrar':'Activar'}</button>`:''}
+          </div>
+        </div>
+        ${l.meta?`<div style="margin-top:14px"><div class="flex justify-b fs12" style="margin-bottom:5px"><span>Recaudado: <strong class="ca">$${fmt(rec)}</strong></span><span>Meta: $${fmt(l.meta)}</span></div><div class="prog-bg"><div class="prog-fill" style="width:${pct}%"></div></div><div class="fs11 c2" style="margin-top:4px">${Math.round(pct)}% alcanzado · ${vl.length} ventas</div></div>`:''}
+      </div>`;
+    }).join('');
+}
+
+window.toggleLz = async (id, activo) => {
+  await updateDoc(doc(db,'lanzamientos',id),{activo});
+  const i=LZS.findIndex(l=>l.id===id); LZS[i].activo=activo;
+  renderLz(); toast(activo?'🚀 Lanzamiento activado':'Lanzamiento cerrado', activo?'s':'w');
+};
+
+// ── CLOSERS ──
+function renderClosers() {
+  const el = document.getElementById('closersBody');
+  el.innerHTML = CLOSERS.length===0 ? '<div class="empty"><div class="e-ico">⚡</div><p>No hay closers registrados</p></div>'
+    : `<div class="g3">${CLOSERS.map(c=>{
+      const vc=VENTAS.filter(v=>v.closerEmail===c.email);
+      const val=vc.filter(v=>v.estadoVenta==='VALIDADA');
+      const m=val.reduce((s,v)=>s+(v.totalPagado||0),0);
+      return `<div class="card">
+        <div class="flex gap12 items-c" style="margin-bottom:14px">
+          <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0">${(c.nombre||'?')[0].toUpperCase()}</div>
+          <div><div class="fw7">${c.nombre} ${c.apellido||''}</div><div class="fs11 c2">${roleLabel(c.rol)}</div></div>
+        </div>
+        <div class="fs11 c2" style="margin-bottom:10px">${c.email}</div>
+        <hr class="divider">
+        <div class="g2" style="gap:8px">
+          <div><div class="dl">Ventas</div><div class="fw7">${vc.length}</div></div>
+          <div><div class="dl">Recaudado</div><div class="fw7 ca">$${fmt(m)}</div></div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge ${c.activo!==false?'b-green':'b-red'}">${c.activo!==false?'Activo':'Inactivo'}</span>
+          ${canManage()&&c.activo!==false?`<button class="btn btn-danger btn-sm" onclick="deactivateCloser('${c.id}')">Desactivar</button>`:''}
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+}
+
+window.deactivateCloser = async (id) => {
+  if(!confirm('¿Desactivar este closer?')) return;
+  await updateDoc(doc(db,'closers',id),{activo:false});
+  const i=CLOSERS.findIndex(c=>c.id===id); CLOSERS[i].activo=false;
+  renderClosers(); toast('Closer desactivado','w');
+};
+
+// ── SAVE VENTA ──
+window.openVentaModal = () => {
+  const sel = document.getElementById('vLz');
+  sel.innerHTML='<option value="">Sin lanzamiento</option>';
+  LZS.filter(l=>l.activo).forEach(l=>sel.innerHTML+=`<option value="${l.id}">${l.nombre}</option>`);
+  document.getElementById('vFV').value = new Date().toISOString().split('T')[0];
+  openM('mVenta');
+};
+window.toggleLzField = () => {
+  document.getElementById('vLzGroup').style.display = document.getElementById('vF').value==='LANZAMIENTO'?'block':'none';
+};
+window.saveVenta = async () => {
+  const N=document.getElementById('vN').value.trim();
+  const A=document.getElementById('vA').value.trim();
+  const C=document.getElementById('vC').value.trim();
+  const PR=document.getElementById('vProd').value;
+  const F=document.getElementById('vF').value;
+  const VT=parseFloat(document.getElementById('vVT').value)||0;
+  const MP=parseFloat(document.getElementById('vMP').value)||0;
+  const ME=document.getElementById('vMet').value;
+  if(!N||!C||!PR||!F||!VT||!ME) { toast('Completa todos los campos obligatorios (*)','e'); return; }
+  const btn=document.getElementById('btnSaveV'); btn.disabled=true; btn.innerHTML='<div class="spin"></div> Guardando...';
+  try {
+    let url='';
+    const file=document.getElementById('vComp').files[0];
+    if(file){ const r=sref(storage,`comprobantes/${Date.now()}_${file.name}`); const snap=await uploadBytes(r,file); url=await getDownloadURL(snap.ref); }
+    const venta={
+      closerEmail:CU.email, closerNombre:`${CUD?.nombre||''} ${CUD?.apellido||''}`.trim(),
+      clienteNombre:N, clienteApellido:A, clienteCorreo:C,
+      clienteTelefono:document.getElementById('vT').value.trim(),
+      clientePais:document.getElementById('vP').value,
+      producto:PR, fuenteLead:F,
+      lanzamientoId:F==='LANZAMIENTO'?document.getElementById('vLz').value:'',
+      valorTotal:VT, totalPagado:MP, saldoPendiente:Math.max(0,VT-MP),
+      estadoPago:MP>=VT?'COMPLETO':'PARCIAL', estadoVenta:'PENDIENTE',
+      moneda:document.getElementById('vMon').value,
+      montoOriginal:parseFloat(document.getElementById('vMO').value)||null,
+      metodoPago:ME, cuentaDestino:document.getElementById('vCD').value.trim(),
+      comprobanteURL:url,
+      fechaVenta:document.getElementById('vFV').value,
+      fechaLimitePago:document.getElementById('vFL').value,
+      notasCloser:document.getElementById('vNT').value.trim(),
+      fechaCreacion:new Date().toISOString()
+    };
+    const ref2=await addDoc(collection(db,'ventas'),venta);
+    VENTAS.unshift({id:ref2.id,...venta});
+    closeM('mVenta'); renderVentas(); renderDashboard(); checkNotif();
+    toast('✅ Venta registrada — pendiente de validación','s');
+    ['vN','vA','vC','vT','vFV','vFL','vVT','vMP','vMO','vCD','vNT'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+    document.getElementById('vProd').value=''; document.getElementById('vF').value=''; document.getElementById('vP').value=''; document.getElementById('vMon').value='USD'; document.getElementById('vMet').value='';
+    document.getElementById('compPrev').innerHTML='<div style="font-size:28px">📎</div><div class="fs12 c2 mt14">Clic para subir imagen o PDF</div>';
+    swTabById('tc1');
+  } catch(e){ toast('Error: '+e.message,'e'); }
+  btn.disabled=false; btn.innerHTML='💾 Guardar venta';
+};
+
+// ── SAVE CLOSER ──
+function genPwd(){
+  const c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%';
+  let p=''; for(let i=0;i<12;i++) p+=c.charAt(Math.floor(Math.random()*c.length));
+  return p;
+}
+window.openCloserModal = () => openM('mCloser');
+window.saveCloser = async () => {
+  const N=document.getElementById('cN').value.trim();
+  const A=document.getElementById('cA').value.trim();
+  const E=document.getElementById('cE').value.trim();
+  const R=document.getElementById('cR').value;
+  if(!N||!E){ toast('Nombre y correo son obligatorios','e'); return; }
+  const btn=document.getElementById('btnSaveC'); btn.disabled=true; btn.textContent='Creando...';
+  try {
+    const pwd=genPwd();
+    const {initializeApp:ia2}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js");
+    const {getAuth:ga2,createUserWithEmailAndPassword:cu2,signOut:so2}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js");
+    const a2=ia2(FC,'sec-'+Date.now()); const au2=ga2(a2);
+    await cu2(au2,E,pwd); await so2(au2);
+    const data={nombre:N,apellido:A,email:E,rol:R,activo:true,fechaCreacion:new Date().toISOString()};
+    const ref2=await addDoc(collection(db,'closers'),data);
+    CLOSERS.push({id:ref2.id,...data});
+    document.getElementById('fVCloser').innerHTML+= `<option value="${E}">${N} ${A}</option>`;
+    document.getElementById('pwdShow').innerHTML=`<strong>${pwd}</strong>`;
+    document.getElementById('pwdEmail').innerHTML=E;
+    closeM('mCloser'); openM('mShowPwd');
+    ['cN','cA','cE'].forEach(id=>document.getElementById(id).value='');
+  } catch(e){ toast('Error: '+e.message,'e'); }
+  btn.disabled=false; btn.textContent='Crear closer';
+};
+window.copyPwd = () => {
+  const p=document.getElementById('pwdShow').textContent;
+  navigator.clipboard.writeText(p).then(()=>toast('✅ Contraseña copiada','s'));
+};
+
+// ── SAVE LZ ──
+window.openLzModal = () => openM('mLz');
+window.saveLz = async () => {
+  const N=document.getElementById('lzN').value.trim();
+  const I=document.getElementById('lzI').value;
+  const F=document.getElementById('lzF').value;
+  if(!N||!I||!F){ toast('Completa nombre y fechas','e'); return; }
+  const prods=[...document.querySelectorAll('#mLz .pill.on')].map(p=>p.dataset.v);
+  const btn=document.getElementById('btnSaveLz'); btn.disabled=true;
+  try {
+    const data={nombre:N,fechaInicio:I,fechaFin:F,meta:parseFloat(document.getElementById('lzM').value)||0,bono:document.getElementById('lzB').value.trim(),productos:prods,activo:true,fechaCreacion:new Date().toISOString()};
+    const ref2=await addDoc(collection(db,'lanzamientos'),data);
+    LZS.unshift({id:ref2.id,...data});
+    closeM('mLz'); renderLz();
+    toast('🚀 Lanzamiento creado','s');
+    ['lzN','lzI','lzF','lzM','lzB'].forEach(id=>document.getElementById(id).value='');
+    document.querySelectorAll('#mLz .pill').forEach(p=>p.classList.remove('on'));
+  } catch(e){ toast('Error: '+e.message,'e'); }
+  btn.disabled=false;
+};
+
+// ── HELPERS ──
+function renderCuentas() {
+  document.getElementById('cuentasBody').innerHTML = '<div style="padding: 40px 20px; text-align: center; color: var(--text2);"><div style="font-size: 40px; margin-bottom: 10px;">💳</div>Cuentas de pago - Información bancaria</div>';
+}
+
+function bProd(p){ const m={KAINET:'b-purple',TRIBU:'b-yellow',ARENA:'b-indigo',PERPETUO:'b-blue'}; return `<span class="badge ${m[p]||'b-gray'}">${p||'—'}</span>`; }
+function bEstado(e){ const m={PENDIENTE:'b-yellow',VALIDADA:'b-green',RECHAZADA:'b-red'}; return `<span class="badge ${m[e]||'b-gray'}">${e||'—'}</span>`; }
+function fLabel(f){ return {EMBUDO:'Embudo',LANZAMIENTO:'Lanzamiento',LLAMADA_FRIA:'Llamada fría',LLAMADA_CALIENTE:'Llamada caliente',INSTAGRAM:'Instagram',OTRO:'Otro'}[f]||f||'—'; }
+function mLabel(m){ return {BANCOLOMBIA:'Bancolombia',BCP_PERU:'BCP Perú',BANESCO_PANAMA:'Banesco Panamá',IFB_USA:'IFB USA',ZELLE:'Zelle',BANCO_VENEZUELA:'Banco Venezuela',CIELO_BRASIL:'Cielo',BRADESCO:'Bradesco',CRYPTO:'Crypto',HOTMART:'Hotmart',PAYPAL:'PayPal',OTRO:'Otro'}[m]||m||'—'; }
+function fDate(d){ if(!d) return '—'; try{ return new Date(d+(d.length===10?'T12:00':'')).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'}); } catch{ return d; } }
+function fmt(n){ return Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+
+window.prevComp = (inp) => {
+  const f=inp.files[0]; if(!f) return;
+  const p=document.getElementById('compPrev');
+  if(f.type.startsWith('image/')){ const r=new FileReader(); r.onload=e=>p.innerHTML=`<img src="${e.target.result}" style="max-height:110px;border-radius:6px">`; r.readAsDataURL(f); }
+  else p.innerHTML=`<div style="font-size:22px">📄</div><div class="fs12 c2">${f.name}</div>`;
+};
+
+// MODALS & TABS
+window.openM = id => document.getElementById(id).classList.add('open');
+window.closeM = id => document.getElementById(id).classList.remove('open');
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
+window.swTab = (el, tid) => {
+  const p=el.closest('.modal')||el.closest('.page-wrap');
+  p.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  p.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); document.getElementById(tid)?.classList.add('active');
+};
+window.swTabById = (tid) => {
+  const el=document.getElementById(tid); if(!el) return;
+  const p=el.closest('.modal')||el.closest('.page-wrap');
+  p.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  p.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const idx=[...p.querySelectorAll('.tc')].indexOf(el);
+  p.querySelectorAll('.tab')[idx]?.classList.add('active');
+};
+
+// TOAST
+function toast(msg, type='s') {
+  const z=document.getElementById('toastZone');
+  const t=document.createElement('div'); t.className=`toast ${type}`; t.textContent=msg; z.appendChild(t);
+  setTimeout(()=>t.remove(),3200);
+}
+window.toast = toast;
+</script>
+</body>
+</html>
+
+
