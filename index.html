@@ -587,6 +587,19 @@
             </select>
           </div>
         </div>
+        <div class="fgroup" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+          <label><input type="checkbox" id="vTercero" onchange="toggleTercero()"> ¿Pagó un tercero?</label>
+        </div>
+        <div id="sectionCompradorBeneficiario" style="display: none; margin-top: 20px; padding: 16px; background: var(--bg3); border-radius: 8px;">
+          <div style="margin-bottom: 14px; font-weight: 600; color: var(--accent);">Quien pagó:</div>
+          <div class="g2">
+            <div class="fgroup"><label>Nombre *</label><input class="finput" id="vTerceroN" placeholder="Juan"></div>
+            <div class="fgroup"><label>Apellido</label><input class="finput" id="vTerceroA" placeholder="Pérez"></div>
+          </div>
+          <div class="fgroup"><label>Correo *</label><input class="finput" type="email" id="vTerceroC" placeholder="juan@email.com"></div>
+          <div style="margin-top: 14px; font-weight: 600; color: var(--accent);">Beneficiario (quien recibirá el producto):</div>
+          <div style="margin-top: 10px; padding: 10px; background: var(--bg2); border-radius: 6px; font-size: 12px; color: var(--text2);">Los datos del cliente arriba</div>
+        </div>
         <div class="tr mt20"><button class="btn btn-primary" onclick="swTabById('tc2')">Siguiente →</button></div>
       </div>
       <div class="tc" id="tc2">
@@ -652,6 +665,7 @@
             <option value="PAYPAL">PayPal</option><option value="OTRO">Otro</option>
           </select>
         </div>
+        <div class="fgroup"><label>ID de Transacción</label><input class="finput" id="vIdTx" placeholder="Ej: 123456789 o TX-001"></div>
         <div class="fgroup"><label>Cuenta destino Tradestars</label><input class="finput" id="vCD" placeholder="Ej: Bancolombia — Gustavo Torres"></div>
         <div class="fgroup"><label>Comprobante de pago *</label>
           <div class="upload-zone" onclick="document.getElementById('vComp').click()">
@@ -862,7 +876,7 @@ window.gotoPage = (p) => {
   document.querySelectorAll('.sb-item').forEach(x => x.classList.remove('active'));
   document.getElementById('pg-'+p)?.classList.add('active');
   document.querySelectorAll('.sb-item').forEach(x => { if(x.getAttribute('onclick')?.includes("'"+p+"'")) x.classList.add('active'); });
-  const renders = { dashboard: renderDashboard, ventas: renderVentas, clientes: renderClientes, validar: renderValidar, reporte: renderReporte, rendimiento: renderRendimiento, lanzamientos: renderLz, closers: renderClosers };
+  const renders = { dashboard: renderDashboard, ventas: renderVentas, clientes: renderClientes, cuentas: renderCuentas, validar: renderValidar, reporte: renderReporte, rendimiento: renderRendimiento, lanzamientos: renderLz, closers: renderClosers };
   renders[p]?.();
 };
 
@@ -1409,3 +1423,4 @@ window.toast = toast;
 </script>
 </body>
 </html>
+
