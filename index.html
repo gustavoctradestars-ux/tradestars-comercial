@@ -1282,9 +1282,49 @@ window.saveLz = async () => {
   btn.disabled=false;
 };
 
+// ── CUENTAS BANCARIAS ──
+const CUENTAS_BANCARIAS = {
+  "Venezuela": {"Banesco": { titular: "Rodrigo Marcano", cedula: "19256159", tipo: "Corriente", cuenta: "01340820378203016736", telefono: "04143501481" }},
+  "Panamá": {"Banesco": { titular: "Black Mentory Agency", cuenta: "221021512164" }},
+  "Colombia": {"Bancolombia": { titular: "Consultoria, comercializacion e ingenieria rialro sas", nit: "901051317", tipo: "Ahorro", cuenta: "55173489063" }},
+  "Perú": {
+    "BCP (Soles)": { titular: "Rodrigo Marcano Sprea", cuenta: "19405243510074", interbancaria: "00219410524351007498" },
+    "BCP (Dólares)": { titular: "Rodrigo Marcano Sprea", cuenta: "19405244088157", interbancaria: "00219410524408815791" }
+  },
+  "Brasil": {"Bradesco": { titular: "BMA PARTICIPAÇÕES LTDA", agencia: "5760", cuenta: "49886-6", pix: "48.913.352/0001-64" }},
+  "Estados Unidos": {
+    "International Finance Bank": { direccion: "777 SW 37th AVE. Suite 100, Miami, FL 33135 USA", aba: "067011692", swift: "IFBKUS3M", cuenta: "1200051602", beneficiario: "Black Mentory Agency LTD" },
+    "Zelle": { email: "mentoria@tradestarslatam.com", beneficiario: "Rodrigo Marcano Sprea" }
+  },
+  "Exchanges": {
+    "Binance Pay (Email)": { email: "rodrigo@tradestarslatam.com" },
+    "Binance Pay (ID)": { id: "178449636" },
+    "Binance Wallet BTC": { wallet: "1NzbMzZVdoZztxqgibaTYYuP9rfvzUFnLs" },
+    "Binance Wallet TRON": { wallet: "TS84arpYqTFvgooyQokrFGbZF4jiuXYQxn", moneda: "USDT TRC-20" },
+    "Binance Wallet BNB/ETH": { wallet: "0xa7c949061a8ca5c4db43b47cf6b2e8df5f66646f" },
+    "Lemon Wallet": { link: "https://br.lemon.me/$mentoria" },
+    "Neteller": { email: "rodrigo.marcano.sprea@gmail.com" },
+    "Skrill": { email: "marcanosprea@gmail.com", id: "131811016" }
+  }
+};
+
 // ── HELPERS ──
 function renderCuentas() {
-  document.getElementById('cuentasBody').innerHTML = '<div style="padding: 40px 20px; text-align: center; color: var(--text2);"><div style="font-size: 40px; margin-bottom: 10px;">💳</div>Cuentas de pago - Información bancaria</div>';
+  let html = '';
+  Object.entries(CUENTAS_BANCARIAS).forEach(([pais, bancos]) => {
+    html += `<div class="card" style="margin-bottom:14px"><div class="card-title">${pais}</div>`;
+    Object.entries(bancos).forEach(([banco, datos]) => {
+      html += `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px">
+        <div class="fw7" style="margin-bottom:8px">${banco}</div>`;
+      Object.entries(datos).forEach(([campo, valor]) => {
+        const labels = {titular:'Titular',cedula:'Cédula',tipo:'Tipo',cuenta:'Cuenta',telefono:'Teléfono',nit:'NIT',agencia:'Agencia',pix:'PIX',direccion:'Dirección',aba:'ABA',swift:'SWIFT',beneficiario:'Beneficiario',email:'Email',id:'ID',wallet:'Wallet',moneda:'Moneda',link:'Link',interbancaria:'Interbancaria'};
+        html += `<div style="font-size:12px;color:var(--text2);margin-bottom:4px"><span>${labels[campo]||campo}:</span><br><span class="fw7" style="color:var(--text)">${valor}</span><button class="btn btn-sm btn-secondary" style="float:right" onclick="navigator.clipboard.writeText('${valor}').then(()=>toast('✅ Copiado','s'))">📋</button></div><div style="clear:both;margin-bottom:6px"></div>`;
+      });
+      html += `</div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('cuentasBody').innerHTML = html;
 }
 
 function bProd(p){ const m={KAINET:'b-purple',TRIBU:'b-yellow',ARENA:'b-indigo',PERPETUO:'b-blue'}; return `<span class="badge ${m[p]||'b-gray'}">${p||'—'}</span>`; }
