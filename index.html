@@ -427,7 +427,16 @@
           <select class="finput" id="fVCloser" onchange="renderVentas()" style="min-width:150px"><option value="">Todos los closers</option></select>
           <select class="finput" id="fVProducto" onchange="renderVentas()">
             <option value="">Todos los productos</option>
-            <option>KAINET</option><option>TRIBU</option><option>ARENA</option><option>PERPETUO</option>
+            <option value="KAINET_ANUAL_COMPLETO">KAINET — Anual Completo</option>
+            <option value="KAINET_ANUAL_CUOTAS">KAINET — Anual Cuotas</option>
+            <option value="KAINET_TRIMESTRAL">KAINET — Trimestral</option>
+            <option value="KAINET_MENSUAL">KAINET — Mensual</option>
+            <option value="TRIBU_ANUAL_COMPLETO">TRIBU — Anual Completo</option>
+            <option value="TRIBU_ANUAL_CUOTAS">TRIBU — Anual Cuotas</option>
+            <option value="TRIBU_VITALICIA_COMPLETO">TRIBU — Vitalicia Completo</option>
+            <option value="TRIBU_VITALICIA_CUOTAS">TRIBU — Vitalicia Cuotas</option>
+            <option value="ARENA">ARENA</option>
+            <option value="PERPETUO">PERPETUO</option>
           </select>
           <select class="finput" id="fVEstado" onchange="renderVentas()">
             <option value="">Todos los estados</option>
@@ -461,7 +470,16 @@
           <input class="finput f-search" id="fCSearch" placeholder="🔍 Buscar nombre, correo, teléfono..." oninput="renderClientes()">
           <select class="finput" id="fCProducto" onchange="renderClientes()">
             <option value="">Todos los productos</option>
-            <option>KAINET</option><option>TRIBU</option><option>ARENA</option><option>PERPETUO</option>
+            <option value="KAINET_ANUAL_COMPLETO">KAINET — Anual Completo</option>
+            <option value="KAINET_ANUAL_CUOTAS">KAINET — Anual Cuotas</option>
+            <option value="KAINET_TRIMESTRAL">KAINET — Trimestral</option>
+            <option value="KAINET_MENSUAL">KAINET — Mensual</option>
+            <option value="TRIBU_ANUAL_COMPLETO">TRIBU — Anual Completo</option>
+            <option value="TRIBU_ANUAL_CUOTAS">TRIBU — Anual Cuotas</option>
+            <option value="TRIBU_VITALICIA_COMPLETO">TRIBU — Vitalicia Completo</option>
+            <option value="TRIBU_VITALICIA_CUOTAS">TRIBU — Vitalicia Cuotas</option>
+            <option value="ARENA">ARENA</option>
+            <option value="PERPETUO">PERPETUO</option>
           </select>
           <select class="finput" id="fCPais" onchange="renderClientes()"><option value="">Todos los países</option></select>
         </div>
@@ -586,8 +604,16 @@
         <div class="fgroup"><label>Producto *</label>
           <select class="finput" id="vProd">
             <option value="">Seleccionar...</option>
-            <option value="KAINET">KAINET</option><option value="TRIBU">TRIBU TRADESTARS</option>
-            <option value="ARENA">ARENA</option><option value="PERPETUO">PERPETUO</option>
+            <option value="KAINET_ANUAL_COMPLETO">KAINET — Anual Completo</option>
+            <option value="KAINET_ANUAL_CUOTAS">KAINET — Anual Cuotas</option>
+            <option value="KAINET_TRIMESTRAL">KAINET — Trimestral</option>
+            <option value="KAINET_MENSUAL">KAINET — Mensual</option>
+            <option value="TRIBU_ANUAL_COMPLETO">TRIBU — Anual Completo</option>
+            <option value="TRIBU_ANUAL_CUOTAS">TRIBU — Anual Cuotas</option>
+            <option value="TRIBU_VITALICIA_COMPLETO">TRIBU — Vitalicia Completo</option>
+            <option value="TRIBU_VITALICIA_CUOTAS">TRIBU — Vitalicia Cuotas</option>
+            <option value="ARENA">ARENA</option>
+            <option value="PERPETUO">PERPETUO</option>
           </select>
         </div>
         <div class="fgroup"><label>Fuente del lead *</label>
@@ -728,8 +754,14 @@
       <div class="fgroup"><label>Bono al cliente</label><input class="finput" id="lzB" placeholder="30 USD + Indicador de trading"></div>
       <div class="fgroup"><label>Productos</label>
         <div class="pill-group">
-          <div class="pill" onclick="this.classList.toggle('on')" data-v="KAINET">KAINET</div>
-          <div class="pill" onclick="this.classList.toggle('on')" data-v="TRIBU">TRIBU</div>
+          <div class="pill" onclick="this.classList.toggle('on')" data-v="KAINET_ANUAL_COMPLETO">KAINET AC</div>
+          <div class="pill" onclick="this.classList.toggle('on')" data-v="KAINET_ANUAL_CUOTAS">KAINET ACu</div>
+          <div class="pill" onclick="this.classList.toggle('on')" data-v="KAINET_TRIMESTRAL">KAINET Trim</div>
+          <div class="pill" onclick="this.classList.toggle('on')" data-v="KAINET_MENSUAL">KAINET Mes</div>
+          <div class="pill" onclick="this.classList.toggle('on')" data-v="TRIBU_ANUAL_COMPLETO">TRIBU AC</div>
+          <div class="pill" onclick="this.classList.toggle('on')" data-v="TRIBU_ANUAL_CUOTAS">TRIBU ACu</div>
+          <div class="pill" onclick="this.classList.toggle('on')" data-v="TRIBU_VITALICIA_COMPLETO">TRIBU VC</div>
+          <div class="pill" onclick="this.classList.toggle('on')" data-v="TRIBU_VITALICIA_CUOTAS">TRIBU VCu</div>
           <div class="pill" onclick="this.classList.toggle('on')" data-v="ARENA">ARENA</div>
           <div class="pill" onclick="this.classList.toggle('on')" data-v="PERPETUO">PERPETUO</div>
         </div>
@@ -1327,7 +1359,19 @@ function renderCuentas() {
   document.getElementById('cuentasBody').innerHTML = html;
 }
 
-function bProd(p){ const m={KAINET:'b-purple',TRIBU:'b-yellow',ARENA:'b-indigo',PERPETUO:'b-blue'}; return `<span class="badge ${m[p]||'b-gray'}">${p||'—'}</span>`; }
+function bProd(p){
+  const colorMap = {
+    KAINET_ANUAL_COMPLETO:'b-purple', KAINET_ANUAL_CUOTAS:'b-purple', KAINET_TRIMESTRAL:'b-purple', KAINET_MENSUAL:'b-purple',
+    TRIBU_ANUAL_COMPLETO:'b-yellow', TRIBU_ANUAL_CUOTAS:'b-yellow', TRIBU_VITALICIA_COMPLETO:'b-yellow', TRIBU_VITALICIA_CUOTAS:'b-yellow',
+    ARENA:'b-indigo', PERPETUO:'b-blue'
+  };
+  const labelMap = {
+    KAINET_ANUAL_COMPLETO:'KAINET Anual C', KAINET_ANUAL_CUOTAS:'KAINET Anual Cu', KAINET_TRIMESTRAL:'KAINET Trim', KAINET_MENSUAL:'KAINET Mes',
+    TRIBU_ANUAL_COMPLETO:'TRIBU Anual C', TRIBU_ANUAL_CUOTAS:'TRIBU Anual Cu', TRIBU_VITALICIA_COMPLETO:'TRIBU Vital C', TRIBU_VITALICIA_CUOTAS:'TRIBU Vital Cu',
+    ARENA:'ARENA', PERPETUO:'PERPETUO'
+  };
+  return `<span class="badge ${colorMap[p]||'b-gray'}">${labelMap[p]||p||'—'}</span>`;
+}
 function bEstado(e){ const m={PENDIENTE:'b-yellow',VALIDADA:'b-green',RECHAZADA:'b-red'}; return `<span class="badge ${m[e]||'b-gray'}">${e||'—'}</span>`; }
 function fLabel(f){ return {EMBUDO:'Embudo',LANZAMIENTO:'Lanzamiento',LLAMADA_FRIA:'Llamada fría',LLAMADA_CALIENTE:'Llamada caliente',INSTAGRAM:'Instagram',OTRO:'Otro'}[f]||f||'—'; }
 function mLabel(m){ return {BANCOLOMBIA:'Bancolombia',BCP_PERU:'BCP Perú',BANESCO_PANAMA:'Banesco Panamá',IFB_USA:'IFB USA',ZELLE:'Zelle',BANCO_VENEZUELA:'Banco Venezuela',CIELO_BRASIL:'Cielo',BRADESCO:'Bradesco',CRYPTO:'Crypto',HOTMART:'Hotmart',PAYPAL:'PayPal',OTRO:'Otro'}[m]||m||'—'; }
