@@ -639,6 +639,20 @@
       <div class="tc" id="tc3">
         <div class="alert a-warn">💡 El pago será revisado por Financiero antes de ser validado.</div>
         <div class="fgroup"><label>Monto pagado ahora (equiv. USD) *</label><input class="finput" type="number" id="vMP" placeholder="100" min="0"></div>
+        
+        <div style="display:flex;align-items:center;gap:10px;margin:16px 0;padding:12px;background:var(--bg2);border-radius:8px">
+          <input type="checkbox" id="vTercero" onchange="toggleTercero()">
+          <label for="vTercero" style="margin:0;cursor:pointer;flex:1">¿Pagó un tercero?</label>
+        </div>
+        
+        <div id="terceroFields" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:14px">
+          <div class="g2">
+            <div class="fgroup"><label>Nombre de quién pagó</label><input class="finput" id="vTerceroN" placeholder="Juan"></div>
+            <div class="fgroup"><label>Apellido de quién pagó</label><input class="finput" id="vTerceroA" placeholder="Pérez"></div>
+          </div>
+          <div class="fgroup"><label>Correo de quién pagó</label><input class="finput" type="email" id="vTerceroE" placeholder="juan@email.com"></div>
+        </div>
+
         <div class="g2">
           <div class="fgroup"><label>Moneda real *</label>
             <select class="finput" id="vMon">
@@ -1208,6 +1222,9 @@ window.openVentaModal = () => {
 window.toggleLzField = () => {
   document.getElementById('vLzGroup').style.display = document.getElementById('vF').value==='LANZAMIENTO'?'block':'none';
 };
+window.toggleTercero = () => {
+  document.getElementById('terceroFields').style.display = document.getElementById('vTercero').checked?'block':'none';
+};
 window.saveVenta = async () => {
   const N=document.getElementById('vN').value.trim();
   const A=document.getElementById('vA').value.trim();
@@ -1235,6 +1252,10 @@ window.saveVenta = async () => {
       moneda:document.getElementById('vMon').value,
       montoOriginal:parseFloat(document.getElementById('vMO').value)||null,
       metodoPago:ME, cuentaDestino:document.getElementById('vCD').value.trim(),
+      pagoPorTercero:document.getElementById('vTercero').checked,
+      terceroNombre:document.getElementById('vTercero').checked?document.getElementById('vTerceroN').value.trim():'',
+      terceroApellido:document.getElementById('vTercero').checked?document.getElementById('vTerceroA').value.trim():'',
+      terceroCorreo:document.getElementById('vTercero').checked?document.getElementById('vTerceroE').value.trim():'',
       comprobanteURL:url,
       fechaVenta:document.getElementById('vFV').value,
       fechaLimitePago:document.getElementById('vFL').value,
