@@ -36,12 +36,10 @@
   html, body { height: 100%; }
   body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.5; }
 
-  /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
-  /* ══════════ LOGIN ══════════ */
   #loginScreen {
     display: flex; align-items: center; justify-content: center;
     min-height: 100vh;
@@ -73,7 +71,6 @@
   select.finput option { background: var(--bg2); }
   textarea.finput { resize: vertical; min-height: 80px; }
 
-  /* ── BUTTONS ── */
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 7px;
     padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600;
@@ -93,11 +90,9 @@
 
   .err-box { background: var(--red-dim); border: 1px solid rgba(239,68,68,.25); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--red); margin-top: 12px; display: none; }
 
-  /* ══════════ LAYOUT ══════════ */
   #appScreen { display: none; height: 100vh; overflow: hidden; }
   .layout { display: flex; height: 100vh; }
 
-  /* ── SIDEBAR ── */
   .sidebar {
     width: var(--sidebar-w); flex-shrink: 0;
     background: var(--card); border-right: 1px solid var(--border);
@@ -126,7 +121,6 @@
   .btn-logout { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 4px; line-height: 1; }
   .btn-logout:hover { color: var(--red); }
 
-  /* ── MAIN ── */
   .main { flex: 1; overflow-y: auto; background: var(--bg); }
   .page-wrap { padding: 28px 32px; max-width: 1400px; display: none; }
   .page-wrap.active { display: block; }
@@ -134,7 +128,6 @@
   .ph-title h1 { font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
   .ph-title p { font-size: 13px; color: var(--text2); margin-top: 3px; }
 
-  /* ── KPI GRID ── */
   .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
   .kpi {
     background: var(--card); border: 1px solid var(--border);
@@ -155,7 +148,6 @@
   .kpi-val.c-red { color: var(--red); }
   .kpi-sub { font-size: 12px; color: var(--text2); margin-top: 5px; }
 
-  /* ── CARDS ── */
   .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
   .card-title { font-size: 13px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -163,7 +155,6 @@
   .mt14 { margin-top: 14px; }
   .mt20 { margin-top: 20px; }
 
-  /* ── TABLE ── */
   .tbl-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
   th { text-align: left; padding: 9px 12px; font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -174,7 +165,6 @@
   .td-main { font-weight: 600; }
   .td-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
 
-  /* ── BADGES ── */
   .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: .3px; white-space: nowrap; }
   .b-blue { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,.2); }
   .b-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,.2); }
@@ -184,11 +174,9 @@
   .b-indigo { background: var(--accent-glow); color: #818cf8; border: 1px solid rgba(99,102,241,.2); }
   .b-gray { background: rgba(139,144,184,.1); color: var(--text2); border: 1px solid rgba(139,144,184,.15); }
 
-  /* ── FILTERS ── */
   .filters { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
   .f-search { flex: 1; min-width: 200px; }
 
-  /* ── MODAL ── */
   .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.72); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
   .overlay.open { display: flex; }
   .modal { background: var(--card); border: 1px solid var(--border2); border-radius: 14px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; box-shadow: 0 32px 80px rgba(0,0,0,.6); }
@@ -200,7 +188,6 @@
   .mb { padding: 22px; }
   .mf { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
 
-  /* ── TABS (modal) ── */
   .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
   .tab { padding: 9px 14px; font-size: 12px; font-weight: 600; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; }
   .tab:hover { color: var(--text); }
@@ -208,7 +195,6 @@
   .tc { display: none; }
   .tc.active { display: block; }
 
-  /* ── MISC ── */
   .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
   .empty { text-align: center; padding: 40px 20px; color: var(--text2); }
   .empty .e-ico { font-size: 40px; margin-bottom: 10px; }
@@ -234,11 +220,9 @@
   .tr { text-align: right; }
   .tc2 { text-align: center; }
 
-  /* ── NOTIF DOT ── */
   .ndot { display: inline-block; width: 7px; height: 7px; background: var(--red); border-radius: 50%; margin-left: 5px; animation: pulse 1.5s infinite; }
   @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
 
-  /* ── RANKING ── */
   .rank-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(37,40,64,.7); }
   .rank-row:last-child { border-bottom: none; }
   .rank-pos { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
@@ -248,16 +232,13 @@
   .rank-bar { height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width .8s ease; }
   .rank-val { font-size: 13px; font-weight: 800; color: var(--accent); flex-shrink: 0; }
 
-  /* ── PROGRESS ── */
   .prog-wrap { display: flex; align-items: center; gap: 10px; }
   .prog-bg { flex: 1; height: 5px; background: var(--bg3); border-radius: 3px; }
   .prog-fill { height: 5px; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .6s; }
 
-  /* ── FUENTE BARS ── */
   .fuente-item { margin-bottom: 14px; }
   .fuente-item:last-child { margin-bottom: 0; }
 
-  /* ── LANZAMIENTO BANNER ── */
   .lz-banner {
     background: linear-gradient(135deg, rgba(79,70,229,.12), rgba(124,58,237,.08));
     border: 1px solid rgba(79,70,229,.25); border-radius: var(--radius);
@@ -265,27 +246,22 @@
   }
   .lz-banner.show { display: flex; }
 
-  /* ── UPLOAD ── */
   .upload-zone { border: 2px dashed var(--border2); border-radius: 8px; padding: 22px; text-align: center; cursor: pointer; transition: all .2s; margin-top: 6px; }
   .upload-zone:hover { border-color: var(--accent); background: var(--accent-glow); }
   .upload-zone input { display: none; }
 
-  /* ── ALERT ── */
   .alert { padding: 11px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
   .a-warn { background: var(--yellow-dim); border: 1px solid rgba(245,158,11,.25); color: var(--yellow); }
   .a-info { background: var(--blue-dim); border: 1px solid rgba(59,130,246,.25); color: var(--blue); }
   .a-success { background: var(--green-dim); border: 1px solid rgba(34,197,94,.25); color: var(--green); }
 
-  /* ── VALIDAR CARD ── */
   .val-card { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; }
   .val-card:last-child { margin-bottom: 0; }
 
-  /* ── PILL ── */
   .pill-group { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
   .pill { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border2); color: var(--text2); transition: all .15s; }
   .pill.on { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-  /* ── TOAST ── */
   #toastZone { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
   .toast { background: var(--card); border-radius: 10px; padding: 12px 18px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 30px rgba(0,0,0,.45); border-left: 3px solid; animation: toastIn .25s ease; }
   .toast.s { border-color: var(--green); color: var(--green); }
@@ -293,12 +269,13 @@
   .toast.w { border-color: var(--yellow); color: var(--yellow); }
   @keyframes toastIn { from{transform:translateX(20px);opacity:0} to{transform:translateX(0);opacity:1} }
 
-  /* ── DETAIL GRID ── */
   .dg { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; margin-bottom: 16px; }
   .dl { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
   .dv { font-size: 14px; font-weight: 600; }
 
-  /* ── RESPONSIVE ── */
+  .copy-btn { cursor: pointer; padding: 8px 12px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 6px; font-size: 12px; color: var(--text2); transition: all .2s; }
+  .copy-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
   @media (max-width: 900px) {
     .kpi-grid { grid-template-columns: 1fr 1fr; }
     .g2, .g3 { grid-template-columns: 1fr; }
@@ -350,11 +327,12 @@
       <div class="sb-section">Principal</div>
       <div class="sb-item active" onclick="gotoPage('dashboard')"><span class="ico">📊</span><span>Dashboard</span></div>
       <div class="sb-item" onclick="gotoPage('ventas')"><span class="ico">💰</span><span>Ventas</span></div>
-      <div class="sb-item" onclick="gotoPage('clientes')"><span class="ico">👥</span><span>Clientes</span></div>
+      <div class="sb-item" id="snCuentas" style="display:none" onclick="gotoPage('cuentas')"><span class="ico">💳</span><span>Cuentas pago</span></div>
+      <div class="sb-item" id="snClientes" style="display:none" onclick="gotoPage('clientes')"><span class="ico">👥</span><span>Clientes</span></div>
 
       <div class="sb-section" id="snFinanciero" style="display:none">Financiero</div>
       <div class="sb-item" id="snValidar" style="display:none" onclick="gotoPage('validar')"><span class="ico">✅</span><span>Validar pagos</span><span class="ndot" id="nDot" style="display:none"></span></div>
-      <div class="sb-item" id="snReporte" style="display:none" onclick="gotoPage('reporte')"><span class="ico">📋</span><span>Reporte Financiero</span></div>
+      <div class="sb-item" id="snReporte" style="display:none" onclick="gotoPage('reporte')"><span class="ico">📋</span><span>Reporte</span></div>
 
       <div class="sb-section" id="snAdmin" style="display:none">Administración</div>
       <div class="sb-item" id="snRendimiento" style="display:none" onclick="gotoPage('rendimiento')"><span class="ico">📈</span><span>Rendimiento</span></div>
@@ -420,7 +398,16 @@
           <select class="finput" id="fVCloser" onchange="renderVentas()" style="min-width:150px"><option value="">Todos los closers</option></select>
           <select class="finput" id="fVProducto" onchange="renderVentas()">
             <option value="">Todos los productos</option>
-            <option>KAINET</option><option>TRIBU</option><option>ARENA</option><option>PERPETUO</option>
+            <option>TRIBU MODALIDAD ANUAL COMPLETO</option>
+            <option>TRIBU MODALIDAD VITALICIA COMPLETO</option>
+            <option>TRIBU MODALIDAD ANUAL CUOTAS</option>
+            <option>TRIBU MODALIDAD VITALICIA CUOTAS</option>
+            <option>KAINET MODALIDAD ANUAL COMPLETO</option>
+            <option>KAINET MODALIDAD ANUAL CUOTAS</option>
+            <option>KAINET MODALIDAD TRIMESTRAL</option>
+            <option>KAINET MODALIDAD MENSUAL</option>
+            <option>ARENA</option>
+            <option>PERPETUO</option>
           </select>
           <select class="finput" id="fVEstado" onchange="renderVentas()">
             <option value="">Todos los estados</option>
@@ -430,11 +417,9 @@
           </select>
           <select class="finput" id="fVFuente" onchange="renderVentas()">
             <option value="">Todas las fuentes</option>
-            <option value="EMBUDO">Embudo</option>
             <option value="LANZAMIENTO">Lanzamiento</option>
-            <option value="LLAMADA_FRIA">Llamada fría</option>
-            <option value="LLAMADA_CALIENTE">Llamada caliente</option>
-            <option value="INSTAGRAM">Instagram</option>
+            <option value="REDES_SOCIALES">Redes Sociales</option>
+            <option value="PERPETUOS">Perpetuos</option>
           </select>
         </div>
         <div class="card">
@@ -447,6 +432,12 @@
         </div>
       </div>
 
+      <!-- CUENTAS DE PAGO (NUEVO) -->
+      <div class="page-wrap" id="pg-cuentas">
+        <div class="ph"><div class="ph-title"><h1>💳 Cuentas de Pago</h1><p>Información bancaria para recibir pagos</p></div></div>
+        <div id="cuentasBody"><div class="loading"><div class="spin"></div></div></div>
+      </div>
+
       <!-- CLIENTES -->
       <div class="page-wrap" id="pg-clientes">
         <div class="ph"><div class="ph-title"><h1>Clientes</h1><p>Clientes únicos registrados por el equipo</p></div></div>
@@ -454,7 +445,7 @@
           <input class="finput f-search" id="fCSearch" placeholder="🔍 Buscar nombre, correo, teléfono..." oninput="renderClientes()">
           <select class="finput" id="fCProducto" onchange="renderClientes()">
             <option value="">Todos los productos</option>
-            <option>KAINET</option><option>TRIBU</option><option>ARENA</option><option>PERPETUO</option>
+            <option>TRIBU</option><option>KAINET</option><option>ARENA</option><option>PERPETUO</option>
           </select>
           <select class="finput" id="fCPais" onchange="renderClientes()"><option value="">Todos los países</option></select>
         </div>
@@ -480,6 +471,7 @@
         <div class="filters">
           <input class="finput" type="date" id="rfD"><span class="c2">→</span><input class="finput" type="date" id="rfH">
           <button class="btn btn-secondary" onclick="renderReporte()">Aplicar</button>
+          <button class="btn btn-secondary" onclick="exportGoogleSheets()" id="btnExportGS" style="display:none">📊 Exportar a Google Sheets</button>
         </div>
         <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
           <div class="kpi c-green"><div class="kpi-label">Total validado USD</div><div class="kpi-val c-green" id="rfK1">—</div></div>
@@ -557,6 +549,20 @@
         <div class="tab" onclick="swTab(this,'tc3')">3. Pago</div>
       </div>
       <div class="tc active" id="tc1">
+        <div class="alert a-warn">⚠️ Pago por tercero: activa el toggle para registrar datos del comprador y beneficiario</div>
+        <div class="fgroup" style="display:flex;gap:10px;align-items:center">
+          <input type="checkbox" id="vTercero" onchange="toggleTercero()">
+          <label style="margin:0">¿Pagó un tercero?</label>
+        </div>
+        <div id="sectionCompradorBeneficiario" style="display:none;background:var(--bg3);padding:14px;border-radius:8px;margin-bottom:16px">
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:12px">DATOS DEL QUE PAGÓ</div>
+          <div class="g2">
+            <div class="fgroup"><label>Nombre *</label><input class="finput" id="vTerceroN" placeholder="Juan"></div>
+            <div class="fgroup"><label>Apellido</label><input class="finput" id="vTerceroA" placeholder="Pérez"></div>
+          </div>
+          <div class="fgroup"><label>Correo *</label><input class="finput" type="email" id="vTerceroC" placeholder="juan@email.com"></div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:12px">DATOS DEL BENEFICIARIO</div>
         <div class="g2">
           <div class="fgroup"><label>Nombre *</label><input class="finput" id="vN" placeholder="Juan"></div>
           <div class="fgroup"><label>Apellido *</label><input class="finput" id="vA" placeholder="Pérez"></div>
@@ -579,18 +585,24 @@
         <div class="fgroup"><label>Producto *</label>
           <select class="finput" id="vProd">
             <option value="">Seleccionar...</option>
-            <option value="KAINET">KAINET</option><option value="TRIBU">TRIBU TRADESTARS</option>
-            <option value="ARENA">ARENA</option><option value="PERPETUO">PERPETUO</option>
+            <option>TRIBU MODALIDAD ANUAL COMPLETO</option>
+            <option>TRIBU MODALIDAD VITALICIA COMPLETO</option>
+            <option>TRIBU MODALIDAD ANUAL CUOTAS</option>
+            <option>TRIBU MODALIDAD VITALICIA CUOTAS</option>
+            <option>KAINET MODALIDAD ANUAL COMPLETO</option>
+            <option>KAINET MODALIDAD ANUAL CUOTAS</option>
+            <option>KAINET MODALIDAD TRIMESTRAL</option>
+            <option>KAINET MODALIDAD MENSUAL</option>
+            <option>ARENA</option>
+            <option>PERPETUO</option>
           </select>
         </div>
         <div class="fgroup"><label>Fuente del lead *</label>
           <select class="finput" id="vF" onchange="toggleLzField()">
             <option value="">Seleccionar...</option>
-            <option value="EMBUDO">Embudo (Hotmart/página)</option>
             <option value="LANZAMIENTO">Lanzamiento</option>
-            <option value="LLAMADA_FRIA">Llamada fría</option>
-            <option value="LLAMADA_CALIENTE">Llamada caliente</option>
-            <option value="INSTAGRAM">Instagram</option>
+            <option value="REDES_SOCIALES">Redes Sociales</option>
+            <option value="PERPETUOS">Perpetuos</option>
           </select>
         </div>
         <div class="fgroup" id="vLzGroup" style="display:none"><label>Lanzamiento</label>
@@ -598,9 +610,10 @@
         </div>
         <div class="g2">
           <div class="fgroup"><label>Valor total USD *</label><input class="finput" type="number" id="vVT" placeholder="400" min="0"></div>
-          <div class="fgroup"><label>Fecha de venta *</label><input class="finput" type="date" id="vFV"></div>
+          <div class="fgroup"><label>Fecha de pago *</label><input class="finput" type="date" id="vFV"></div>
         </div>
         <div class="fgroup"><label>Fecha límite de pago completo</label><input class="finput" type="date" id="vFL"></div>
+        <div class="fgroup"><label>ID de transacción</label><input class="finput" id="vIdTx" placeholder="TXN-12345678"></div>
         <div class="fgroup"><label>Notas del closer</label><textarea class="finput" id="vNT" rows="3" placeholder="Observaciones, acuerdos con el cliente..."></textarea></div>
         <div class="flex justify-b mt20">
           <button class="btn btn-secondary" onclick="swTabById('tc1')">← Anterior</button>
@@ -627,8 +640,8 @@
             <option value="BANCOLOMBIA">Bancolombia</option><option value="BCP_PERU">BCP Perú</option>
             <option value="BANESCO_PANAMA">Banesco Panamá</option><option value="IFB_USA">IFB USA</option>
             <option value="ZELLE">Zelle</option><option value="BANCO_VENEZUELA">Banco Venezuela</option>
-            <option value="CIELO_BRASIL">Cielo Brasil</option><option value="BRADESCO">Bradesco</option>
-            <option value="CRYPTO">Crypto / Exchange</option><option value="HOTMART">Hotmart</option>
+            <option value="BRADESCO">Bradesco</option><option value="CRYPTO">Crypto / Exchange</option>
+            <option value="HOTMART">Hotmart</option><option value="CIELO">Cielo</option>
             <option value="PAYPAL">PayPal</option><option value="OTRO">Otro</option>
           </select>
         </div>
@@ -815,20 +828,51 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// STATE
 let CU = null, CUD = null, ROLE = null;
 let VENTAS = [], CLOSERS = [], LZS = [];
-let RECHAZO_ID = null;
+let RECHAZO_ID = null, CLOSER_SELECTED = null;
 const GUSTAVO = 'gustavoctradestars@gmail.com';
 
-// ROLE HELPERS
-const canValidate = () => ['gustavo','lider_financiero'].includes(ROLE);
-const canManage   = () => ['gustavo','lider_comercial'].includes(ROLE);
-const isLeader    = () => ROLE !== 'closer';
-const isCloser    = () => ROLE === 'closer';
-const roleLabel   = r => ({gustavo:'CEO',lider_comercial:'Líder Comercial',lider_financiero:'Líder Financiero',closer:'Closer'})[r]||r;
+const CUENTAS_BANCARIAS = {
+  "Venezuela": {
+    "Banesco": { titular: "Rodrigo Marcano", cedula: "19256159", tipo: "Corriente", cuenta: "01340820378203016736", telefono: "04143501481" }
+  },
+  "Panamá": {
+    "Banesco": { titular: "Black Mentory Agency", cuenta: "221021512164" }
+  },
+  "Colombia": {
+    "Bancolombia": { titular: "Consultoria, comercializacion e ingenieria rialro sas", nit: "901051317", tipo: "Ahorro", cuenta: "55173489063" }
+  },
+  "Perú": {
+    "BCP (Soles)": { titular: "Rodrigo Marcano Sprea", cuenta: "19405243510074", interbancaria: "00219410524351007498" },
+    "BCP (Dólares)": { titular: "Rodrigo Marcano Sprea", cuenta: "19405244088157", interbancaria: "00219410524408815791" }
+  },
+  "Brasil": {
+    "Bradesco": { titular: "BMA PARTICIPAÇÕES LTDA", agencia: "5760", cuenta: "49886-6", pix: "48.913.352/0001-64" }
+  },
+  "Estados Unidos": {
+    "International Finance Bank": { direccion: "777 SW 37th AVE. Suite 100, Miami, FL 33135 USA", aba: "067011692", swift: "IFBKUS3M", cuenta: "1200051602", beneficiario: "Black Mentory Agency LTD", descripcion: "nombre alumno + nombre de la Mentoría" },
+    "Zelle": { email: "mentoria@tradestarslatam.com", beneficiario: "Rodrigo Marcano Sprea" }
+  },
+  "Exchanges": {
+    "Binance Pay (Email)": { email: "rodrigo@tradestarslatam.com", moneda: "USDT" },
+    "Binance Pay (ID)": { id: "178449636", moneda: "USDT" },
+    "Binance Wallet BTC": { wallet: "1NzbMzZVdoZztxqgibaTYYuP9rfvzUFnLs" },
+    "Binance Wallet TRON": { wallet: "TS84arpYqTFvgooyQokrFGbZF4jiuXYQxn", moneda: "USDT TRC-20" },
+    "Binance Wallet BNB": { wallet: "0xa7c949061a8ca5c4db43b47cf6b2e8df5f66646f", moneda: "USDT BEP-20" },
+    "Binance Wallet Ethereum": { wallet: "0xa7c949061a8ca5c4db43b47cf6b2e8df5f66646f", moneda: "USDT ERC-20" },
+    "Lemon Wallet": { link: "https://br.lemon.me/$mentoria" },
+    "Neteller": { email: "rodrigo.marcano.sprea@gmail.com" },
+    "Skrill": { email: "marcanosprea@gmail.com", id: "131811016" }
+  }
+};
 
-// AUTH
+const canValidate = () => ['gustavo','lider_financiero'].includes(ROLE);
+const canManage = () => ['gustavo','lider_comercial'].includes(ROLE);
+const isLeader = () => ROLE !== 'closer';
+const isCloser = () => ROLE === 'closer';
+const roleLabel = r => ({gustavo:'CEO',lider_comercial:'Líder Comercial',lider_financiero:'Líder Financiero',closer:'Closer'})[r]||r;
+
 window.doLogin = async () => {
   const e = document.getElementById('lEmail').value.trim();
   const p = document.getElementById('lPass').value;
@@ -871,26 +915,38 @@ function setupNav() {
   document.getElementById('uName').textContent = `${n} ${a}`.trim();
   document.getElementById('uRole').textContent = roleLabel(ROLE);
   document.getElementById('phBadgeRole').innerHTML = `<span class="badge b-indigo">${roleLabel(ROLE)}</span>`;
-  if (canValidate()) { document.getElementById('snFinanciero').style.display='block'; document.getElementById('snValidar').style.display='flex'; document.getElementById('snReporte').style.display='flex'; }
+  
+  if (isCloser()) {
+    document.getElementById('snCuentas').style.display='flex';
+    document.getElementById('dMisVentas').style.display='block';
+    document.getElementById('snClientes').style.display='none';
+  } else {
+    document.getElementById('snClientes').style.display='flex';
+  }
+  
+  if (canValidate()) { 
+    document.getElementById('snFinanciero').style.display='block'; 
+    document.getElementById('snValidar').style.display='flex'; 
+    document.getElementById('snReporte').style.display='flex';
+    document.getElementById('btnExportGS').style.display='inline-flex';
+  }
   if (isLeader()) { document.getElementById('snAdmin').style.display='block'; document.getElementById('snRendimiento').style.display='flex'; }
   if (canManage()) { document.getElementById('snLanzamientos').style.display='flex'; document.getElementById('snClosers').style.display='flex'; }
-  if (isCloser()) document.getElementById('dMisVentas').style.display='block';
 }
 
-// NAV
 window.gotoPage = (p) => {
   document.querySelectorAll('.page-wrap').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(x => x.classList.remove('active'));
   document.getElementById('pg-'+p)?.classList.add('active');
   document.querySelectorAll('.sb-item').forEach(x => { if(x.getAttribute('onclick')?.includes("'"+p+"'")) x.classList.add('active'); });
-  const renders = { dashboard: renderDashboard, ventas: renderVentas, clientes: renderClientes, validar: renderValidar, reporte: renderReporte, rendimiento: renderRendimiento, lanzamientos: renderLz, closers: renderClosers };
+  const renders = { dashboard: renderDashboard, ventas: renderVentas, clientes: renderClientes, cuentas: renderCuentas, validar: renderValidar, reporte: renderReporte, rendimiento: renderRendimiento, lanzamientos: renderLz, closers: renderClosers };
   renders[p]?.();
 };
 
-// LOAD
 async function loadAll() {
   await Promise.all([loadVentas(), loadClosers(), loadLzs()]);
 }
+
 async function loadVentas() {
   let q = isCloser()
     ? query(collection(db,'ventas'), where('closerEmail','==',CU.email), orderBy('fechaCreacion','desc'))
@@ -899,18 +955,21 @@ async function loadVentas() {
   VENTAS = s.docs.map(d=>({id:d.id,...d.data()}));
   renderDashboard(); renderVentas(); checkNotif();
 }
+
 async function loadClosers() {
   const s = await getDocs(collection(db,'closers'));
   CLOSERS = s.docs.map(d=>({id:d.id,...d.data()}));
   const sel = document.getElementById('fVCloser');
-  CLOSERS.filter(c=>c.activo!==false).forEach(c => { sel.innerHTML += `<option value="${c.email}">${c.nombre} ${c.apellido||''}</option>`; });
+  if(sel) CLOSERS.filter(c=>c.activo!==false).forEach(c => { sel.innerHTML += `<option value="${c.email}">${c.nombre} ${c.apellido||''}</option>`; });
 }
+
 async function loadLzs() {
   try {
     const s = await getDocs(query(collection(db,'lanzamientos'), orderBy('fechaCreacion','desc')));
     LZS = s.docs.map(d=>({id:d.id,...d.data()}));
   } catch { LZS = []; }
 }
+
 function checkNotif() {
   const n = VENTAS.filter(v=>v.estadoVenta==='PENDIENTE').length;
   const dot = document.getElementById('nDot');
@@ -920,7 +979,10 @@ function checkNotif() {
 // ── DASHBOARD ──
 function renderDashboard() {
   const now = new Date(); const m = now.getMonth(); const y = now.getFullYear();
-  const vMes = VENTAS.filter(v => { const f = v.fechaVenta?new Date(v.fechaVenta+(v.fechaVenta.length===10?'T12:00':'')):null; return f && f.getMonth()===m && f.getFullYear()===y; });
+  const vMes = isCloser() 
+    ? VENTAS.filter(v => { const f = v.fechaVenta?new Date(v.fechaVenta+(v.fechaVenta.length===10?'T12:00':'')):null; return f && f.getMonth()===m && f.getFullYear()===y; })
+    : VENTAS.filter(v => { const f = v.fechaVenta?new Date(v.fechaVenta+(v.fechaVenta.length===10?'T12:00':'')):null; return f && f.getMonth()===m && f.getFullYear()===y; });
+  
   const rec = vMes.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.totalPagado||0),0);
   const pend = vMes.filter(v=>v.estadoVenta==='PENDIENTE').length;
   const saldo = vMes.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.saldoPendiente||0),0);
@@ -929,7 +991,6 @@ function renderDashboard() {
   document.getElementById('kV3').textContent = pend;
   document.getElementById('kV4').textContent = '$'+fmt(saldo);
 
-  // Ranking
   const byC = {}; vMes.filter(v=>v.estadoVenta==='VALIDADA').forEach(v=>{ const k=v.closerNombre||v.closerEmail||'—'; if(!byC[k]) byC[k]={m:0,v:0}; byC[k].m+=v.totalPagado||0; byC[k].v++; });
   const rank = Object.entries(byC).sort((a,b)=>b[1].m-a[1].m);
   const mx = rank[0]?.[1].m||1;
@@ -938,15 +999,13 @@ function renderDashboard() {
   rEl.innerHTML = rank.length===0 ? '<div class="empty"><div class="e-ico">📊</div><p>Sin datos este mes</p></div>'
     : rank.slice(0,5).map(([n,d],i)=>`<div class="rank-row"><div class="rank-pos">${med[i]||(i+1)}</div><div class="rank-info"><div class="rank-name">${n}</div><div class="rank-bar-bg"><div class="rank-bar" style="width:${d.m/mx*100}%"></div></div></div><div><div class="rank-val">$${fmt(d.m)}</div><div class="fs11 c2 tr">${d.v} venta${d.v!==1?'s':''}</div></div></div>`).join('');
 
-  // Fuentes
   const byF = {}; vMes.forEach(v=>{ const f=v.fuenteLead||'OTRO'; byF[f]=(byF[f]||0)+1; });
   const totalF = Object.values(byF).reduce((s,v)=>s+v,0)||1;
-  const fColors = {EMBUDO:'var(--accent)',LANZAMIENTO:'var(--accent2)',LLAMADA_FRIA:'var(--blue)',LLAMADA_CALIENTE:'var(--green)',INSTAGRAM:'var(--purple)'};
+  const fColors = {LANZAMIENTO:'var(--accent2)',REDES_SOCIALES:'var(--blue)',PERPETUOS:'var(--green)'};
   const fEl = document.getElementById('dFuente');
   fEl.innerHTML = Object.keys(byF).length===0 ? '<div class="empty"><div class="e-ico">📡</div><p>Sin datos este mes</p></div>'
     : Object.entries(byF).sort((a,b)=>b[1]-a[1]).map(([f,c])=>`<div class="fuente-item"><div class="flex justify-b fs12" style="margin-bottom:4px"><span>${fLabel(f)}</span><span class="fw7">${c} (${Math.round(c/totalF*100)}%)</span></div><div class="prog-bg"><div class="prog-fill" style="width:${c/totalF*100}%;background:${fColors[f]||'var(--text3)'}"></div></div></div>`).join('');
 
-  // Lanzamiento activo
   const lzA = LZS.find(l=>l.activo);
   const banner = document.getElementById('lzBanner');
   if (lzA) {
@@ -958,12 +1017,55 @@ function renderDashboard() {
     document.getElementById('lzMeta').textContent = lzA.meta?'$'+fmt(lzA.meta)+' USD':'Sin meta';
   } else banner.classList.remove('show');
 
-  // Mis ventas (closer)
   if (isCloser()) {
     const mv = VENTAS.slice(0,6);
     document.getElementById('dMisVentasBody').innerHTML = mv.length===0 ? '<div class="empty"><p>Aún no tienes ventas registradas</p></div>' : miniTable(mv);
   }
 }
+
+// ── CUENTAS DE PAGO ──
+function renderCuentas() {
+  const body = document.getElementById('cuentasBody');
+  let html = '<div style="display:grid;grid-template-columns:1fr;gap:14px">';
+  
+  for (const [pais, bancos] of Object.entries(CUENTAS_BANCARIAS)) {
+    html += `<div class="card"><div style="font-size:16px;font-weight:700;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">${pais}</div>`;
+    
+    for (const [banco, datos] of Object.entries(bancos)) {
+      html += `<div style="margin-bottom:16px;padding:14px;background:var(--bg3);border-radius:8px">
+        <div style="font-weight:600;margin-bottom:10px">${banco}</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.8">`;
+      
+      for (const [key, val] of Object.entries(datos)) {
+        const labels = {
+          titular: 'Titular', cedula: 'Cédula', tipo: 'Tipo de cuenta', cuenta: 'Número de cuenta',
+          telefono: 'Teléfono', nit: 'NIT', interbancaria: 'Interbancaria', agencia: 'Agencia',
+          pix: 'Llave PIX', direccion: 'Dirección', aba: 'ABA', swift: 'SWIFT',
+          beneficiario: 'Beneficiario', descripcion: 'Descripción', email: 'Email', id: 'ID',
+          moneda: 'Moneda', wallet: 'Wallet', link: 'Link'
+        };
+        const label = labels[key] || key;
+        html += `<div><span style="color:var(--text);">${label}:</span> <span class="copy-btn" onclick="copyToClip('${val}')">${val}</span></div>`;
+      }
+      
+      html += `</div></div>`;
+    }
+    
+    html += '</div>';
+  }
+  
+  body.innerHTML = html + '</div>';
+}
+
+window.copyToClip = (text) => {
+  navigator.clipboard.writeText(text).then(() => toast('✅ Copiado','s'));
+};
+
+function toggleTercero() {
+  const checked = document.getElementById('vTercero').checked;
+  document.getElementById('sectionCompradorBeneficiario').style.display = checked ? 'block' : 'none';
+}
+window.toggleTercero = toggleTercero;
 
 // ── VENTAS ──
 function renderVentas() {
@@ -1001,7 +1103,6 @@ function miniTable(vs) {
   </tbody></table></div>`;
 }
 
-// ── VER VENTA ──
 window.verVenta = (id) => {
   const v = VENTAS.find(x=>x.id===id); if(!v) return;
   const pct = v.valorTotal>0?Math.min(100,(v.totalPagado||0)/v.valorTotal*100):0;
@@ -1013,13 +1114,15 @@ window.verVenta = (id) => {
       <div><div class="dl">Correo</div><div class="dv fs12">${v.clienteCorreo||'—'}</div></div>
       <div><div class="dl">Teléfono</div><div class="dv fs12">${v.clienteTelefono||'—'}</div></div>
     </div>
+    ${v.tercero?`<div style="padding:10px;background:var(--yellow-dim);border-radius:6px;margin-top:14px;font-size:12px;border:1px solid rgba(245,158,11,.2)"><div class="dl">PAGO POR TERCERO</div><div style="margin-top:6px"><strong>${v.tercero.nombre} ${v.tercero.apellido||''}</strong> - ${v.tercero.correo}</div></div>`:''}
     <hr class="divider">
     <div class="dg">
       <div><div class="dl">Fuente</div><div class="dv">${fLabel(v.fuenteLead)}</div></div>
       <div><div class="dl">Closer</div><div class="dv">${v.closerNombre||'—'}</div></div>
-      <div><div class="dl">Fecha venta</div><div class="dv">${fDate(v.fechaVenta)}</div></div>
+      <div><div class="dl">Fecha pago</div><div class="dv">${fDate(v.fechaVenta)}</div></div>
       <div><div class="dl">Fecha límite</div><div class="dv">${fDate(v.fechaLimitePago)}</div></div>
     </div>
+    ${v.idTransaccion?`<div style="margin-top:14px"><div class="dl">ID de transacción</div><div class="dv fs12">${v.idTransaccion}</div></div>`:''}
     <hr class="divider">
     <div style="margin-bottom:16px">
       <div class="flex justify-b fs12" style="margin-bottom:6px"><span>Pagado: <strong class="cg">$${fmt(v.totalPagado||0)}</strong></span><span>Total: <strong>$${fmt(v.valorTotal||0)}</strong></span></div>
@@ -1126,6 +1229,25 @@ function renderReporte() {
 }
 window.renderReporte = renderReporte;
 
+window.exportGoogleSheets = () => {
+  toast('⏳ Preparando descarga...','w');
+  const d = document.getElementById('rfD')?.value; const h = document.getElementById('rfH')?.value;
+  let vs = VENTAS.filter(v=>v.estadoVenta==='VALIDADA');
+  if(d) vs=vs.filter(v=>v.fechaVenta>=d); if(h) vs=vs.filter(v=>v.fechaVenta<=h);
+  
+  let csv = 'Cliente,Apellido,Correo,País,Teléfono,Producto,Fuente,Valor Total,Total Pagado,Saldo,Moneda,Monto Original,Método,Cuenta Destino,Closer,Fecha Venta,Fecha Validación\n';
+  vs.forEach(v => {
+    csv += `"${v.clienteNombre}","${v.clienteApellido||''}","${v.clienteCorreo}","${v.clientePais||''}","${v.clienteTelefono||''}","${v.producto}","${fLabel(v.fuenteLead)}","${v.valorTotal}","${v.totalPagado||0}","${v.saldoPendiente||0}","${v.moneda||'USD'}","${v.montoOriginal||''}","${mLabel(v.metodoPago)}","${v.cuentaDestino||''}","${v.closerNombre||''}","${v.fechaVenta}","${fDate(v.fechaValidacion)}"\n`;
+  });
+  
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const link = document.createElement('a');
+  link.setAttribute('href', URL.createObjectURL(blob));
+  link.setAttribute('download', `Reporte_Financiero_${new Date().toISOString().split('T')[0]}.csv`);
+  link.click();
+  toast('✅ CSV descargado — puedes importar a Google Sheets','s');
+};
+
 // ── RENDIMIENTO ──
 function renderRendimiento() {
   const d = document.getElementById('rnD')?.value; const h = document.getElementById('rnH')?.value;
@@ -1203,10 +1325,6 @@ function renderClosers() {
     }).join('')}</div>`;
 }
 
-// Variables globales para modales
-let CLOSER_SELECTED = null;
-
-// ── GENERAR CSV DEL CLOSER ──
 function generateCloserCSV(closer, ventas, tipo) {
   const fecha = new Date().toLocaleDateString('es-ES');
   const ahora = new Date().toLocaleString('es-ES');
@@ -1238,7 +1356,6 @@ function generateCloserCSV(closer, ventas, tipo) {
   return csv;
 }
 
-// ── ABRIR MODAL REPORTE CLOSER ACTIVO ──
 window.openReporteCloser = (id, nombre) => {
   const c = CLOSERS.find(x=>x.id===id);
   if(!c) return;
@@ -1274,7 +1391,6 @@ document.addEventListener('change',e=>{
   if(e.target.id==='repDesde' || e.target.id==='repHasta') updateReportPreview();
 });
 
-// ── DESCARGAR REPORTE CLOSER ACTIVO ──
 window.downloadCloserReportActive = () => {
   if(!CLOSER_SELECTED) return;
   const desde = document.getElementById('repDesde').value;
@@ -1296,7 +1412,6 @@ window.downloadCloserReportActive = () => {
   closeM('mReporteCloser');
 };
 
-// ── ABRIR MODAL ELIMINAR CLOSER ──
 window.openDeleteCloser = (id) => {
   const c = CLOSERS.find(x=>x.id===id);
   if(!c) return;
@@ -1316,7 +1431,6 @@ window.openDeleteCloser = (id) => {
   openM('mDeleteCloser');
 };
 
-// ── CONFIRMAR ELIMINACIÓN ──
 window.confirmDeleteCloser = async () => {
   if(!CLOSER_SELECTED) return;
   
@@ -1327,7 +1441,6 @@ window.confirmDeleteCloser = async () => {
   try {
     const vc = VENTAS.filter(v=>v.closerEmail===CLOSER_SELECTED.email);
     
-    // Generar CSV
     const csv = generateCloserCSV(CLOSER_SELECTED, vc, 'eliminado');
     const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
     const link = document.createElement('a');
@@ -1336,7 +1449,6 @@ window.confirmDeleteCloser = async () => {
     link.setAttribute('download', `Archivo_${CLOSER_SELECTED.nombre}_${fecha}.csv`);
     link.click();
     
-    // Guardar en Firestore colección closers_archivados
     const archivoData = {
       id: CLOSER_SELECTED.id,
       nombre: CLOSER_SELECTED.nombre,
@@ -1353,7 +1465,6 @@ window.confirmDeleteCloser = async () => {
     
     await addDoc(collection(db,'closers_archivados'), archivoData);
     
-    // Eliminar closer
     await deleteDoc(doc(db,'closers',CLOSER_SELECTED.id));
     CLOSERS = CLOSERS.filter(c=>c.id!==CLOSER_SELECTED.id);
     
@@ -1369,7 +1480,6 @@ window.confirmDeleteCloser = async () => {
   }
 };
 
-// ── SAVE VENTA ──
 window.openVentaModal = () => {
   const sel = document.getElementById('vLz');
   sel.innerHTML='<option value="">Sin lanzamiento</option>';
@@ -1380,26 +1490,42 @@ window.openVentaModal = () => {
 window.toggleLzField = () => {
   document.getElementById('vLzGroup').style.display = document.getElementById('vF').value==='LANZAMIENTO'?'block':'none';
 };
+
 window.saveVenta = async () => {
-  const N=document.getElementById('vN').value.trim();
-  const A=document.getElementById('vA').value.trim();
-  const C=document.getElementById('vC').value.trim();
+  const tercero = document.getElementById('vTercero').checked;
+  let N, A, C;
+  
+  if (tercero) {
+    N = document.getElementById('vTerceroN').value.trim();
+    A = document.getElementById('vTerceroA').value.trim();
+    C = document.getElementById('vTerceroC').value.trim();
+    if (!N || !C) { toast('Completa datos del que pagó','e'); return; }
+  }
+  
+  const bN=document.getElementById('vN').value.trim();
+  const bA=document.getElementById('vA').value.trim();
+  const bC=document.getElementById('vC').value.trim();
   const PR=document.getElementById('vProd').value;
   const F=document.getElementById('vF').value;
   const VT=parseFloat(document.getElementById('vVT').value)||0;
   const MP=parseFloat(document.getElementById('vMP').value)||0;
   const ME=document.getElementById('vMet').value;
-  if(!N||!C||!PR||!F||!VT||!ME) { toast('Completa todos los campos obligatorios (*)','e'); return; }
+  const IdTx=document.getElementById('vIdTx').value.trim();
+  
+  if(!bN||!bC||!PR||!F||!VT||!ME) { toast('Completa todos los campos obligatorios (*)','e'); return; }
+  
   const btn=document.getElementById('btnSaveV'); btn.disabled=true; btn.innerHTML='<div class="spin"></div> Guardando...';
   try {
     let url='';
     const file=document.getElementById('vComp').files[0];
     if(file){ const r=sref(storage,`comprobantes/${Date.now()}_${file.name}`); const snap=await uploadBytes(r,file); url=await getDownloadURL(snap.ref); }
+    
     const venta={
       closerEmail:CU.email, closerNombre:`${CUD?.nombre||''} ${CUD?.apellido||''}`.trim(),
-      clienteNombre:N, clienteApellido:A, clienteCorreo:C,
+      clienteNombre:tercero?bN:N, clienteApellido:tercero?bA:A, clienteCorreo:tercero?bC:C,
       clienteTelefono:document.getElementById('vT').value.trim(),
       clientePais:document.getElementById('vP').value,
+      tercero: tercero?{nombre:N,apellido:A,correo:C}:null,
       producto:PR, fuenteLead:F,
       lanzamientoId:F==='LANZAMIENTO'?document.getElementById('vLz').value:'',
       valorTotal:VT, totalPagado:MP, saldoPendiente:Math.max(0,VT-MP),
@@ -1410,14 +1536,17 @@ window.saveVenta = async () => {
       comprobanteURL:url,
       fechaVenta:document.getElementById('vFV').value,
       fechaLimitePago:document.getElementById('vFL').value,
+      idTransaccion:IdTx,
       notasCloser:document.getElementById('vNT').value.trim(),
       fechaCreacion:new Date().toISOString()
     };
+    
     const ref2=await addDoc(collection(db,'ventas'),venta);
     VENTAS.unshift({id:ref2.id,...venta});
     closeM('mVenta'); renderVentas(); renderDashboard(); checkNotif();
     toast('✅ Venta registrada — pendiente de validación','s');
-    ['vN','vA','vC','vT','vFV','vFL','vVT','vMP','vMO','vCD','vNT'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+    ['vN','vA','vC','vTerceroN','vTerceroA','vTerceroC','vT','vFV','vFL','vVT','vMP','vMO','vCD','vNT','vIdTx'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+    document.getElementById('vTercero').checked=false; toggleTercero();
     document.getElementById('vProd').value=''; document.getElementById('vF').value=''; document.getElementById('vP').value=''; document.getElementById('vMon').value='USD'; document.getElementById('vMet').value='';
     document.getElementById('compPrev').innerHTML='<div style="font-size:28px">📎</div><div class="fs12 c2 mt14">Clic para subir imagen o PDF</div>';
     swTabById('tc1');
@@ -1425,7 +1554,6 @@ window.saveVenta = async () => {
   btn.disabled=false; btn.innerHTML='💾 Guardar venta';
 };
 
-// ── SAVE CLOSER ──
 function genPwd(){
   const c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%';
   let p=''; for(let i=0;i<12;i++) p+=c.charAt(Math.floor(Math.random()*c.length));
@@ -1461,7 +1589,6 @@ window.copyPwd = () => {
   navigator.clipboard.writeText(p).then(()=>toast('✅ Contraseña copiada','s'));
 };
 
-// ── SAVE LZ ──
 window.openLzModal = () => openM('mLz');
 window.saveLz = async () => {
   const N=document.getElementById('lzN').value.trim();
@@ -1482,11 +1609,10 @@ window.saveLz = async () => {
   btn.disabled=false;
 };
 
-// ── HELPERS ──
-function bProd(p){ const m={KAINET:'b-purple',TRIBU:'b-yellow',ARENA:'b-indigo',PERPETUO:'b-blue'}; return `<span class="badge ${m[p]||'b-gray'}">${p||'—'}</span>`; }
+function bProd(p){ const m={TRIBU:'b-yellow',KAINET:'b-purple',ARENA:'b-indigo',PERPETUO:'b-blue'}; return `<span class="badge ${m[p]||'b-gray'}">${p||'—'}</span>`; }
 function bEstado(e){ const m={PENDIENTE:'b-yellow',VALIDADA:'b-green',RECHAZADA:'b-red'}; return `<span class="badge ${m[e]||'b-gray'}">${e||'—'}</span>`; }
-function fLabel(f){ return {EMBUDO:'Embudo',LANZAMIENTO:'Lanzamiento',LLAMADA_FRIA:'Llamada fría',LLAMADA_CALIENTE:'Llamada caliente',INSTAGRAM:'Instagram',OTRO:'Otro'}[f]||f||'—'; }
-function mLabel(m){ return {BANCOLOMBIA:'Bancolombia',BCP_PERU:'BCP Perú',BANESCO_PANAMA:'Banesco Panamá',IFB_USA:'IFB USA',ZELLE:'Zelle',BANCO_VENEZUELA:'Banco Venezuela',CIELO_BRASIL:'Cielo',BRADESCO:'Bradesco',CRYPTO:'Crypto',HOTMART:'Hotmart',PAYPAL:'PayPal',OTRO:'Otro'}[m]||m||'—'; }
+function fLabel(f){ return {LANZAMIENTO:'Lanzamiento',REDES_SOCIALES:'Redes Sociales',PERPETUOS:'Perpetuos',OTRO:'Otro'}[f]||f||'—'; }
+function mLabel(m){ return {BANCOLOMBIA:'Bancolombia',BCP_PERU:'BCP Perú',BANESCO_PANAMA:'Banesco Panamá',IFB_USA:'IFB USA',ZELLE:'Zelle',BANCO_VENEZUELA:'Banco Venezuela',BRADESCO:'Bradesco',CRYPTO:'Crypto',HOTMART:'Hotmart',CIELO:'Cielo',PAYPAL:'PayPal',OTRO:'Otro'}[m]||m||'—'; }
 function fDate(d){ if(!d) return '—'; try{ return new Date(d+(d.length===10?'T12:00':'')).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'}); } catch{ return d; } }
 function fmt(n){ return Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
 
@@ -1497,7 +1623,6 @@ window.prevComp = (inp) => {
   else p.innerHTML=`<div style="font-size:22px">📄</div><div class="fs12 c2">${f.name}</div>`;
 };
 
-// MODALS & TABS
 window.openM = id => document.getElementById(id).classList.add('open');
 window.closeM = id => document.getElementById(id).classList.remove('open');
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
@@ -1517,7 +1642,6 @@ window.swTabById = (tid) => {
   p.querySelectorAll('.tab')[idx]?.classList.add('active');
 };
 
-// TOAST
 function toast(msg, type='s') {
   const z=document.getElementById('toastZone');
   const t=document.createElement('div'); t.className=`toast ${type}`; t.textContent=msg; z.appendChild(t);
@@ -1527,5 +1651,3 @@ window.toast = toast;
 </script>
 </body>
 </html>
-
-
