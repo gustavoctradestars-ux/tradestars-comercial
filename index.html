@@ -350,7 +350,6 @@
       <div class="sb-section">Principal</div>
       <div class="sb-item active" onclick="gotoPage('dashboard')"><span class="ico">📊</span><span>Dashboard</span></div>
       <div class="sb-item" onclick="gotoPage('ventas')"><span class="ico">💰</span><span>Ventas</span></div>
-      <div class="sb-item" id="snCuentas" style="display:none" onclick="gotoPage('cuentas')"><span class="ico">💳</span><span>Cuentas pago</span></div>
       <div class="sb-item" onclick="gotoPage('clientes')"><span class="ico">👥</span><span>Clientes</span></div>
 
       <div class="sb-section" id="snFinanciero" style="display:none">Financiero</div>
@@ -421,16 +420,7 @@
           <select class="finput" id="fVCloser" onchange="renderVentas()" style="min-width:150px"><option value="">Todos los closers</option></select>
           <select class="finput" id="fVProducto" onchange="renderVentas()">
             <option value="">Todos los productos</option>
-            <option>TRIBU MODALIDAD ANUAL COMPLETO</option>
-            <option>TRIBU MODALIDAD VITALICIA COMPLETO</option>
-            <option>TRIBU MODALIDAD ANUAL CUOTAS</option>
-            <option>TRIBU MODALIDAD VITALICIA CUOTAS</option>
-            <option>KAINET MODALIDAD ANUAL COMPLETO</option>
-            <option>KAINET MODALIDAD ANUAL CUOTAS</option>
-            <option>KAINET MODALIDAD TRIMESTRAL</option>
-            <option>KAINET MODALIDAD MENSUAL</option>
-            <option>ARENA</option>
-            <option>PERPETUO</option>
+            <option>KAINET</option><option>TRIBU</option><option>ARENA</option><option>PERPETUO</option>
           </select>
           <select class="finput" id="fVEstado" onchange="renderVentas()">
             <option value="">Todos los estados</option>
@@ -440,9 +430,11 @@
           </select>
           <select class="finput" id="fVFuente" onchange="renderVentas()">
             <option value="">Todas las fuentes</option>
+            <option value="EMBUDO">Embudo</option>
             <option value="LANZAMIENTO">Lanzamiento</option>
-            <option value="REDES_SOCIALES">Redes Sociales</option>
-            <option value="PERPETUOS">Perpetuos</option>
+            <option value="LLAMADA_FRIA">Llamada fría</option>
+            <option value="LLAMADA_CALIENTE">Llamada caliente</option>
+            <option value="INSTAGRAM">Instagram</option>
           </select>
         </div>
         <div class="card">
@@ -453,12 +445,6 @@
             </table>
           </div>
         </div>
-      </div>
-
-      <!-- CUENTAS DE PAGO (NUEVO) -->
-      <div class="page-wrap" id="pg-cuentas">
-        <div class="ph"><div class="ph-title"><h1>💳 Cuentas de Pago</h1><p>Información bancaria para recibir pagos</p></div></div>
-        <div id="cuentasBody"><div class="loading"><div class="spin"></div></div></div>
       </div>
 
       <!-- CLIENTES -->
@@ -587,43 +573,24 @@
             </select>
           </div>
         </div>
-        <div class="fgroup" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
-          <label><input type="checkbox" id="vTercero" onchange="toggleTercero()"> ¿Pagó un tercero?</label>
-        </div>
-        <div id="sectionCompradorBeneficiario" style="display: none; margin-top: 20px; padding: 16px; background: var(--bg3); border-radius: 8px;">
-          <div style="margin-bottom: 14px; font-weight: 600; color: var(--accent);">Quien pagó:</div>
-          <div class="g2">
-            <div class="fgroup"><label>Nombre *</label><input class="finput" id="vTerceroN" placeholder="Juan"></div>
-            <div class="fgroup"><label>Apellido</label><input class="finput" id="vTerceroA" placeholder="Pérez"></div>
-          </div>
-          <div class="fgroup"><label>Correo *</label><input class="finput" type="email" id="vTerceroC" placeholder="juan@email.com"></div>
-          <div style="margin-top: 14px; font-weight: 600; color: var(--accent);">Beneficiario (quien recibirá el producto):</div>
-          <div style="margin-top: 10px; padding: 10px; background: var(--bg2); border-radius: 6px; font-size: 12px; color: var(--text2);">Los datos del cliente arriba</div>
-        </div>
         <div class="tr mt20"><button class="btn btn-primary" onclick="swTabById('tc2')">Siguiente →</button></div>
       </div>
       <div class="tc" id="tc2">
         <div class="fgroup"><label>Producto *</label>
           <select class="finput" id="vProd">
             <option value="">Seleccionar...</option>
-            <option>TRIBU MODALIDAD ANUAL COMPLETO</option>
-            <option>TRIBU MODALIDAD VITALICIA COMPLETO</option>
-            <option>TRIBU MODALIDAD ANUAL CUOTAS</option>
-            <option>TRIBU MODALIDAD VITALICIA CUOTAS</option>
-            <option>KAINET MODALIDAD ANUAL COMPLETO</option>
-            <option>KAINET MODALIDAD ANUAL CUOTAS</option>
-            <option>KAINET MODALIDAD TRIMESTRAL</option>
-            <option>KAINET MODALIDAD MENSUAL</option>
-            <option>ARENA</option>
-            <option>PERPETUO</option>
+            <option value="KAINET">KAINET</option><option value="TRIBU">TRIBU TRADESTARS</option>
+            <option value="ARENA">ARENA</option><option value="PERPETUO">PERPETUO</option>
           </select>
         </div>
         <div class="fgroup"><label>Fuente del lead *</label>
           <select class="finput" id="vF" onchange="toggleLzField()">
             <option value="">Seleccionar...</option>
+            <option value="EMBUDO">Embudo (Hotmart/página)</option>
             <option value="LANZAMIENTO">Lanzamiento</option>
-            <option value="REDES_SOCIALES">Redes Sociales</option>
-            <option value="PERPETUOS">Perpetuos</option>
+            <option value="LLAMADA_FRIA">Llamada fría</option>
+            <option value="LLAMADA_CALIENTE">Llamada caliente</option>
+            <option value="INSTAGRAM">Instagram</option>
           </select>
         </div>
         <div class="fgroup" id="vLzGroup" style="display:none"><label>Lanzamiento</label>
@@ -665,7 +632,6 @@
             <option value="PAYPAL">PayPal</option><option value="OTRO">Otro</option>
           </select>
         </div>
-        <div class="fgroup"><label>ID de Transacción</label><input class="finput" id="vIdTx" placeholder="Ej: 123456789 o TX-001"></div>
         <div class="fgroup"><label>Cuenta destino Tradestars</label><input class="finput" id="vCD" placeholder="Ej: Bancolombia — Gustavo Torres"></div>
         <div class="fgroup"><label>Comprobante de pago *</label>
           <div class="upload-zone" onclick="document.getElementById('vComp').click()">
@@ -783,10 +749,57 @@
   </div>
 </div>
 
+<!-- MODAL: DESCARGAR REPORTE CLOSER ACTIVO -->
+<div class="overlay" id="mReporteCloser">
+  <div class="modal" style="max-width:480px">
+    <div class="mh"><h3>📊 Descargar reporte de closer</h3><button class="mh-close" onclick="closeM('mReporteCloser')">✕</button></div>
+    <div class="mb">
+      <div class="alert a-info">Filtra por período para obtener el reporte de actividad</div>
+      <div class="g2">
+        <div class="fgroup"><label>Desde</label><input class="finput" type="date" id="repDesde"></div>
+        <div class="fgroup"><label>Hasta</label><input class="finput" type="date" id="repHasta"></div>
+      </div>
+      <div id="repPreview" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:14px;font-size:12px;color:var(--text2)">
+        <div>Total ventas: <strong id="repTotalV" class="text">0</strong></div>
+        <div>Recaudado: <strong id="repTotalR" class="text">$0</strong></div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-secondary" onclick="closeM('mReporteCloser')">Cancelar</button>
+      <button class="btn btn-primary" onclick="downloadCloserReportActive()">⬇ Descargar CSV</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ELIMINAR CLOSER CON ARCHIVO -->
+<div class="overlay" id="mDeleteCloser">
+  <div class="modal" style="max-width:520px">
+    <div class="mh"><h3>⚠️ Eliminar closer</h3><button class="mh-close" onclick="closeM('mDeleteCloser')">✕</button></div>
+    <div class="mb">
+      <div class="alert a-warn">Se eliminará del sistema pero se archivará toda su información</div>
+      <div id="delPreview" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px;margin:16px 0">
+        <div style="margin-bottom:12px"><strong id="delName"></strong></div>
+        <div class="fs12 c2" id="delEmail" style="margin-bottom:14px"></div>
+        <hr class="divider">
+        <div class="g2" style="gap:8px;margin-top:12px">
+          <div><div class="dl">Ventas totales</div><div class="fw7" id="delVentas">0</div></div>
+          <div><div class="dl">Recaudado</div><div class="fw7 ca" id="delRecaudado">$0</div></div>
+          <div><div class="dl">Clientes únicos</div><div class="fw7" id="delClientes">0</div></div>
+        </div>
+      </div>
+      <div class="alert a-info" style="font-size:12px">📋 Se generará un CSV con toda su actividad y se guardará en Firestore</div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-secondary" onclick="closeM('mDeleteCloser')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmDeleteCloser()">Eliminar y archivar</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-import { getFirestore, collection, doc, addDoc, getDocs, updateDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 import { getStorage, ref as sref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
 
 const FC = {
@@ -858,16 +871,10 @@ function setupNav() {
   document.getElementById('uName').textContent = `${n} ${a}`.trim();
   document.getElementById('uRole').textContent = roleLabel(ROLE);
   document.getElementById('phBadgeRole').innerHTML = `<span class="badge b-indigo">${roleLabel(ROLE)}</span>`;
-  if (isCloser()) {
-    document.getElementById('snCuentas').style.display='flex';
-    document.getElementById('dMisVentas').style.display='block';
-    document.getElementById('snClientes').style.display='none';
-  } else {
-    document.getElementById('snClientes').style.display='flex';
-  }
   if (canValidate()) { document.getElementById('snFinanciero').style.display='block'; document.getElementById('snValidar').style.display='flex'; document.getElementById('snReporte').style.display='flex'; }
   if (isLeader()) { document.getElementById('snAdmin').style.display='block'; document.getElementById('snRendimiento').style.display='flex'; }
   if (canManage()) { document.getElementById('snLanzamientos').style.display='flex'; document.getElementById('snClosers').style.display='flex'; }
+  if (isCloser()) document.getElementById('dMisVentas').style.display='block';
 }
 
 // NAV
@@ -876,7 +883,7 @@ window.gotoPage = (p) => {
   document.querySelectorAll('.sb-item').forEach(x => x.classList.remove('active'));
   document.getElementById('pg-'+p)?.classList.add('active');
   document.querySelectorAll('.sb-item').forEach(x => { if(x.getAttribute('onclick')?.includes("'"+p+"'")) x.classList.add('active'); });
-  const renders = { dashboard: renderDashboard, ventas: renderVentas, clientes: renderClientes, cuentas: renderCuentas, validar: renderValidar, reporte: renderReporte, rendimiento: renderRendimiento, lanzamientos: renderLz, closers: renderClosers };
+  const renders = { dashboard: renderDashboard, ventas: renderVentas, clientes: renderClientes, validar: renderValidar, reporte: renderReporte, rendimiento: renderRendimiento, lanzamientos: renderLz, closers: renderClosers };
   renders[p]?.();
 };
 
@@ -1189,17 +1196,177 @@ function renderClosers() {
         </div>
         <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
           <span class="badge ${c.activo!==false?'b-green':'b-red'}">${c.activo!==false?'Activo':'Inactivo'}</span>
-          ${canManage()&&c.activo!==false?`<button class="btn btn-danger btn-sm" onclick="deactivateCloser('${c.id}')">Desactivar</button>`:''}
+          ${canManage()?`<button class="btn btn-secondary btn-sm" onclick="openReporteCloser('${c.id}','${c.nombre} ${c.apellido}')">📊 Reporte</button>`:''}
+          ${canManage()?`<button class="btn btn-danger btn-sm" onclick="openDeleteCloser('${c.id}')">🗑️ Eliminar</button>`:''}
         </div>
       </div>`;
     }).join('')}</div>`;
 }
 
-window.deactivateCloser = async (id) => {
-  if(!confirm('¿Desactivar este closer?')) return;
-  await updateDoc(doc(db,'closers',id),{activo:false});
-  const i=CLOSERS.findIndex(c=>c.id===id); CLOSERS[i].activo=false;
-  renderClosers(); toast('Closer desactivado','w');
+// Variables globales para modales
+let CLOSER_SELECTED = null;
+
+// ── GENERAR CSV DEL CLOSER ──
+function generateCloserCSV(closer, ventas, tipo) {
+  const fecha = new Date().toLocaleDateString('es-ES');
+  const ahora = new Date().toLocaleString('es-ES');
+  
+  const recaudado = ventas.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.totalPagado||0),0);
+  const clientesUnicos = new Set(ventas.map(v=>v.clienteCorreo)).size;
+  
+  let csv = 'REPORTE DE ACTIVIDAD — CLOSER\n';
+  csv += `Nombre,${closer.nombre} ${closer.apellido}\n`;
+  csv += `Email,${closer.email}\n`;
+  csv += `Rol,${roleLabel(closer.rol)}\n`;
+  csv += `Generado,${ahora}\n`;
+  csv += `\n`;
+  
+  csv += 'RESUMEN\n';
+  csv += `Total ventas,${ventas.length}\n`;
+  csv += `Ventas validadas,${ventas.filter(v=>v.estadoVenta==='VALIDADA').length}\n`;
+  csv += `Total recaudado USD,$${fmt(recaudado)}\n`;
+  csv += `Clientes únicos,${clientesUnicos}\n`;
+  csv += `\n`;
+  
+  csv += 'DETALLE DE VENTAS\n';
+  csv += 'Cliente,Producto,Monto USD,Recaudado,Metodo Pago,Estado,Fecha\n';
+  
+  ventas.forEach(v => {
+    csv += `"${v.clienteNombre} ${v.clienteApellido||''}","${v.producto}","${fmt(v.valorTotal)}","${fmt(v.totalPagado||0)}","${mLabel(v.metodoPago)}","${v.estadoVenta}","${fDate(v.fechaVenta)}"\n`;
+  });
+  
+  return csv;
+}
+
+// ── ABRIR MODAL REPORTE CLOSER ACTIVO ──
+window.openReporteCloser = (id, nombre) => {
+  const c = CLOSERS.find(x=>x.id===id);
+  if(!c) return;
+  CLOSER_SELECTED = c;
+  
+  const hoy = new Date().toISOString().split('T')[0];
+  const hace30 = new Date(Date.now()-30*24*60*60*1000).toISOString().split('T')[0];
+  
+  document.getElementById('repDesde').value = hace30;
+  document.getElementById('repHasta').value = hoy;
+  
+  updateReportPreview();
+  openM('mReporteCloser');
+};
+
+window.updateReportPreview = () => {
+  if(!CLOSER_SELECTED) return;
+  const desde = document.getElementById('repDesde').value;
+  const hasta = document.getElementById('repHasta').value;
+  
+  let vs = VENTAS.filter(v=>v.closerEmail===CLOSER_SELECTED.email);
+  if(desde) vs = vs.filter(v=>v.fechaVenta>=desde);
+  if(hasta) vs = vs.filter(v=>v.fechaVenta<=hasta);
+  
+  const validadas = vs.filter(v=>v.estadoVenta==='VALIDADA');
+  const recaudado = validadas.reduce((s,v)=>s+(v.totalPagado||0),0);
+  
+  document.getElementById('repTotalV').textContent = vs.length;
+  document.getElementById('repTotalR').textContent = '$'+fmt(recaudado);
+};
+
+document.addEventListener('change',e=>{
+  if(e.target.id==='repDesde' || e.target.id==='repHasta') updateReportPreview();
+});
+
+// ── DESCARGAR REPORTE CLOSER ACTIVO ──
+window.downloadCloserReportActive = () => {
+  if(!CLOSER_SELECTED) return;
+  const desde = document.getElementById('repDesde').value;
+  const hasta = document.getElementById('repHasta').value;
+  
+  let vs = VENTAS.filter(v=>v.closerEmail===CLOSER_SELECTED.email);
+  if(desde) vs = vs.filter(v=>v.fechaVenta>=desde);
+  if(hasta) vs = vs.filter(v=>v.fechaVenta<=hasta);
+  
+  const csv = generateCloserCSV(CLOSER_SELECTED, vs, 'activo');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const link = document.createElement('a');
+  const fecha = new Date().toISOString().split('T')[0];
+  link.setAttribute('href', URL.createObjectURL(blob));
+  link.setAttribute('download', `Reporte_${CLOSER_SELECTED.nombre}_${fecha}.csv`);
+  link.click();
+  
+  toast('✅ Reporte descargado','s');
+  closeM('mReporteCloser');
+};
+
+// ── ABRIR MODAL ELIMINAR CLOSER ──
+window.openDeleteCloser = (id) => {
+  const c = CLOSERS.find(x=>x.id===id);
+  if(!c) return;
+  CLOSER_SELECTED = c;
+  
+  const vc = VENTAS.filter(v=>v.closerEmail===c.email);
+  const validadas = vc.filter(v=>v.estadoVenta==='VALIDADA');
+  const recaudado = validadas.reduce((s,v)=>s+(v.totalPagado||0),0);
+  const clientesUnicos = new Set(vc.map(v=>v.clienteCorreo)).size;
+  
+  document.getElementById('delName').textContent = `${c.nombre} ${c.apellido}`;
+  document.getElementById('delEmail').textContent = c.email;
+  document.getElementById('delVentas').textContent = vc.length;
+  document.getElementById('delRecaudado').textContent = '$'+fmt(recaudado);
+  document.getElementById('delClientes').textContent = clientesUnicos;
+  
+  openM('mDeleteCloser');
+};
+
+// ── CONFIRMAR ELIMINACIÓN ──
+window.confirmDeleteCloser = async () => {
+  if(!CLOSER_SELECTED) return;
+  
+  const btn = document.querySelector('#mDeleteCloser .mf .btn-danger');
+  btn.disabled = true;
+  btn.textContent = 'Procesando...';
+  
+  try {
+    const vc = VENTAS.filter(v=>v.closerEmail===CLOSER_SELECTED.email);
+    
+    // Generar CSV
+    const csv = generateCloserCSV(CLOSER_SELECTED, vc, 'eliminado');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const link = document.createElement('a');
+    const fecha = new Date().toISOString().split('T')[0];
+    link.setAttribute('href', URL.createObjectURL(blob));
+    link.setAttribute('download', `Archivo_${CLOSER_SELECTED.nombre}_${fecha}.csv`);
+    link.click();
+    
+    // Guardar en Firestore colección closers_archivados
+    const archivoData = {
+      id: CLOSER_SELECTED.id,
+      nombre: CLOSER_SELECTED.nombre,
+      apellido: CLOSER_SELECTED.apellido,
+      email: CLOSER_SELECTED.email,
+      rol: CLOSER_SELECTED.rol,
+      totalVentas: vc.length,
+      totalRecaudado: vc.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.totalPagado||0),0),
+      clientesUnicos: new Set(vc.map(v=>v.clienteCorreo)).size,
+      ventasIds: vc.map(v=>v.id),
+      fechaEliminacion: new Date().toISOString(),
+      csvData: csv
+    };
+    
+    await addDoc(collection(db,'closers_archivados'), archivoData);
+    
+    // Eliminar closer
+    await deleteDoc(doc(db,'closers',CLOSER_SELECTED.id));
+    CLOSERS = CLOSERS.filter(c=>c.id!==CLOSER_SELECTED.id);
+    
+    renderClosers();
+    closeM('mDeleteCloser');
+    toast('🗑️ Closer eliminado y archivado — CSV descargado','s');
+    
+  } catch(e) {
+    toast('Error: '+e.message,'e');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Eliminar y archivar';
+  }
 };
 
 // ── SAVE VENTA ──
@@ -1214,24 +1381,15 @@ window.toggleLzField = () => {
   document.getElementById('vLzGroup').style.display = document.getElementById('vF').value==='LANZAMIENTO'?'block':'none';
 };
 window.saveVenta = async () => {
-  const tercero = document.getElementById('vTercero').checked;
-  let N, A, C;
-  if (tercero) {
-    N = document.getElementById('vTerceroN').value.trim();
-    A = document.getElementById('vTerceroA').value.trim();
-    C = document.getElementById('vTerceroC').value.trim();
-    if (!N || !C) { toast('Completa datos del que pagó','e'); return; }
-  }
-  const bN=document.getElementById('vN').value.trim();
-  const bA=document.getElementById('vA').value.trim();
-  const bC=document.getElementById('vC').value.trim();
+  const N=document.getElementById('vN').value.trim();
+  const A=document.getElementById('vA').value.trim();
+  const C=document.getElementById('vC').value.trim();
   const PR=document.getElementById('vProd').value;
   const F=document.getElementById('vF').value;
   const VT=parseFloat(document.getElementById('vVT').value)||0;
   const MP=parseFloat(document.getElementById('vMP').value)||0;
   const ME=document.getElementById('vMet').value;
-  const IdTx=document.getElementById('vIdTx').value.trim();
-  if(!bN||!bC||!PR||!F||!VT||!ME) { toast('Completa todos los campos obligatorios (*)','e'); return; }
+  if(!N||!C||!PR||!F||!VT||!ME) { toast('Completa todos los campos obligatorios (*)','e'); return; }
   const btn=document.getElementById('btnSaveV'); btn.disabled=true; btn.innerHTML='<div class="spin"></div> Guardando...';
   try {
     let url='';
@@ -1239,9 +1397,8 @@ window.saveVenta = async () => {
     if(file){ const r=sref(storage,`comprobantes/${Date.now()}_${file.name}`); const snap=await uploadBytes(r,file); url=await getDownloadURL(snap.ref); }
     const venta={
       closerEmail:CU.email, closerNombre:`${CUD?.nombre||''} ${CUD?.apellido||''}`.trim(),
-      clienteNombre:tercero?bN:N, clienteApellido:tercero?bA:A, clienteCorreo:tercero?bC:C,
+      clienteNombre:N, clienteApellido:A, clienteCorreo:C,
       clienteTelefono:document.getElementById('vT').value.trim(),
-      tercero: tercero?{nombre:N,apellido:A,correo:C}:null,
       clientePais:document.getElementById('vP').value,
       producto:PR, fuenteLead:F,
       lanzamientoId:F==='LANZAMIENTO'?document.getElementById('vLz').value:'',
@@ -1252,7 +1409,6 @@ window.saveVenta = async () => {
       metodoPago:ME, cuentaDestino:document.getElementById('vCD').value.trim(),
       comprobanteURL:url,
       fechaVenta:document.getElementById('vFV').value,
-      idTransaccion:IdTx,
       fechaLimitePago:document.getElementById('vFL').value,
       notasCloser:document.getElementById('vNT').value.trim(),
       fechaCreacion:new Date().toISOString()
@@ -1327,61 +1483,9 @@ window.saveLz = async () => {
 };
 
 // ── HELPERS ──
-// ── CUENTAS BANCARIAS ──
-const CUENTAS_BANCARIAS = {
-  "Venezuela": {"Banesco": { titular: "Rodrigo Marcano", cedula: "19256159", tipo: "Corriente", cuenta: "01340820378203016736", telefono: "04143501481" }},
-  "Panamá": {"Banesco": { titular: "Black Mentory Agency", cuenta: "221021512164" }},
-  "Colombia": {"Bancolombia": { titular: "Consultoria, comercializacion e ingenieria rialro sas", nit: "901051317", tipo: "Ahorro", cuenta: "55173489063" }},
-  "Perú": {
-    "BCP (Soles)": { titular: "Rodrigo Marcano Sprea", cuenta: "19405243510074", interbancaria: "00219410524351007498" },
-    "BCP (Dólares)": { titular: "Rodrigo Marcano Sprea", cuenta: "19405244088157", interbancaria: "00219410524408815791" }
-  },
-  "Brasil": {"Bradesco": { titular: "BMA PARTICIPAÇÕES LTDA", agencia: "5760", cuenta: "49886-6", pix: "48.913.352/0001-64" }},
-  "Estados Unidos": {
-    "International Finance Bank": { direccion: "777 SW 37th AVE. Suite 100, Miami, FL 33135 USA", aba: "067011692", swift: "IFBKUS3M", cuenta: "1200051602", beneficiario: "Black Mentory Agency LTD", descripcion: "nombre alumno + nombre de la Mentoría" },
-    "Zelle": { email: "mentoria@tradestarslatam.com", beneficiario: "Rodrigo Marcano Sprea" }
-  },
-  "Exchanges": {
-    "Binance Pay (Email)": { email: "rodrigo@tradestarslatam.com", moneda: "USDT" },
-    "Binance Pay (ID)": { id: "178449636", moneda: "USDT" },
-    "Binance Wallet BTC": { wallet: "1NzbMzZVdoZztxqgibaTYYuP9rfvzUFnLs" },
-    "Binance Wallet TRON": { wallet: "TS84arpYqTFvgooyQokrFGbZF4jiuXYQxn", moneda: "USDT TRC-20" },
-    "Binance Wallet BNB": { wallet: "0xa7c949061a8ca5c4db43b47cf6b2e8df5f66646f", moneda: "USDT BEP-20" },
-    "Binance Wallet Ethereum": { wallet: "0xa7c949061a8ca5c4db43b47cf6b2e8df5f66646f", moneda: "USDT ERC-20" },
-    "Lemon Wallet": { link: "https://br.lemon.me/$mentoria" },
-    "Neteller": { email: "rodrigo.marcano.sprea@gmail.com" },
-    "Skrill": { email: "marcanosprea@gmail.com", id: "131811016" }
-  }
-};
-
-window.renderCuentas = () => {
-  const body = document.getElementById('cuentasBody');
-  let html = '<div style="display:grid;grid-template-columns:1fr;gap:14px">';
-  for (const [pais, bancos] of Object.entries(CUENTAS_BANCARIAS)) {
-    html += `<div class="card"><div style="font-size:16px;font-weight:700;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">${pais}</div>`;
-    for (const [banco, datos] of Object.entries(bancos)) {
-      html += `<div style="margin-bottom:16px;padding:14px;background:var(--bg3);border-radius:8px"><div style="font-weight:600;margin-bottom:10px">${banco}</div><div style="font-size:12px;color:var(--text2);line-height:1.8">`;
-      for (const [key, val] of Object.entries(datos)) {
-        const labels = {titular:"Titular", cedula:"Cédula", tipo:"Tipo de cuenta", cuenta:"Número de cuenta", telefono:"Teléfono", nit:"NIT", interbancaria:"Interbancaria", agencia:"Agencia", pix:"Llave PIX", direccion:"Dirección", aba:"ABA", swift:"SWIFT", beneficiario:"Beneficiario", descripcion:"Descripción", email:"Email", id:"ID", moneda:"Moneda", wallet:"Wallet", link:"Link"};
-        const label = labels[key] || key;
-        html += `<div><span style="color:var(--text);">${label}:</span> <span style="cursor:pointer;padding:8px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;font-size:12px;color:var(--text2);transition:all .2s" onclick="navigator.clipboard.writeText('${val}').then(()=>toast('✅ Copiado','s'))">${val}</span></div>`;
-      }
-      html += `</div></div>`;
-    }
-    html += '</div>';
-  }
-  body.innerHTML = html + '</div>';
-};
-
-window.toggleTercero = () => {
-  const checked = document.getElementById('vTercero').checked;
-  document.getElementById('sectionCompradorBeneficiario').style.display = checked ? 'block' : 'none';
-};
-
-
 function bProd(p){ const m={KAINET:'b-purple',TRIBU:'b-yellow',ARENA:'b-indigo',PERPETUO:'b-blue'}; return `<span class="badge ${m[p]||'b-gray'}">${p||'—'}</span>`; }
 function bEstado(e){ const m={PENDIENTE:'b-yellow',VALIDADA:'b-green',RECHAZADA:'b-red'}; return `<span class="badge ${m[e]||'b-gray'}">${e||'—'}</span>`; }
-function fLabel(f){ return {LANZAMIENTO:'Lanzamiento',REDES_SOCIALES:'Redes Sociales',PERPETUOS:'Perpetuos',OTRO:'Otro'}[f]||f||'—'; }
+function fLabel(f){ return {EMBUDO:'Embudo',LANZAMIENTO:'Lanzamiento',LLAMADA_FRIA:'Llamada fría',LLAMADA_CALIENTE:'Llamada caliente',INSTAGRAM:'Instagram',OTRO:'Otro'}[f]||f||'—'; }
 function mLabel(m){ return {BANCOLOMBIA:'Bancolombia',BCP_PERU:'BCP Perú',BANESCO_PANAMA:'Banesco Panamá',IFB_USA:'IFB USA',ZELLE:'Zelle',BANCO_VENEZUELA:'Banco Venezuela',CIELO_BRASIL:'Cielo',BRADESCO:'Bradesco',CRYPTO:'Crypto',HOTMART:'Hotmart',PAYPAL:'PayPal',OTRO:'Otro'}[m]||m||'—'; }
 function fDate(d){ if(!d) return '—'; try{ return new Date(d+(d.length===10?'T12:00':'')).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'}); } catch{ return d; } }
 function fmt(n){ return Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
@@ -1423,4 +1527,5 @@ window.toast = toast;
 </script>
 </body>
 </html>
+
 
