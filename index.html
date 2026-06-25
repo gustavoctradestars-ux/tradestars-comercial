@@ -945,15 +945,6 @@ function renderDashboard() {
   document.getElementById('kV3').textContent = pend;
   document.getElementById('kV4').textContent = '$'+fmt(saldo);
 
-  // Ranking
-  const byC = {}; vMes.filter(v=>v.estadoVenta==='VALIDADA').forEach(v=>{ const k=v.closerNombre||v.closerEmail||'—'; if(!byC[k]) byC[k]={m:0,v:0}; byC[k].m+=v.totalPagado||0; byC[k].v++; });
-  const rank = Object.entries(byC).sort((a,b)=>b[1].m-a[1].m);
-  const mx = rank[0]?.[1].m||1;
-  const med = ['🥇','🥈','🥉'];
-  const rEl = document.getElementById('dRanking');
-  rEl.innerHTML = rank.length===0 ? '<div class="empty"><div class="e-ico">📊</div><p>Sin datos este mes</p></div>'
-    : rank.slice(0,5).map(([n,d],i)=>`<div class="rank-row"><div class="rank-pos">${med[i]||(i+1)}</div><div class="rank-info"><div class="rank-name">${n}</div><div class="rank-bar-bg"><div class="rank-bar" style="width:${d.m/mx*100}%"></div></div></div><div><div class="rank-val">$${fmt(d.m)}</div><div class="fs11 c2 tr">${d.v} venta${d.v!==1?'s':''}</div></div></div>`).join('');
-
   // Fuentes
   const byF = {}; vMes.forEach(v=>{ const f=v.fuenteLead||'OTRO'; byF[f]=(byF[f]||0)+1; });
   const totalF = Object.values(byF).reduce((s,v)=>s+v,0)||1;
