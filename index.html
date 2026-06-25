@@ -424,7 +424,7 @@
         </div>
         <div class="filters">
           <input class="finput f-search" id="fVSearch" placeholder="🔍 Buscar cliente, correo..." oninput="renderVentas()">
-          <select class="finput" id="fVCloser" onchange="renderVentas()" style="min-width:150px"><option value="">Todos los closers</option></select>
+          <div id="fVCloserGroup"><select class="finput" id="fVCloser" onchange="renderVentas()" style="min-width:150px"><option value="">Todos los closers</option></select></div>
           <select class="finput" id="fVProducto" onchange="renderVentas()">
             <option value="">Todos los productos</option>
             <option value="KAINET_ANUAL_COMPLETO">KAINET — Anual Completo</option>
@@ -886,6 +886,7 @@ function setupNav() {
   if (isCloser()) { 
     document.getElementById('snCuentas').style.display='flex'; 
     document.getElementById('dMisVentas').style.display='block';
+    document.getElementById('fVCloserGroup').style.display='none';
   } else {
     if (canValidate()) { document.getElementById('snFinanciero').style.display='block'; document.getElementById('snValidar').style.display='flex'; document.getElementById('snReporte').style.display='flex'; }
     if (isLeader()) { document.getElementById('snAdmin').style.display='block'; document.getElementById('snRendimiento').style.display='flex'; }
@@ -1004,7 +1005,7 @@ function renderVentas() {
 
 function filteredVentas() {
   const s = (document.getElementById('fVSearch')?.value||'').toLowerCase();
-  const cl = document.getElementById('fVCloser')?.value||'';
+  const cl = isCloser() ? CU.email : (document.getElementById('fVCloser')?.value||'');
   const pr = document.getElementById('fVProducto')?.value||'';
   const es = document.getElementById('fVEstado')?.value||'';
   const fu = document.getElementById('fVFuente')?.value||'';
