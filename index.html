@@ -883,10 +883,14 @@ function setupNav() {
   document.getElementById('uName').textContent = `${n} ${a}`.trim();
   document.getElementById('uRole').textContent = roleLabel(ROLE);
   document.getElementById('phBadgeRole').innerHTML = `<span class="badge b-indigo">${roleLabel(ROLE)}</span>`;
-  if (canValidate()) { document.getElementById('snFinanciero').style.display='block'; document.getElementById('snValidar').style.display='flex'; document.getElementById('snReporte').style.display='flex'; }
-  if (isLeader()) { document.getElementById('snAdmin').style.display='block'; document.getElementById('snRendimiento').style.display='flex'; }
-  if (canManage()) { document.getElementById('snLanzamientos').style.display='flex'; document.getElementById('snClosers').style.display='flex'; }
-  if (isCloser()) { document.getElementById('snCuentas').style.display='flex'; document.getElementById('dMisVentas').style.display='block'; }
+  if (isCloser()) { 
+    document.getElementById('snCuentas').style.display='flex'; 
+    document.getElementById('dMisVentas').style.display='block';
+  } else {
+    if (canValidate()) { document.getElementById('snFinanciero').style.display='block'; document.getElementById('snValidar').style.display='flex'; document.getElementById('snReporte').style.display='flex'; }
+    if (isLeader()) { document.getElementById('snAdmin').style.display='block'; document.getElementById('snRendimiento').style.display='flex'; }
+    if (canManage()) { document.getElementById('snLanzamientos').style.display='flex'; document.getElementById('snClosers').style.display='flex'; }
+  }
 }
 
 // NAV
@@ -970,9 +974,21 @@ function renderDashboard() {
     document.getElementById('lzMeta').textContent = lzA.meta?'$'+fmt(lzA.meta)+' USD':'Sin meta';
   } else banner.classList.remove('show');
 
+  // Ranking GLOBAL (todos los closers)
+  const byC = {}; VENTAS.filter(v=>v.estadoVenta==='VALIDADA').forEach(v=>{ const k=v.closerNombre||v.closerEmail||'—'; if(!byC[k]) byC[k]={m:0,v:0,email:v.closerEmail}; byC[k].m+=v.totalPagado||0; byC[k].v++; });
+  const rankGlobal = Object.entries(byC).sort((a,b)=>b[1].m-a[1].m);
+  const mxGlobal = rankGlobal[0]?.[1].m||1;
+  const med = ['🥇','🥈','🥉'];
+  const rEl = document.getElementById('dRanking');
+  rEl.innerHTML = rankGlobal.length===0 ? '<div class="empty"><div class="e-ico">📊</div><p>Sin datos</p></div>'
+    : rankGlobal.map(([n,d],i)=>{
+      const esYo = isCloser() && d.email===CU.email ? ' <span class="badge b-indigo">TÚ</span>' : '';
+      return `<div class="rank-row"><div class="rank-pos">${med[i]||(i+1)}</div><div class="rank-info"><div class="rank-name">${n}${esYo}</div><div class="rank-bar-bg"><div class="rank-bar" style="width:${d.m/mxGlobal*100}%"></div></div></div><div><div class="rank-val">$${fmt(d.m)}</div><div class="fs11 c2 tr">${d.v} venta${d.v!==1?'s':''}</div></div></div>`;
+    }).join('');
+
   // Mis ventas (closer)
   if (isCloser()) {
-    const mv = VENTAS.slice(0,6);
+    const mv = VENTAS.filter(v=>v.closerEmail===CU.email).slice(0,6);
     document.getElementById('dMisVentasBody').innerHTML = mv.length===0 ? '<div class="empty"><p>Aún no tienes ventas registradas</p></div>' : miniTable(mv);
   }
 }
