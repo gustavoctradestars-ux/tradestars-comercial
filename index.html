@@ -650,7 +650,10 @@
           <div class="fgroup"><label>Valor total USD *</label><input class="finput" type="number" id="vVT" placeholder="400" min="0"></div>
           <div class="fgroup"><label>Fecha de venta *</label><input class="finput" type="date" id="vFV"></div>
         </div>
-        <div class="fgroup"><label>Fecha límite de pago completo</label><input class="finput" type="date" id="vFL"></div>
+        <div class="g2">
+          <div class="fgroup"><label>Fecha límite de pago completo</label><input class="finput" type="date" id="vFL"></div>
+          <div class="fgroup"><label>ID de Transacción</label><input class="finput" id="vIdTx" placeholder="TXN-2026-001234"></div>
+        </div>
         <div class="fgroup"><label>Notas del closer</label><textarea class="finput" id="vNT" rows="3" placeholder="Observaciones, acuerdos con el cliente..."></textarea></div>
         <div class="flex justify-b mt20">
           <button class="btn btn-secondary" onclick="swTabById('tc1')">← Anterior</button>
@@ -1265,6 +1268,7 @@ window.saveVenta = async () => {
       clienteLiberarCorreo:document.getElementById('vLiberar').checked?document.getElementById('vLiberarE').value.trim():'',
       producto:PR, fuenteLead:F,
       lanzamientoId:F==='LANZAMIENTO'?document.getElementById('vLz').value:'',
+      idTransaccion:document.getElementById('vIdTx').value.trim(),
       valorTotal:VT, totalPagado:MP, saldoPendiente:Math.max(0,VT-MP),
       estadoPago:MP>=VT?'COMPLETO':'PARCIAL', estadoVenta:'PENDIENTE',
       moneda:document.getElementById('vMon').value,
