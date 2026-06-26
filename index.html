@@ -551,6 +551,9 @@
         <div class="ph"><div class="ph-title"><h1>Rendimiento</h1><p>Performance del equipo comercial</p></div></div>
         <div class="filters">
           <input class="finput" type="date" id="rnD"><span class="c2">→</span><input class="finput" type="date" id="rnH">
+          <select class="finput" id="rnCloser" onchange="renderRendimiento()" style="min-width:150px;display:block">
+            <option value="">Todos los closers</option>
+          </select>
           <button class="btn btn-secondary" onclick="renderRendimiento()">Aplicar</button>
         </div>
         <div class="kpi-grid">
@@ -1291,9 +1294,33 @@ window.renderReporte = renderReporte;
 
 // ── RENDIMIENTO ──
 function renderRendimiento() {
+  // Llenar select de closers si está vacío (ANTES de filtrar)
+  const clSel = document.getElementById('rnCloser');
+  if(clSel && clSel.options.length<=1) {
+    const cls = [...new Set(VENTAS.map(v=>v.closerEmail).filter(Boolean))];
+    cls.forEach(email => {
+      const closer = CLOSERS.find(c=>c.email===email);
+      if(closer && closer.equipo === EQUIPO_ACTUAL) clSel.innerHTML += `<option value="${email}">${closer.nombre} ${closer.apellido||''}</option>`;
+    });
+  }
+  
   const d = document.getElementById('rnD')?.value; const h = document.getElementById('rnH')?.value;
+  const cl = document.getElementById('rnCloser')?.value;
+  
+  // Solo filtrar por equipo si es closer
   let vs = VENTAS;
+  if (isCloser()) {
+    const emailsEquipo = CLOSERS.filter(c => c.equipo === CUD?.equipo).map(c => c.email);
+    vs = vs.filter(v => emailsEquipo.includes(v.closerEmail));
+  } else {
+    // Líderes ven solo su equipo
+    const emailsEquipo = CLOSERS.filter(c => c.equipo === EQUIPO_ACTUAL).map(c => c.email);
+    vs = vs.filter(v => emailsEquipo.includes(v.closerEmail));
+  }
+  
   if(d) vs=vs.filter(v=>v.fechaVenta>=d); if(h) vs=vs.filter(v=>v.fechaVenta<=h);
+  if(cl) vs=vs.filter(v=>v.closerEmail===cl);
+  
   const val=vs.filter(v=>v.estadoVenta==='VALIDADA');
   const ticket=val.length>0?val.reduce((s,v)=>s+(v.valorTotal||0),0)/val.length:0;
   const compl=vs.filter(v=>v.estadoPago==='COMPLETO').length;
