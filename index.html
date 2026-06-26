@@ -1300,7 +1300,12 @@ function renderRendimiento() {
     const cls = [...new Set(VENTAS.map(v=>v.closerEmail).filter(Boolean))];
     cls.forEach(email => {
       const closer = CLOSERS.find(c=>c.email===email);
-      if(closer && closer.equipo === EQUIPO_ACTUAL) clSel.innerHTML += `<option value="${email}">${closer.nombre} ${closer.apellido||''}</option>`;
+      if(closer) {
+        // Solo mostrar closers del equipo actual (si no es CEO)
+        if (ROLE === 'gustavo' || closer.equipo === EQUIPO_ACTUAL || ROLE === 'lider_revenue') {
+          clSel.innerHTML += `<option value="${email}">${closer.nombre} ${closer.apellido||''}</option>`;
+        }
+      }
     });
   }
   
