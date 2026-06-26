@@ -502,6 +502,22 @@
         <div class="ph"><div class="ph-title"><h1>Reporte Financiero</h1><p>Análisis por método de pago, moneda y cuenta</p></div></div>
         <div class="filters">
           <input class="finput" type="date" id="rfD"><span class="c2">→</span><input class="finput" type="date" id="rfH">
+          <select class="finput" id="rfLz" onchange="renderReporte()">
+            <option value="">Todos lanzamientos</option>
+          </select>
+          <select class="finput" id="rfProd" onchange="renderReporte()">
+            <option value="">Todos productos</option>
+            <option value="KAINET_ANUAL_COMPLETO">KAINET Anual C</option>
+            <option value="KAINET_ANUAL_CUOTAS">KAINET Anual Cu</option>
+            <option value="KAINET_TRIMESTRAL">KAINET Trim</option>
+            <option value="KAINET_MENSUAL">KAINET Mes</option>
+            <option value="TRIBU_ANUAL_COMPLETO">TRIBU Anual C</option>
+            <option value="TRIBU_ANUAL_CUOTAS">TRIBU Anual Cu</option>
+            <option value="TRIBU_VITALICIA_COMPLETO">TRIBU Vital C</option>
+            <option value="TRIBU_VITALICIA_CUOTAS">TRIBU Vital Cu</option>
+            <option value="ARENA">ARENA</option>
+            <option value="PERPETUO">PERPETUO</option>
+          </select>
           <button class="btn btn-secondary" onclick="renderReporte()">Aplicar</button>
           <button class="btn btn-primary" onclick="downloadCSVReporte()" style="margin-left:auto">📥 Descargar CSV</button>
         </div>
@@ -1130,8 +1146,20 @@ function renderClientes() {
 // ── REPORTE ──
 function renderReporte() {
   const d = document.getElementById('rfD')?.value; const h = document.getElementById('rfH')?.value;
+  const lz = document.getElementById('rfLz')?.value; const pr = document.getElementById('rfProd')?.value;
   let vs = VENTAS.filter(v=>v.estadoVenta==='VALIDADA');
   if(d) vs=vs.filter(v=>v.fechaVenta>=d); if(h) vs=vs.filter(v=>v.fechaVenta<=h);
+  if(lz) vs=vs.filter(v=>v.lanzamientoId===lz); if(pr) vs=vs.filter(v=>v.producto===pr);
+  
+  // Llenar select de lanzamientos si está vacío
+  const lzSel = document.getElementById('rfLz');
+  if(lzSel && lzSel.options.length<=1) {
+    const lzs = [...new Set(VENTAS.map(v=>v.lanzamientoId).filter(Boolean))];
+    lzs.forEach(lzId => {
+      const lzObj = LZS.find(l=>l.id===lzId);
+      if(lzObj) lzSel.innerHTML += `<option value="${lzId}">${lzObj.nombre}</option>`;
+    });
+  }
   const total = vs.reduce((s,v)=>s+(v.totalPagado||0),0);
   const saldo = VENTAS.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.saldoPendiente||0),0);
   const rech = VENTAS.filter(v=>v.estadoVenta==='RECHAZADA').length;
@@ -1149,12 +1177,17 @@ function renderReporte() {
 window.downloadCSVReporte = () => {
   const d1 = document.getElementById('rfD').value;
   const d2 = document.getElementById('rfH').value;
-  const vs = VENTAS.filter(v => {
+  const lz = document.getElementById('rfLz').value;
+  const pr = document.getElementById('rfProd').value;
+  
+  let vs = VENTAS.filter(v => {
     const f = v.fechaVenta?new Date(v.fechaVenta+(v.fechaVenta.length===10?'T12:00':'')):null;
     if(!f) return false;
     const ok1 = !d1 || f >= new Date(d1+'T00:00');
     const ok2 = !d2 || f <= new Date(d2+'T23:59');
-    return ok1 && ok2 && v.estadoVenta==='VALIDADA';
+    const okLz = !lz || v.lanzamientoId===lz;
+    const okPr = !pr || v.producto===pr;
+    return ok1 && ok2 && okLz && okPr && v.estadoVenta==='VALIDADA';
   });
   
   const headers = ['Cliente', 'Apellido', 'Correo', 'Producto', 'Closer', 'Monto USD', 'Moneda Original', 'Monto Orig', 'Método Pago', 'Cuenta Destino', 'Fecha Venta', 'Link Comprobante'];
@@ -1177,7 +1210,8 @@ window.downloadCSVReporte = () => {
   const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = `backup_ventas_${new Date().toISOString().slice(0,10)}.csv`;
+  const lzName = lz ? (LZS.find(l=>l.id===lz)?.nombre||'') : 'general';
+  link.download = `backup_ventas_${lzName}_${new Date().toISOString().slice(0,10)}.csv`;
   link.click();
 };
 window.renderReporte = renderReporte;
