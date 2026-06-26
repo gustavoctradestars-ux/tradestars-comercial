@@ -1293,20 +1293,22 @@ window.downloadCSVReporte = () => {
 window.renderReporte = renderReporte;
 
 // ── RENDIMIENTO ──
+let RENDER_SELECTOR_FILLED = {};
+
 function renderRendimiento() {
-  // Llenar select de closers si está vacío (ANTES de filtrar)
   const clSel = document.getElementById('rnCloser');
-  if(clSel && clSel.options.length<=1) {
-    const cls = [...new Set(VENTAS.map(v=>v.closerEmail).filter(Boolean))];
-    cls.forEach(email => {
-      const closer = CLOSERS.find(c=>c.email===email);
-      if(closer) {
-        // Solo mostrar closers del equipo actual (si no es CEO)
-        if (ROLE === 'gustavo' || closer.equipo === EQUIPO_ACTUAL || ROLE === 'lider_revenue') {
-          clSel.innerHTML += `<option value="${email}">${closer.nombre} ${closer.apellido||''}</option>`;
-        }
+  
+  // Llenar select si aún no se ha llenado
+  if(!RENDER_SELECTOR_FILLED['rendimiento']) {
+    let html = '<option value="">Todos los closers</option>';
+    // Mostrar TODOS los closers, no solo los que tienen ventas
+    CLOSERS.forEach(closer => {
+      if(closer.activo !== false) { // Solo closers activos
+        html += `<option value="${closer.email}">${closer.nombre} ${closer.apellido||''}</option>`;
       }
     });
+    clSel.innerHTML = html;
+    RENDER_SELECTOR_FILLED['rendimiento'] = true;
   }
   
   const d = document.getElementById('rnD')?.value; const h = document.getElementById('rnH')?.value;
