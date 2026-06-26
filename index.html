@@ -503,6 +503,7 @@
         <div class="filters">
           <input class="finput" type="date" id="rfD"><span class="c2">→</span><input class="finput" type="date" id="rfH">
           <button class="btn btn-secondary" onclick="renderReporte()">Aplicar</button>
+          <button class="btn btn-primary" onclick="downloadCSVReporte()" style="margin-left:auto">📥 Descargar CSV</button>
         </div>
         <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
           <div class="kpi c-green"><div class="kpi-label">Total validado USD</div><div class="kpi-val c-green" id="rfK1">—</div></div>
@@ -1144,6 +1145,41 @@ function renderReporte() {
   document.getElementById('rfMonedas').innerHTML=Object.entries(byMon).sort((a,b)=>b[1]-a[1]).map(([m,t])=>`<div class="flex justify-b fs12" style="padding:9px 0;border-bottom:1px solid var(--border)"><span>${m}</span><strong>${t.toLocaleString()}</strong></div>`).join('')||'<div class="c2 fs12">Sin datos</div>';
   document.getElementById('rfDetalle').innerHTML=vs.map(v=>`<tr><td>${v.clienteNombre} ${v.clienteApellido||''}</td><td>${bProd(v.producto)}</td><td>${mLabel(v.metodoPago)}</td><td>${v.moneda||'USD'}</td><td>${v.montoOriginal?v.montoOriginal.toLocaleString():'—'}</td><td class="ca fw7">$${fmt(v.totalPagado||0)}</td><td>${v.closerNombre||'—'}</td><td class="c2 fs12">${fDate(v.fechaValidacion)}</td></tr>`).join('')||'<tr><td colspan="8" class="tc2 c2" style="padding:20px">Sin ventas validadas</td></tr>';
 }
+
+window.downloadCSVReporte = () => {
+  const d1 = document.getElementById('rfD').value;
+  const d2 = document.getElementById('rfH').value;
+  const vs = VENTAS.filter(v => {
+    const f = v.fechaVenta?new Date(v.fechaVenta+(v.fechaVenta.length===10?'T12:00':'')):null;
+    if(!f) return false;
+    const ok1 = !d1 || f >= new Date(d1+'T00:00');
+    const ok2 = !d2 || f <= new Date(d2+'T23:59');
+    return ok1 && ok2 && v.estadoVenta==='VALIDADA';
+  });
+  
+  const headers = ['Cliente', 'Apellido', 'Correo', 'Producto', 'Closer', 'Monto USD', 'Moneda Original', 'Monto Orig', 'Método Pago', 'Cuenta Destino', 'Fecha Venta', 'Link Comprobante'];
+  const rows = vs.map(v => [
+    v.clienteNombre||'',
+    v.clienteApellido||'',
+    v.clienteCorreo||'',
+    bProd(v.producto),
+    v.closerNombre||'—',
+    v.totalPagado||0,
+    v.moneda||'USD',
+    v.montoOriginal||'—',
+    mLabel(v.metodoPago),
+    v.cuentaDestino||'—',
+    v.fechaVenta||'—',
+    v.comprobanteURL||'—'
+  ]);
+  
+  const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `backup_ventas_${new Date().toISOString().slice(0,10)}.csv`;
+  link.click();
+};
 window.renderReporte = renderReporte;
 
 // ── RENDIMIENTO ──
