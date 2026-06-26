@@ -394,6 +394,10 @@
             <div class="fw8 ca" id="lzMeta">—</div>
           </div>
         </div>
+        <div class="tabs" style="margin-bottom:20px;border-bottom:1px solid var(--border)">
+          <div class="tab active" onclick="switchEquipo('COMERCIAL')">🏢 Comercial Externo</div>
+          <div class="tab" onclick="switchEquipo('REVENUE')">📈 Revenue (Interno)</div>
+        </div>
         <div class="kpi-grid">
           <div class="kpi c-blue"><div class="kpi-ico">💰</div><div class="kpi-label">Total ventas (mes)</div><div class="kpi-val c-blue" id="kV1">—</div><div class="kpi-sub">ventas registradas</div></div>
           <div class="kpi c-green"><div class="kpi-ico">✅</div><div class="kpi-label">Recaudado USD</div><div class="kpi-val c-green" id="kV2">—</div><div class="kpi-sub">pagos validados</div></div>
@@ -741,7 +745,15 @@
         <select class="finput" id="cR">
           <option value="closer">Closer</option>
           <option value="lider_comercial">Líder Comercial</option>
+          <option value="lider_revenue">Líder Revenue</option>
           <option value="lider_financiero">Líder Financiero</option>
+        </select>
+      </div>
+      <div class="fgroup"><label>Equipo *</label>
+        <select class="finput" id="cEq">
+          <option value="">Seleccionar...</option>
+          <option value="COMERCIAL">Comercial Externo</option>
+          <option value="REVENUE">Revenue (Interno)</option>
         </select>
       </div>
     </div>
@@ -847,6 +859,7 @@ const storage = getStorage(app);
 // STATE
 let CU = null, CUD = null, ROLE = null;
 let VENTAS = [], CLOSERS = [], LZS = [];
+let EQUIPO_ACTUAL = 'COMERCIAL';
 let RECHAZO_ID = null;
 const GUSTAVO = 'gustavoctradestars@gmail.com';
 
@@ -855,7 +868,24 @@ const canValidate = () => ['gustavo','lider_financiero'].includes(ROLE);
 const canManage   = () => ['gustavo','lider_comercial'].includes(ROLE);
 const isLeader    = () => ROLE !== 'closer';
 const isCloser    = () => ROLE === 'closer';
-const roleLabel   = r => ({gustavo:'CEO',lider_comercial:'Líder Comercial',lider_financiero:'Líder Financiero',closer:'Closer'})[r]||r;
+const roleLabel   = r => ({gustavo:'CEO',lider_comercial:'Líder Comercial',lider_revenue:'Líder Revenue',lider_financiero:'Líder Financiero',closer:'Closer'})[r]||r;
+
+// EQUIPO PERMISOS
+const puedoVerEquipo = (eq) => {
+  if (ROLE === 'gustavo') return true; // CEO ve todo
+  if (ROLE === 'lider_comercial' && eq === 'COMERCIAL') return true;
+  if (ROLE === 'lider_revenue') return true; // Ve ambos
+  if (ROLE === 'closer' && CUD?.equipo === eq) return true;
+  return false;
+};
+
+const equiposVisibles = () => {
+  if (ROLE === 'gustavo') return ['COMERCIAL', 'REVENUE'];
+  if (ROLE === 'lider_comercial') return ['COMERCIAL'];
+  if (ROLE === 'lider_revenue') return ['COMERCIAL', 'REVENUE'];
+  if (ROLE === 'closer') return [CUD?.equipo];
+  return [];
+};
 
 // AUTH
 window.doLogin = async () => {
@@ -900,6 +930,20 @@ function setupNav() {
   document.getElementById('uName').textContent = `${n} ${a}`.trim();
   document.getElementById('uRole').textContent = roleLabel(ROLE);
   document.getElementById('phBadgeRole').innerHTML = `<span class="badge b-indigo">${roleLabel(ROLE)}</span>`;
+  
+  // Mostrar/ocultar tabs de equipo
+  const equipos = equiposVisibles();
+  const tabs = document.querySelectorAll('.tabs .tab');
+  tabs.forEach((tab, i) => {
+    const eq = i === 0 ? 'COMERCIAL' : 'REVENUE';
+    tab.style.display = equipos.includes(eq) ? 'block' : 'none';
+  });
+  
+  // Establecer primer equipo disponible
+  if (!equipos.includes(EQUIPO_ACTUAL) && equipos.length > 0) {
+    EQUIPO_ACTUAL = equipos[0];
+  }
+  
   if (isCloser()) { 
     document.getElementById('snCuentas').style.display='flex'; 
     document.getElementById('dMisVentas').style.display='block';
@@ -908,6 +952,7 @@ function setupNav() {
     if (canValidate()) { document.getElementById('snFinanciero').style.display='block'; document.getElementById('snValidar').style.display='flex'; document.getElementById('snReporte').style.display='flex'; }
     if (isLeader()) { document.getElementById('snAdmin').style.display='block'; document.getElementById('snRendimiento').style.display='flex'; }
     if (canManage()) { document.getElementById('snLanzamientos').style.display='flex'; document.getElementById('snClosers').style.display='flex'; }
+    if (ROLE === 'lider_revenue') { document.getElementById('snAdmin').style.display='block'; document.getElementById('snClosers').style.display='flex'; }
   }
 }
 
@@ -951,10 +996,38 @@ function checkNotif() {
   if(dot) dot.style.display = n>0 && canValidate() ? 'inline-block' : 'none';
 }
 
+// ── SWITCH EQUIPO ──
+window.switchEquipo = (eq) => {
+  if (!puedoVerEquipo(eq)) {
+    toast('No tienes acceso a este equipo','e');
+    return;
+  }
+  EQUIPO_ACTUAL = eq;
+  document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderDashboard();
+};
+
 // ── DASHBOARD ──
 function renderDashboard() {
+  // Validar que puedo ver el equipo actual
+  if (!puedoVerEquipo(EQUIPO_ACTUAL)) {
+    const eq = equiposVisibles()[0];
+    if (!eq) { document.getElementById('dRanking').innerHTML = '<div class="c2">Sin acceso</div>'; return; }
+    EQUIPO_ACTUAL = eq;
+  }
+  
   const now = new Date(); const m = now.getMonth(); const y = now.getFullYear();
-  const vMes = VENTAS.filter(v => { const f = v.fechaVenta?new Date(v.fechaVenta+(v.fechaVenta.length===10?'T12:00':'')):null; return f && f.getMonth()===m && f.getFullYear()===y; });
+  
+  // Filtrar closers por equipo actual
+  const closersEquipo = CLOSERS.filter(c => c.equipo === EQUIPO_ACTUAL);
+  const emailsEquipo = closersEquipo.map(c => c.email);
+  
+  // Filtrar ventas por equipo y mes
+  const vMes = VENTAS.filter(v => { 
+    const f = v.fechaVenta?new Date(v.fechaVenta+(v.fechaVenta.length===10?'T12:00':'')):null; 
+    return f && f.getMonth()===m && f.getFullYear()===y && emailsEquipo.includes(v.closerEmail);
+  });
   const rec = vMes.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.totalPagado||0),0);
   const pend = vMes.filter(v=>v.estadoVenta==='PENDIENTE').length;
   const saldo = vMes.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.saldoPendiente||0),0);
@@ -983,8 +1056,8 @@ function renderDashboard() {
     document.getElementById('lzMeta').textContent = lzA.meta?'$'+fmt(lzA.meta)+' USD':'Sin meta';
   } else banner.classList.remove('show');
 
-  // Ranking GLOBAL (todos los closers)
-  const byC = {}; VENTAS.filter(v=>v.estadoVenta==='VALIDADA').forEach(v=>{ const k=v.closerNombre||v.closerEmail||'—'; if(!byC[k]) byC[k]={m:0,v:0,email:v.closerEmail}; byC[k].m+=v.totalPagado||0; byC[k].v++; });
+  // Ranking EQUIPO (closers del equipo actual)
+  const byC = {}; VENTAS.filter(v=>v.estadoVenta==='VALIDADA' && emailsEquipo.includes(v.closerEmail)).forEach(v=>{ const k=v.closerNombre||v.closerEmail||'—'; if(!byC[k]) byC[k]={m:0,v:0,email:v.closerEmail}; byC[k].m+=v.totalPagado||0; byC[k].v++; });
   const rankGlobal = Object.entries(byC).sort((a,b)=>b[1].m-a[1].m);
   const mxGlobal = rankGlobal[0]?.[1].m||1;
   const med = ['🥇','🥈','🥉'];
@@ -1382,7 +1455,8 @@ window.saveCloser = async () => {
   const A=document.getElementById('cA').value.trim();
   const E=document.getElementById('cE').value.trim();
   const R=document.getElementById('cR').value;
-  if(!N||!E){ toast('Nombre y correo son obligatorios','e'); return; }
+  const Eq=document.getElementById('cEq').value;
+  if(!N||!E||!Eq){ toast('Nombre, correo y equipo son obligatorios','e'); return; }
   const btn=document.getElementById('btnSaveC'); btn.disabled=true; btn.textContent='Creando...';
   try {
     const pwd=genPwd();
@@ -1390,14 +1464,14 @@ window.saveCloser = async () => {
     const {getAuth:ga2,createUserWithEmailAndPassword:cu2,signOut:so2}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js");
     const a2=ia2(FC,'sec-'+Date.now()); const au2=ga2(a2);
     await cu2(au2,E,pwd); await so2(au2);
-    const data={nombre:N,apellido:A,email:E,rol:R,activo:true,fechaCreacion:new Date().toISOString()};
+    const data={nombre:N,apellido:A,email:E,rol:R,equipo:Eq,activo:true,fechaCreacion:new Date().toISOString()};
     const ref2=await addDoc(collection(db,'closers'),data);
     CLOSERS.push({id:ref2.id,...data});
     document.getElementById('fVCloser').innerHTML+= `<option value="${E}">${N} ${A}</option>`;
     document.getElementById('pwdShow').innerHTML=`<strong>${pwd}</strong>`;
     document.getElementById('pwdEmail').innerHTML=E;
     closeM('mCloser'); openM('mShowPwd');
-    ['cN','cA','cE'].forEach(id=>document.getElementById(id).value='');
+    ['cN','cA','cE','cEq'].forEach(id=>document.getElementById(id).value='');
   } catch(e){ toast('Error: '+e.message,'e'); }
   btn.disabled=false; btn.textContent='Crear closer';
 };
