@@ -521,7 +521,7 @@ let VENTAS=[], CLOSERS=[], LZS=[];
 let RECH_ID=null, PAGO_VID=null, EXTEND_VID=null;
 const GUSTAVO='gustavoctradestars@gmail.com';
 const canVal=()=>['gustavo','lider_financiero'].includes(ROLE);
-const canMng=()=>['gustavo','lider_comercial'].includes(ROLE);
+const canMng=()=>['gustavo','lider_comercial','lider_revenue'].includes(ROLE);
 const isLdr=()=>ROLE!=='closer';
 const isClsr=()=>ROLE==='closer';
 const rLabel=r=>({gustavo:'CEO',lider_comercial:'Líder Comercial',lider_financiero:'Líder Financiero',closer:'Closer'})[r]||r;
