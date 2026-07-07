@@ -272,7 +272,8 @@
 
       <!-- DASHBOARD -->
       <div class="pw active" id="pg-dashboard">
-        <div class="ph flex jb ic"><div><h1>Dashboard General</h1><p>Resumen del equipo comercial</p></div><div id="phRole"></div></div>
+        <div class="ph flex jb ic"><div><h1>Dashboard General</h1><p id="dashSubtitle">Resumen del equipo comercial</p></div><div id="phRole"></div></div>
+        <div class="filters" id="filtroEquipoContainer" style="display:none;margin-bottom:16px"><select class="fi" id="filtroEquipo" onchange="cambiarFiltroEquipo()" style="min-width:160px"><option value="">📊 Todos los equipos</option><option value="comercial">Equipo Comercial</option><option value="revenue">Equipo Revenue</option></select></div>
         <div class="lz-banner" id="lzB"><span style="font-size:26px">🚀</span><div style="flex:1"><div class="fw7 f12" id="lzN">—</div><div class="f11 c2" id="lzD">—</div></div><div class="tr"><div class="f11 c2">Meta</div><div class="fw8 ca" id="lzM">—</div></div></div>
         <div class="kgrid">
           <div class="kpi kb"><div class="kpi-ico">💰</div><div class="kpi-lbl">Total ventas (mes)</div><div class="kpi-val cb" id="k1">—</div><div class="kpi-sub">registradas</div></div>
@@ -517,7 +518,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 let CU=null, CUD=null, ROLE=null;
-let VENTAS=[], CLOSERS=[], LZS=[];
+let VENTAS=[], CLOSERS=[], LZS=[], FILTRO_EQUIPO=null;
 let RECH_ID=null, PAGO_VID=null, EXTEND_VID=null;
 const GUSTAVO='gustavoctradestars@gmail.com';
 const canVal=()=>['gustavo','lider_financiero'].includes(ROLE);
@@ -525,6 +526,7 @@ const canMng=()=>['gustavo','lider_comercial','lider_revenue'].includes(ROLE);
 const isLdr=()=>ROLE!=='closer';
 const isClsr=()=>ROLE==='closer';
 const getEquipo=()=>{if(ROLE==='lider_comercial')return 'comercial';if(ROLE==='lider_revenue')return 'revenue';return null;};
+const getVentasFiltradas=()=>{if(!['gustavo','lider_financiero'].includes(ROLE))return VENTAS;if(!FILTRO_EQUIPO)return VENTAS;return VENTAS.filter(v=>v.equipoCloser===FILTRO_EQUIPO);};
 const rLabel=r=>({gustavo:'CEO',lider_comercial:'Líder Comercial',lider_revenue:'Líder Revenue',lider_financiero:'Líder Financiero',closer:'Closer'})[r]||r;
 
 // AUTH
@@ -564,6 +566,8 @@ function setupNav(){
   document.getElementById('uNm').textContent=`${n} ${a}`.trim();
   document.getElementById('uRl').textContent=rLabel(ROLE);
   document.getElementById('phRole').innerHTML=`<span class="badge bi">${rLabel(ROLE)}</span>`;
+  if(['gustavo','lider_financiero'].includes(ROLE))document.getElementById('filtroEquipoContainer').style.display='block';
+  else document.getElementById('filtroEquipoContainer').style.display='none';
   if(canVal()){document.getElementById('snFin').style.display='block';document.getElementById('snVal').style.display='flex';document.getElementById('snRep').style.display='flex';}
   if(isLdr()){document.getElementById('snAdm').style.display='block';document.getElementById('snRend').style.display='flex';}
   if(canMng()){document.getElementById('snLz').style.display='flex';document.getElementById('snCl').style.display='flex';}
@@ -608,7 +612,8 @@ function checkNotif(){const n=VENTAS.filter(v=>v.estadoVenta==='PENDIENTE').leng
 // DASHBOARD
 function renderDash(){
   const now=new Date(),m=now.getMonth(),y=now.getFullYear();
-  const vm=VENTAS.filter(v=>{const f=v.fechaVenta?new Date(v.fechaVenta+(v.fechaVenta.length===10?'T12:00':'')):null;return f&&f.getMonth()===m&&f.getFullYear()===y;});
+  const allV=getVentasFiltradas();
+  const vm=allV.filter(v=>{const f=v.fechaVenta?new Date(v.fechaVenta+(v.fechaVenta.length===10?'T12:00':'')):null;return f&&f.getMonth()===m&&f.getFullYear()===y;});
   const rec=vm.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.totalPagado||0),0);
   const pend=vm.filter(v=>v.estadoVenta==='PENDIENTE').length;
   const saldo=vm.filter(v=>v.estadoVenta==='VALIDADA').reduce((s,v)=>s+(v.saldoPendiente||0),0);
@@ -968,6 +973,7 @@ function renderClosers(){
     </div>`;
   }).join('')}</div>`;
 }
+window.cambiarFiltroEquipo=()=>{FILTRO_EQUIPO=document.getElementById('filtroEquipo').value||null;const sub=document.getElementById('dashSubtitle');if(FILTRO_EQUIPO==='comercial')sub.textContent='Resumen del equipo comercial';else if(FILTRO_EQUIPO==='revenue')sub.textContent='Resumen del equipo revenue';else sub.textContent='Resumen de todos los equipos';renderDash();};
 window.delCl=async(id,nombre)=>{if(!confirm(`¿Eliminar a ${nombre} del equipo? Esta acción no se puede deshacer.`))return;try{await deleteDoc(doc(db,'closers',id));CLOSERS=CLOSERS.filter(c=>c.id!==id);document.getElementById('fVC').querySelectorAll('option').forEach(opt=>{if(opt.value&&CLOSERS.every(c=>c.email!==opt.value))opt.remove();});renderClosers();toast('Closer eliminado del sistema','s');}catch(e){toast('Error: '+e.message,'e');}};
 
 // ANTI-DUPLICADOS
