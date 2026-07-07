@@ -395,6 +395,16 @@
           <div class="fg"><label>Teléfono (WhatsApp)</label><input class="fi" id="vT" placeholder="+57 300 0000000"></div>
           <div class="fg"><label>País</label><select class="fi" id="vPais"><option value="">Seleccionar...</option><option>Colombia</option><option>Venezuela</option><option>Perú</option><option>Brasil</option><option>México</option><option>Argentina</option><option>Chile</option><option>Ecuador</option><option>Panamá</option><option>EEUU</option><option>Otro</option></select></div>
         </div>
+        <div class="fg" style="margin-top:20px;padding-top:20px;border-top:1px solid var(--bg3)"><label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="vCompra3ro" onchange="toggleCompra3ro()" style="width:18px;height:18px;cursor:pointer"><span>¿Compra de tercero?</span></label></div>
+        <div id="vReceptor" style="display:none;margin-top:20px">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:12px"><strong>Datos del receptor:</strong></div>
+          <div class="g2">
+            <div class="fg"><label>Nombre receptor *</label><input class="fi" id="vRN" placeholder="María"></div>
+            <div class="fg"><label>Apellido receptor</label><input class="fi" id="vRA" placeholder="González"></div>
+          </div>
+          <div class="fg"><label>Correo receptor *</label><input class="fi" type="email" id="vRC" placeholder="maria@email.com"></div>
+          <div class="fg"><label>Teléfono receptor (WhatsApp)</label><input class="fi" id="vRT" placeholder="+57 300 0000000"></div>
+        </div>
         <div class="tr mt20"><button class="btn btn-primary" onclick="checkDupAndNext()">Siguiente →</button></div>
       </div>
       <div class="tc" id="tc2">
@@ -606,6 +616,7 @@ function setupNav(){
   if(isClsr())document.getElementById('dMV').style.display='block';
 }
 
+window.toggleCompra3ro=()=>{const el=document.getElementById('vReceptor'),check=document.getElementById('vCompra3ro').checked;el.style.display=check?'block':'none';if(!check){document.getElementById('vRN').value='';document.getElementById('vRA').value='';document.getElementById('vRC').value='';document.getElementById('vRT').value='';}};
 window.go=p=>{
   document.querySelectorAll('.pw').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(x=>x.classList.remove('active'));
@@ -710,6 +721,12 @@ window.verV=(id)=>{
       <div><div class="dl">Teléfono</div><div class="dv f12">${v.clienteTelefono||'—'}</div></div>
     </div>
     <hr class="divider">
+    ${v.compra3ro?`<div class="dg" style="background:rgba(168,85,247,.1);padding:10px;border-radius:6px;margin-bottom:14px">
+      <div style="font-size:11px;color:var(--purple);font-weight:600;margin-bottom:8px">👤 COMPRA DE TERCERO</div>
+      <div><div class="dl">Receptor</div><div class="dv">${v.receptorNombre||'—'} ${v.receptorApellido||''}</div></div>
+      <div><div class="dl">Correo receptor</div><div class="dv f12">${v.receptorCorreo||'—'}</div></div>
+      <div><div class="dl">Teléfono receptor</div><div class="dv f12">${v.receptorTelefono||'—'}</div></div>
+    </div><hr class="divider">`:''}
     <div class="dg">
       <div><div class="dl">Fuente</div><div class="dv">${flbl(v.fuenteLead)}</div></div>
       <div><div class="dl">Closer</div><div class="dv">${v.closerNombre||'—'}</div></div>
@@ -1045,6 +1062,11 @@ window.checkDupAndNext=async()=>{
   const correo=document.getElementById('vC').value.trim().toLowerCase();
   const nombre=document.getElementById('vN').value.trim();
   if(!nombre||!correo){toast('Nombre y correo son obligatorios','e');return;}
+  const compra3ro=document.getElementById('vCompra3ro').checked;
+  if(compra3ro){
+    const rN=document.getElementById('vRN').value.trim(),rC=document.getElementById('vRC').value.trim();
+    if(!rN||!rC){toast('Nombre y correo del receptor son obligatorios en compra de tercero','e');return;}
+  }
   const dupAlert=document.getElementById('vDupAlert');
   dupAlert.style.display='none';
   if(isClsr()){
@@ -1063,6 +1085,9 @@ window.openMV=()=>{
   LZS.filter(l=>l.activo).forEach(l=>sel.innerHTML+=`<option value="${l.id}">${l.nombre}</option>`);
   document.getElementById('vFV').value=new Date().toISOString().split('T')[0];
   document.getElementById('vDupAlert').style.display='none';
+  document.getElementById('vCompra3ro').checked=false;
+  document.getElementById('vReceptor').style.display='none';
+  ['vRN','vRA','vRC','vRT'].forEach(id=>document.getElementById(id).value='');
   openM('mVenta');
 };
 window.toggleLzF=()=>{document.getElementById('vLzG').style.display=document.getElementById('vF').value==='LANZAMIENTO'?'block':'none';};
@@ -1076,7 +1101,7 @@ window.saveVenta=async()=>{
     let url='';const file=document.getElementById('vComp').files[0];
     if(file){const r=sref(storage,`comprobantes/${Date.now()}_${file.name}`);const snap=await uploadBytes(r,file);url=await getDownloadURL(snap.ref);}
     const primerPago={monto:MP,moneda:document.getElementById('vMon').value,montoOriginal:parseFloat(document.getElementById('vMO').value)||null,metodoPago:ME,cuentaDestino:document.getElementById('vCD').value.trim(),comprobanteURL:url,fecha:document.getElementById('vFV').value,notas:'Pago inicial',estado:'PENDIENTE',closerEmail:CU.email,fechaRegistro:new Date().toISOString()};
-    const venta={closerEmail:CU.email,closerNombre:`${CUD?.nombre||''} ${CUD?.apellido||''}`.trim(),equipoCloser:CUD?.equipo||'comercial',clienteNombre:N,clienteApellido:A,clienteCorreo:C.toLowerCase(),clienteTelefono:document.getElementById('vT').value.trim(),clientePais:document.getElementById('vPais').value,producto:PR,fuenteLead:F,lanzamientoId:F==='LANZAMIENTO'?document.getElementById('vLz').value:'',valorTotal:VT,totalPagado:MP,saldoPendiente:Math.max(0,VT-MP),estadoPago:MP>=VT?'COMPLETO':'PARCIAL',estadoVenta:'PENDIENTE',moneda:document.getElementById('vMon').value,montoOriginal:parseFloat(document.getElementById('vMO').value)||null,metodoPago:ME,cuentaDestino:document.getElementById('vCD').value.trim(),comprobanteURL:url,fechaVenta:document.getElementById('vFV').value,fechaLimitePago:document.getElementById('vFL').value,notasCloser:document.getElementById('vNt').value.trim(),pagosHistorial:[primerPago],fechaCreacion:new Date().toISOString()};
+    const venta={closerEmail:CU.email,closerNombre:`${CUD?.nombre||''} ${CUD?.apellido||''}`.trim(),equipoCloser:CUD?.equipo||'comercial',clienteNombre:N,clienteApellido:A,clienteCorreo:C.toLowerCase(),clienteTelefono:document.getElementById('vT').value.trim(),clientePais:document.getElementById('vPais').value,compra3ro:document.getElementById('vCompra3ro').checked,receptorNombre:document.getElementById('vRN').value.trim(),receptorApellido:document.getElementById('vRA').value.trim(),receptorCorreo:document.getElementById('vRC').value.toLowerCase(),receptorTelefono:document.getElementById('vRT').value.trim(),producto:PR,fuenteLead:F,lanzamientoId:F==='LANZAMIENTO'?document.getElementById('vLz').value:'',valorTotal:VT,totalPagado:MP,saldoPendiente:Math.max(0,VT-MP),estadoPago:MP>=VT?'COMPLETO':'PARCIAL',estadoVenta:'PENDIENTE',moneda:document.getElementById('vMon').value,montoOriginal:parseFloat(document.getElementById('vMO').value)||null,metodoPago:ME,cuentaDestino:document.getElementById('vCD').value.trim(),comprobanteURL:url,fechaVenta:document.getElementById('vFV').value,fechaLimitePago:document.getElementById('vFL').value,notasCloser:document.getElementById('vNt').value.trim(),pagosHistorial:[primerPago],fechaCreacion:new Date().toISOString()};
     const ref2=await addDoc(collection(db,'ventas'),venta);
     VENTAS.unshift({id:ref2.id,...venta});
     closeM('mVenta');renderVentas();renderDash();checkNotif();
