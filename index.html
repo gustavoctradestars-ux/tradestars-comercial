@@ -374,7 +374,7 @@
       </div>
 
       <div class="pw" id="pg-metodos">
-        <div class="ph flex jb ic"><div><h1>Métodos de Pago</h1><p>Información de cuentas bancarias y digitales</p></div>${['gustavo','lider_financiero'].includes(ROLE)?'<button class="btn btn-primary" onclick="openMMetodo()">+ Nuevo método</button>':''}</div>
+        <div class="ph flex jb ic"><div><h1>Métodos de Pago</h1><p>Información de cuentas bancarias y digitales</p></div><button class="btn btn-primary" id="btnNewMetodo" style="display:none" onclick="openMMetodo()">+ Nuevo método</button></div>
         <div id="mdBody"><div class="loading"><div class="spin"></div></div></div>
       </div>
 
@@ -619,6 +619,7 @@ function setupNav(){
   if(isLdr()){document.getElementById('snAdm').style.display='block';document.getElementById('snRend').style.display='flex';}
   if(canMng()){document.getElementById('snLz').style.display='flex';document.getElementById('snCl').style.display='flex';}
   if(ROLE==='gustavo'){document.getElementById('snLd').style.display='flex';}
+  if(['gustavo','lider_financiero'].includes(ROLE)){const btn=document.getElementById('btnNewMetodo');if(btn)btn.style.display='block';}
   if(isClsr())document.getElementById('dMV').style.display='block';
 }
 
