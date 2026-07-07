@@ -461,7 +461,7 @@
       <div class="alert aw">Acceso creado con contraseña <strong>Tradestars2026*</strong></div>
       <div class="g2"><div class="fg"><label>Nombre *</label><input class="fi" id="cN" placeholder="Juan"></div><div class="fg"><label>Apellido *</label><input class="fi" id="cA" placeholder="Pérez"></div></div>
       <div class="fg"><label>Correo *</label><input class="fi" type="email" id="cE" placeholder="juan@email.com"></div>
-      <div class="fg"><label>Rol</label><select class="fi" id="cR"><option value="closer">Closer</option><option value="lider_comercial">Líder Comercial</option><option value="lider_financiero">Líder Financiero</option></select></div>
+      <div class="fg"><label>Rol</label><select class="fi" id="cR" disabled><option value="closer">Closer</option></select></div>
     </div>
     <div class="mf"><button class="btn btn-secondary" onclick="closeM('mCloser')">Cancelar</button><button class="btn btn-primary" id="btnSC" onclick="saveCloser()">Crear</button></div>
   </div>
@@ -521,10 +521,11 @@ let VENTAS=[], CLOSERS=[], LZS=[];
 let RECH_ID=null, PAGO_VID=null, EXTEND_VID=null;
 const GUSTAVO='gustavoctradestars@gmail.com';
 const canVal=()=>['gustavo','lider_financiero'].includes(ROLE);
-const canMng=()=>['gustavo','lider_comercial'].includes(ROLE);
+const canMng=()=>['gustavo','lider_comercial','lider_revenue'].includes(ROLE);
 const isLdr=()=>ROLE!=='closer';
 const isClsr=()=>ROLE==='closer';
-const rLabel=r=>({gustavo:'CEO',lider_comercial:'Líder Comercial',lider_financiero:'Líder Financiero',closer:'Closer'})[r]||r;
+const getEquipo=()=>{if(ROLE==='lider_comercial')return 'comercial';if(ROLE==='lider_revenue')return 'revenue';return null;};
+const rLabel=r=>({gustavo:'CEO',lider_comercial:'Líder Comercial',lider_revenue:'Líder Revenue',lider_financiero:'Líder Financiero',closer:'Closer'})[r]||r;
 
 // AUTH
 window.doLogin=async()=>{
@@ -580,13 +581,21 @@ window.go=p=>{
 async function loadAll(){await Promise.all([loadVentas(),loadClosers(),loadLzs()]);}
 
 async function loadVentas(){
-  let q=isClsr()?query(collection(db,'ventas'),where('closerEmail','==',CU.email),orderBy('fechaCreacion','desc')):query(collection(db,'ventas'),orderBy('fechaCreacion','desc'));
+  let q;
+  if(isClsr()) q=query(collection(db,'ventas'),where('closerEmail','==',CU.email),orderBy('fechaCreacion','desc'));
+  else if(ROLE==='lider_comercial') q=query(collection(db,'ventas'),where('equipoCloser','==','comercial'),orderBy('fechaCreacion','desc'));
+  else if(ROLE==='lider_revenue') q=query(collection(db,'ventas'),where('equipoCloser','==','revenue'),orderBy('fechaCreacion','desc'));
+  else q=query(collection(db,'ventas'),orderBy('fechaCreacion','desc'));
   const s=await getDocs(q);
   VENTAS=s.docs.map(d=>({id:d.id,...d.data()}));
   renderDash();renderVentas();checkNotif();
 }
 async function loadClosers(){
-  const s=await getDocs(collection(db,'closers'));
+  let q;
+  if(ROLE==='lider_comercial') q=query(collection(db,'closers'),where('equipo','==','comercial'));
+  else if(ROLE==='lider_revenue') q=query(collection(db,'closers'),where('equipo','==','revenue'));
+  else q=collection(db,'closers');
+  const s=await getDocs(q);
   CLOSERS=s.docs.map(d=>({id:d.id,...d.data()}));
   const sel=document.getElementById('fVC');
   CLOSERS.filter(c=>c.activo!==false).forEach(c=>sel.innerHTML+=`<option value="${c.email}">${c.nombre} ${c.apellido||''}</option>`);
@@ -996,7 +1005,7 @@ window.saveVenta=async()=>{
     let url='';const file=document.getElementById('vComp').files[0];
     if(file){const r=sref(storage,`comprobantes/${Date.now()}_${file.name}`);const snap=await uploadBytes(r,file);url=await getDownloadURL(snap.ref);}
     const primerPago={monto:MP,moneda:document.getElementById('vMon').value,montoOriginal:parseFloat(document.getElementById('vMO').value)||null,metodoPago:ME,cuentaDestino:document.getElementById('vCD').value.trim(),comprobanteURL:url,fecha:document.getElementById('vFV').value,notas:'Pago inicial',estado:'PENDIENTE',closerEmail:CU.email,fechaRegistro:new Date().toISOString()};
-    const venta={closerEmail:CU.email,closerNombre:`${CUD?.nombre||''} ${CUD?.apellido||''}`.trim(),clienteNombre:N,clienteApellido:A,clienteCorreo:C.toLowerCase(),clienteTelefono:document.getElementById('vT').value.trim(),clientePais:document.getElementById('vPais').value,producto:PR,fuenteLead:F,lanzamientoId:F==='LANZAMIENTO'?document.getElementById('vLz').value:'',valorTotal:VT,totalPagado:MP,saldoPendiente:Math.max(0,VT-MP),estadoPago:MP>=VT?'COMPLETO':'PARCIAL',estadoVenta:'PENDIENTE',moneda:document.getElementById('vMon').value,montoOriginal:parseFloat(document.getElementById('vMO').value)||null,metodoPago:ME,cuentaDestino:document.getElementById('vCD').value.trim(),comprobanteURL:url,fechaVenta:document.getElementById('vFV').value,fechaLimitePago:document.getElementById('vFL').value,notasCloser:document.getElementById('vNt').value.trim(),pagosHistorial:[primerPago],fechaCreacion:new Date().toISOString()};
+    const venta={closerEmail:CU.email,closerNombre:`${CUD?.nombre||''} ${CUD?.apellido||''}`.trim(),equipoCloser:CUD?.equipo||'comercial',clienteNombre:N,clienteApellido:A,clienteCorreo:C.toLowerCase(),clienteTelefono:document.getElementById('vT').value.trim(),clientePais:document.getElementById('vPais').value,producto:PR,fuenteLead:F,lanzamientoId:F==='LANZAMIENTO'?document.getElementById('vLz').value:'',valorTotal:VT,totalPagado:MP,saldoPendiente:Math.max(0,VT-MP),estadoPago:MP>=VT?'COMPLETO':'PARCIAL',estadoVenta:'PENDIENTE',moneda:document.getElementById('vMon').value,montoOriginal:parseFloat(document.getElementById('vMO').value)||null,metodoPago:ME,cuentaDestino:document.getElementById('vCD').value.trim(),comprobanteURL:url,fechaVenta:document.getElementById('vFV').value,fechaLimitePago:document.getElementById('vFL').value,notasCloser:document.getElementById('vNt').value.trim(),pagosHistorial:[primerPago],fechaCreacion:new Date().toISOString()};
     const ref2=await addDoc(collection(db,'ventas'),venta);
     VENTAS.unshift({id:ref2.id,...venta});
     closeM('mVenta');renderVentas();renderDash();checkNotif();
@@ -1020,7 +1029,7 @@ window.saveCloser=async()=>{
     const {getAuth:ga2,createUserWithEmailAndPassword:cu2,signOut:so2}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js");
     const a2=ia2(FC,'sec-'+Date.now());const au2=ga2(a2);
     await cu2(au2,E,'Tradestars2026*');await so2(au2);
-    const data={nombre:N,apellido:A,email:E,rol:R,activo:true,fechaCreacion:new Date().toISOString()};
+    const data={nombre:N,apellido:A,email:E,rol:R,equipo:getEquipo(),activo:true,fechaCreacion:new Date().toISOString()};
     const ref2=await addDoc(collection(db,'closers'),data);
     CLOSERS.push({id:ref2.id,...data});
     document.getElementById('fVC').innerHTML+=`<option value="${E}">${N} ${A}</option>`;
