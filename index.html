@@ -811,20 +811,18 @@
       </div>
 
       <div class="sb-sec">Dashboard</div>
-      <div class="sb-item active" onclick="go('dash-ext')"><span class="ico">📊</span><span>Comercial Ext</span></div>
-      <div class="sb-item" onclick="go('dash-int')"><span class="ico">🔵</span><span>Revenue Int</span></div>
-      <div class="sb-item" onclick="go('dash-comb')"><span class="ico">🎯</span><span>Combinado</span></div>
+      <div class="sb-item active" onclick="go('dash')"><span class="ico">📊</span><span>Dashboard</span></div>
 
       <div class="sb-sec" style="margin-top: 16px;">Operaciones</div>
       <div class="sb-item" id="snVta" style="display: none;" onclick="go('ventas')"><span class="ico">💰</span><span>Ventas</span></div>
       <div class="sb-item" id="snCli" style="display: none;" onclick="go('clientes')"><span class="ico">👥</span><span>Clientes</span></div>
       <div class="sb-item" id="snVal" style="display: none;" onclick="go('validar')"><span class="ico">✅</span><span>Validar</span></div>
       <div class="sb-item" id="snRep" style="display: none;" onclick="go('reporte')"><span class="ico">📈</span><span>Financiero</span></div>
+      <div class="sb-item" id="snRend" style="display: none;" onclick="go('rendimiento')"><span class="ico">📉</span><span>Rendimiento</span></div>
 
       <div class="sb-sec" style="margin-top: 16px;">Admin</div>
       <div class="sb-item" id="snLz" style="display: none;" onclick="go('lanzamientos')"><span class="ico">🚀</span><span>Lanzamientos</span></div>
       <div class="sb-item" id="snCl" style="display: none;" onclick="go('closers')"><span class="ico">⚡</span><span>Closers</span></div>
-      <div class="sb-item" id="snCfg" style="display: none;" onclick="go('config')"><span class="ico">⚙️</span><span>Configuración</span></div>
 
       <div class="sb-footer">
         <div class="u-row">
@@ -841,46 +839,17 @@
     <!-- MAIN CONTENT -->
     <main class="main">
 
-      <!-- DASHBOARD COMERCIAL EXTERNO -->
-      <div class="pw active" id="pg-dash-ext">
+      <!-- DASHBOARD -->
+      <div class="pw active" id="pg-dash">
         <div class="ph">
           <div>
-            <h1>Dashboard Comercial Externo</h1>
-            <p>Embudos, lanzamientos, frío</p>
+            <h1>Dashboard</h1>
+            <p id="dashSub">Métricas del mes</p>
           </div>
         </div>
-        <div class="kgrid" id="kgExt">
-          <div class="loading"><div class="spin"></div></div>
-        </div>
-        <div id="dpExt"></div>
-      </div>
-
-      <!-- DASHBOARD REVENUE INTERNO -->
-      <div class="pw" id="pg-dash-int">
-        <div class="ph">
-          <div>
-            <h1>Dashboard Revenue Interno</h1>
-            <p>Seguimiento, upsells</p>
-          </div>
-        </div>
-        <div class="kgrid" id="kgInt">
-          <div class="loading"><div class="spin"></div></div>
-        </div>
-        <div id="dpInt"></div>
-      </div>
-
-      <!-- DASHBOARD COMBINADO -->
-      <div class="pw" id="pg-dash-comb">
-        <div class="ph">
-          <div>
-            <h1>Dashboard Combinado</h1>
-            <p>Resultado total de ambos equipos</p>
-          </div>
-        </div>
-        <div class="kgrid" id="kgComb">
-          <div class="loading"><div class="spin"></div></div>
-        </div>
-        <div id="dpComb"></div>
+        <div id="dashBanner"></div>
+        <div class="kgrid" id="kgrid"></div>
+        <div id="dashContent"></div>
       </div>
 
       <!-- VENTAS -->
@@ -901,7 +870,6 @@
                   <th>Producto</th>
                   <th>Monto</th>
                   <th>Estado</th>
-                  <th>Equipo</th>
                   <th>Fecha</th>
                 </tr>
               </thead>
@@ -961,6 +929,17 @@
         <div id="repBody"></div>
       </div>
 
+      <!-- RENDIMIENTO -->
+      <div class="pw" id="pg-rendimiento">
+        <div class="ph">
+          <div>
+            <h1>Rendimiento</h1>
+            <p>Métricas de cierre y conversión</p>
+          </div>
+        </div>
+        <div id="rendBody"></div>
+      </div>
+
       <!-- LANZAMIENTOS -->
       <div class="pw" id="pg-lanzamientos">
         <div class="ph flex jb ic">
@@ -989,41 +968,6 @@
         </div>
       </div>
 
-      <!-- CONFIGURACIÓN -->
-      <div class="pw" id="pg-config">
-        <div class="ph flex jb ic">
-          <div>
-            <h1>Configuración</h1>
-            <p>Métodos de pago y ajustes</p>
-          </div>
-          <button class="btn btn-primary" onclick="openMMet()">+ Nuevo método</button>
-        </div>
-        <div class="card">
-          <div class="ct">💳 Métodos de pago disponibles</div>
-          <div class="tw">
-            <table>
-              <thead>
-                <tr>
-                  <th>Método</th>
-                  <th>País</th>
-                  <th>Tipo</th>
-                  <th>Monedas</th>
-                  <th>Estado</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="tMet">
-                <tr>
-                  <td colspan="6">
-                    <div class="loading"><div class="spin"></div></div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
     </main>
   </div>
 </div>
@@ -1033,87 +977,147 @@
 
 <!-- MODAL: NUEVA VENTA -->
 <div class="overlay" id="oMVta">
-  <div class="modal">
+  <div class="modal modal-lg">
     <div class="mh">
       <h3>Nueva Venta</h3>
       <button class="mc" onclick="closeM('oMVta')">×</button>
     </div>
     <div class="mb">
-      <div class="fg">
-        <label>Equipo</label>
-        <select id="vmEq" class="fi">
-          <option value="">Seleccionar equipo...</option>
-          <option value="EXT">Comercial Externo</option>
-          <option value="INT">Revenue Interno</option>
-        </select>
+      <div style="display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 14px;">
+        <button class="btn btn-sm" id="tab1" style="background: var(--accent); color: white;" onclick="switchTab(1)">Cliente</button>
+        <button class="btn btn-sm" id="tab2" style="background: var(--bg3); color: var(--text2);" onclick="switchTab(2)">Venta</button>
+        <button class="btn btn-sm" id="tab3" style="background: var(--bg3); color: var(--text2);" onclick="switchTab(3)">Pago</button>
       </div>
-      <div class="fg">
-        <label>Closer</label>
-        <select id="vmCl" class="fi">
-          <option value="">Seleccionar closer...</option>
-        </select>
-      </div>
-      <div class="fg">
-        <label>Cliente (Nombre)</label>
-        <input type="text" id="vmNom" class="fi" placeholder="Juan Pérez">
-      </div>
-      <div class="fg">
-        <label>Apellido</label>
-        <input type="text" id="vmApe" class="fi" placeholder="García">
-      </div>
-      <div class="fg">
-        <label>Correo</label>
-        <input type="email" id="vmMail" class="fi" placeholder="juan@gmail.com">
-      </div>
-      <div class="fg">
-        <label>Teléfono</label>
-        <input type="tel" id="vmTel" class="fi" placeholder="+57...">
-      </div>
-      <div class="fg">
-        <label>País</label>
-        <input type="text" id="vmPais" class="fi" placeholder="Colombia">
-      </div>
-      <div class="fg">
-        <label>Producto</label>
-        <select id="vmProd" class="fi">
-          <option value="">Seleccionar...</option>
-          <option value="KAINET">KAINET</option>
-          <option value="TRIBU">TRIBU</option>
-          <option value="ARENA">ARENA</option>
-          <option value="PERPETUO">PERPETUO</option>
-        </select>
-      </div>
-      <div class="g2">
+
+      <!-- TAB 1: CLIENTE -->
+      <div id="tabContent1">
         <div class="fg">
-          <label>Monto Total</label>
-          <input type="number" id="vmMto" class="fi" placeholder="0" step="0.01">
+          <label>Nombre*</label>
+          <input type="text" id="vmNom" class="fi" placeholder="Juan">
         </div>
         <div class="fg">
-          <label>Moneda</label>
-          <select id="vmMon" class="fi">
-            <option value="USD">USD</option>
-            <option value="COP">COP</option>
-            <option value="PEN">PEN</option>
-            <option value="VES">VES</option>
-            <option value="BRL">BRL</option>
+          <label>Apellido</label>
+          <input type="text" id="vmApe" class="fi" placeholder="Pérez">
+        </div>
+        <div class="fg">
+          <label>Correo*</label>
+          <input type="email" id="vmMail" class="fi" placeholder="juan@gmail.com">
+        </div>
+        <div class="g2">
+          <div class="fg">
+            <label>Teléfono</label>
+            <input type="tel" id="vmTel" class="fi" placeholder="+57...">
+          </div>
+          <div class="fg">
+            <label>País</label>
+            <input type="text" id="vmPais" class="fi" placeholder="Colombia">
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: VENTA -->
+      <div id="tabContent2" style="display: none;">
+        <div class="g2">
+          <div class="fg">
+            <label>Producto*</label>
+            <select id="vmProd" class="fi">
+              <option value="">Seleccionar...</option>
+              <option value="KAINET">KAINET</option>
+              <option value="TRIBU">TRIBU</option>
+              <option value="ARENA">ARENA</option>
+              <option value="PERPETUO">PERPETUO</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Fuente de lead*</label>
+            <select id="vmFte" class="fi">
+              <option value="">Seleccionar...</option>
+              <option value="EMBUDO">Embudo</option>
+              <option value="LANZAMIENTO">Lanzamiento</option>
+              <option value="LLAMADA_FRIA">Llamada fría</option>
+              <option value="LLAMADA_CALIENTE">Llamada caliente</option>
+              <option value="INSTAGRAM">Instagram</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Lanzamiento (si aplica)</label>
+          <select id="vmLz" class="fi">
+            <option value="">Ninguno</option>
           </select>
         </div>
-      </div>
-      <div class="g2">
-        <div class="fg">
-          <label>Monto Pagado</label>
-          <input type="number" id="vmPag" class="fi" placeholder="0" step="0.01">
+        <div class="g2">
+          <div class="fg">
+            <label>Valor total USD*</label>
+            <input type="number" id="vmMto" class="fi" placeholder="0" step="0.01">
+          </div>
+          <div class="fg">
+            <label>Fecha de venta*</label>
+            <input type="date" id="vmFecha" class="fi">
+          </div>
         </div>
         <div class="fg">
-          <label>Método Pago</label>
-          <select id="vmMetPago" class="fi">
-            <option value="">Seleccionar método...</option>
-          </select>
+          <label>Fecha límite de pago</label>
+          <input type="date" id="vmFechaLim" class="fi">
+        </div>
+        <div class="fg">
+          <label>Notas del closer</label>
+          <textarea id="vmNotas" class="fi" placeholder="Observaciones..." style="resize: vertical; min-height: 60px;"></textarea>
         </div>
       </div>
-      <div class="fg">
-        <label>Notas</label>
-        <textarea id="vmNotas" class="fi" placeholder="Observaciones..." style="resize: vertical; min-height: 72px;"></textarea>
+
+      <!-- TAB 3: PAGO -->
+      <div id="tabContent3" style="display: none;">
+        <div class="g2">
+          <div class="fg">
+            <label>Monto pagado ahora USD*</label>
+            <input type="number" id="vmPag" class="fi" placeholder="0" step="0.01">
+          </div>
+          <div class="fg">
+            <label>Moneda real*</label>
+            <select id="vmMon" class="fi">
+              <option value="USD">USD</option>
+              <option value="COP">COP</option>
+              <option value="BRL">BRL</option>
+              <option value="PEN">PEN</option>
+              <option value="VES">VES</option>
+              <option value="USDT">USDT</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Monto en moneda original</label>
+          <input type="number" id="vmMonOrig" class="fi" placeholder="0" step="0.01">
+        </div>
+        <div class="g2">
+          <div class="fg">
+            <label>Método de pago*</label>
+            <select id="vmMetPago" class="fi">
+              <option value="">Seleccionar...</option>
+              <option value="Bancolombia">Bancolombia</option>
+              <option value="BCP Perú">BCP Perú</option>
+              <option value="Banesco Panamá">Banesco Panamá</option>
+              <option value="IFB USA">IFB USA</option>
+              <option value="Zelle">Zelle</option>
+              <option value="Banco Venezuela">Banco Venezuela</option>
+              <option value="Cielo Brasil">Cielo Brasil</option>
+              <option value="Bradesco">Bradesco</option>
+              <option value="Crypto">Crypto</option>
+              <option value="Hotmart">Hotmart</option>
+              <option value="PayPal">PayPal</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Cuenta destino Tradestars</label>
+            <input type="text" id="vmCta" class="fi" placeholder="Ej: Bancolombia — Gustavo">
+          </div>
+        </div>
+        <div class="fg">
+          <label>Comprobante de pago*</label>
+          <input type="file" id="vmComp" class="fi" accept="image/*,.pdf">
+        </div>
       </div>
     </div>
     <div class="mf">
@@ -1158,13 +1162,6 @@
         <label>Correo</label>
         <input type="email" id="cmEmail" class="fi" placeholder="juan@...com">
       </div>
-      <div class="fg">
-        <label>Equipo</label>
-        <select id="cmEq" class="fi">
-          <option value="EXT">Comercial Externo</option>
-          <option value="INT">Revenue Interno</option>
-        </select>
-      </div>
     </div>
     <div class="mf">
       <button class="btn btn-secondary" onclick="closeM('oMCl')">Cancelar</button>
@@ -1195,6 +1192,16 @@
           <input type="date" id="lmFend" class="fi">
         </div>
       </div>
+      <div class="g2">
+        <div class="fg">
+          <label>Meta USD</label>
+          <input type="number" id="lmMeta" class="fi" placeholder="0" step="0.01">
+        </div>
+        <div class="fg">
+          <label>Bono</label>
+          <input type="text" id="lmBono" class="fi" placeholder="30 USD">
+        </div>
+      </div>
     </div>
     <div class="mf">
       <button class="btn btn-secondary" onclick="closeM('oMLz')">Cancelar</button>
@@ -1203,50 +1210,7 @@
   </div>
 </div>
 
-<!-- MODAL: NUEVO MÉTODO PAGO -->
-<div class="overlay" id="oMMet">
-  <div class="modal">
-    <div class="mh">
-      <h3 id="mmTitle">Nuevo método</h3>
-      <button class="mc" onclick="closeM('oMMet')">×</button>
-    </div>
-    <div class="mb">
-      <div class="fg">
-        <label>Nombre</label>
-        <input type="text" id="mmNom" class="fi" placeholder="Bancolombia">
-      </div>
-      <div class="g2">
-        <div class="fg">
-          <label>País/Región</label>
-          <input type="text" id="mmPais" class="fi" placeholder="Colombia">
-        </div>
-        <div class="fg">
-          <label>Tipo</label>
-          <select id="mmTipo" class="fi">
-            <option value="Transferencia">Transferencia</option>
-            <option value="Tarjeta">Tarjeta</option>
-            <option value="Billetera">Billetera</option>
-            <option value="Crypto">Crypto</option>
-            <option value="Efectivo">Efectivo</option>
-          </select>
-        </div>
-      </div>
-      <div class="fg">
-        <label>Monedas soportadas (separar con comas)</label>
-        <input type="text" id="mmMon" class="fi" placeholder="USD,COP,PEN">
-      </div>
-      <div class="fg">
-        <label><input type="checkbox" id="mmAct" checked> Activo</label>
-      </div>
-    </div>
-    <div class="mf">
-      <button class="btn btn-secondary" onclick="closeM('oMMet')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveMet()">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- FIREBASE SCRIPTS -->
+<!-- FIREBASE SCRIPTS v8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
@@ -1266,48 +1230,41 @@ const FB_CONFIG = {
 firebase.initializeApp(FB_CONFIG);
 const db = firebase.firestore();
 const auth = firebase.auth();
+const storage = firebase.storage();
 
 // ============ GLOBAL STATE ============
 let CURRENTUSER = {};
 let VENTAS = [];
 let CLOSERS = [];
 let LANZAMIENTOS = [];
-let METODOS_PAGO = [];
 let VAL_EDIT_ID = null;
-let MET_EDIT_ID = null;
+let VTAB = 1;
 
 // ============ INIT ============
-const init = () => {
-  auth.onAuthStateChanged(u => {
-    if (u) {
-      loadApp(u);
-    } else {
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('appScreen').style.display = 'none';
-    }
-  });
-};
+auth.onAuthStateChanged(u => {
+  if (u) {
+    loadApp(u);
+  } else {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('appScreen').style.display = 'none';
+  }
+});
 
 const loadApp = async (u) => {
   CURRENTUSER = { email: u.email };
 
-  // Buscar si es un closer
   const snap = await db.collection('closers').where('email', '==', u.email).get();
   if (!snap.empty) {
     const closer = snap.docs[0].data();
-    CURRENTUSER.role = closer.rol;
+    CURRENTUSER.rol = closer.rol;
     CURRENTUSER.nombre = closer.nombre;
-    CURRENTUSER.equipo = closer.equipo || 'EXT';
   } else {
-    // Es Gustavo (admin)
-    CURRENTUSER.role = 'gustavo';
+    CURRENTUSER.rol = 'gustavo';
     CURRENTUSER.nombre = 'Gustavo';
-    CURRENTUSER.equipo = 'COMB';
   }
 
   renderUI();
   loadAll();
-  await migrateMetodos();
 };
 
 const renderUI = () => {
@@ -1315,23 +1272,21 @@ const renderUI = () => {
   document.getElementById('appScreen').style.display = 'block';
   
   document.getElementById('uName').innerText = CURRENTUSER.nombre;
-  document.getElementById('uRole').innerText = CURRENTUSER.role;
+  document.getElementById('uRole').innerText = CURRENTUSER.rol;
   
   const av = document.getElementById('uAv');
   av.innerText = CURRENTUSER.nombre[0].toUpperCase();
 
-  // Mostrar items según rol
-  const isLider = CURRENTUSER.role !== 'closer';
-  const canManage = CURRENTUSER.role === 'gustavo' || CURRENTUSER.role === 'lider_comercial' || CURRENTUSER.role === 'lider_revenue';
-  const isFinanciero = CURRENTUSER.role === 'gustavo' || CURRENTUSER.role === 'lider_financiero';
+  const isLider = CURRENTUSER.rol !== 'closer';
+  const canVal = CURRENTUSER.rol === 'gustavo' || CURRENTUSER.rol === 'lider_financiero';
 
   document.getElementById('snVta').style.display = isLider ? 'flex' : 'none';
   document.getElementById('snCli').style.display = isLider ? 'flex' : 'none';
-  document.getElementById('snVal').style.display = isFinanciero ? 'flex' : 'none';
-  document.getElementById('snRep').style.display = isFinanciero ? 'flex' : 'none';
+  document.getElementById('snVal').style.display = canVal ? 'flex' : 'none';
+  document.getElementById('snRep').style.display = canVal ? 'flex' : 'none';
+  document.getElementById('snRend').style.display = isLider ? 'flex' : 'none';
   document.getElementById('snLz').style.display = isLider ? 'flex' : 'none';
-  document.getElementById('snCl').style.display = canManage ? 'flex' : 'none';
-  document.getElementById('snCfg').style.display = canManage ? 'flex' : 'none';
+  document.getElementById('snCl').style.display = isLider ? 'flex' : 'none';
 };
 
 // ============ LOAD DATA ============
@@ -1339,7 +1294,7 @@ const loadAll = async () => {
   await loadVtas();
   await loadClosers();
   await loadLzs();
-  await loadMetodos();
+  renderDash();
 };
 
 const loadVtas = async () => {
@@ -1357,42 +1312,6 @@ const loadLzs = async () => {
   LANZAMIENTOS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 };
 
-const loadMetodos = async () => {
-  const snap = await db.collection('metodosPago').get();
-  METODOS_PAGO = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-};
-
-// ============ MIGRATION ============
-const migrateMetodos = async () => {
-  const snap = await db.collection('metodosPago').get();
-  
-  if (snap.empty) {
-    const METODOS_DEFAULT = [
-      { nombre: 'Bancolombia', pais: 'Colombia', tipo: 'Transferencia', monedas: ['COP'], activo: true },
-      { nombre: 'BCP Perú', pais: 'Perú', tipo: 'Transferencia', monedas: ['PEN', 'USD'], activo: true },
-      { nombre: 'Banesco Panamá', pais: 'Panamá', tipo: 'Transferencia', monedas: ['USD'], activo: true },
-      { nombre: 'IFB USA', pais: 'USA', tipo: 'Transferencia', monedas: ['USD'], activo: true },
-      { nombre: 'Zelle', pais: 'USA', tipo: 'Transferencia', monedas: ['USD'], activo: true },
-      { nombre: 'Banco Venezuela', pais: 'Venezuela', tipo: 'Transferencia', monedas: ['VES'], activo: true },
-      { nombre: 'Cielo Brasil', pais: 'Brasil', tipo: 'Tarjeta', monedas: ['BRL'], activo: true },
-      { nombre: 'Bradesco', pais: 'Brasil', tipo: 'Transferencia', monedas: ['BRL'], activo: true },
-      { nombre: 'Crypto/Exchange', pais: 'Global', tipo: 'Crypto', monedas: ['USD', 'USDT', 'BTC'], activo: true },
-      { nombre: 'Hotmart', pais: 'Global', tipo: 'Billetera', monedas: ['USD', 'BRL'], activo: true },
-      { nombre: 'PayPal', pais: 'Global', tipo: 'Billetera', monedas: ['USD'], activo: true },
-      { nombre: 'Otro', pais: 'Otro', tipo: 'Efectivo', monedas: ['USD', 'COP', 'BRL'], activo: true }
-    ];
-
-    for (const m of METODOS_DEFAULT) {
-      await db.collection('metodosPago').add({
-        ...m,
-        fechaCreacion: new Date()
-      });
-    }
-  }
-
-  await loadMetodos();
-};
-
 // ============ NAVIGATION ============
 const go = (page) => {
   document.querySelectorAll('.pw').forEach(p => p.classList.remove('active'));
@@ -1405,99 +1324,91 @@ const go = (page) => {
 };
 
 const renderPage = (page) => {
-  if (page.startsWith('dash-')) {
-    renderDash(page.replace('dash-', ''));
-  } else if (page === 'ventas') {
-    renderVtas();
-  } else if (page === 'clientes') {
-    renderClis();
-  } else if (page === 'validar') {
-    renderVal();
-  } else if (page === 'reporte') {
-    renderRep();
-  } else if (page === 'lanzamientos') {
-    renderLz();
-  } else if (page === 'closers') {
-    renderClos();
-  } else if (page === 'config') {
-    renderConfig();
-  }
+  if (page === 'dash') renderDash();
+  else if (page === 'ventas') renderVtas();
+  else if (page === 'clientes') renderClis();
+  else if (page === 'validar') renderVal();
+  else if (page === 'reporte') renderRep();
+  else if (page === 'rendimiento') renderRend();
+  else if (page === 'lanzamientos') renderLz();
+  else if (page === 'closers') renderClos();
 };
 
-// ============ DASHBOARDS ============
-const renderDash = (tipo) => {
-  // Filtrar solo VALIDADAS
-  let vtas = VENTAS.filter(v => v.estadoVenta === 'VALIDADA');
-  
-  // Filtrar por equipo
-  if (tipo === 'ext') {
-    vtas = vtas.filter(v => v.equipo === 'EXT');
-  } else if (tipo === 'int') {
-    vtas = vtas.filter(v => v.equipo === 'INT');
-  }
-  // Si es 'comb', mostramos todas
+// ============ DASHBOARD ============
+const renderDash = () => {
+  const pending = VENTAS.filter(v => v.estadoVenta === 'PENDIENTE').length;
+  const validated = VENTAS.filter(v => v.estadoVenta === 'VALIDADA').length;
+  const rechazadas = VENTAS.filter(v => v.estadoVenta === 'RECHAZADA').length;
+  const totalRecaudado = VENTAS.filter(v => v.estadoVenta === 'VALIDADA').reduce((sum, v) => sum + (parseFloat(v.totalPagado) || 0), 0);
+  const saldoPendiente = VENTAS.filter(v => v.estadoVenta === 'VALIDADA').reduce((sum, v) => sum + (parseFloat(v.saldoPendiente) || 0), 0);
 
-  const total = vtas.reduce((sum, v) => sum + parseFloat(v.valorTotal || 0), 0);
-  const count = vtas.length;
-  const partial = vtas.filter(v => v.estadoPago === 'PARCIAL').length;
-  const complete = vtas.filter(v => v.estadoPago === 'COMPLETO').length;
-
-  const kgId = tipo === 'ext' ? 'kgExt' : tipo === 'int' ? 'kgInt' : 'kgComb';
-  const dpId = tipo === 'ext' ? 'dpExt' : tipo === 'int' ? 'dpInt' : 'dpComb';
-
-  document.getElementById(kgId).innerHTML = `
+  document.getElementById('kgrid').innerHTML = `
     <div class="kpi">
       <div class="kpi-ico">💰</div>
-      <div class="kpi-lbl">Ingresos Total</div>
-      <div class="kpi-val">$${total.toFixed(0)}</div>
+      <div class="kpi-lbl">Recaudado USD</div>
+      <div class="kpi-val">$${totalRecaudado.toFixed(0)}</div>
     </div>
     <div class="kpi">
       <div class="kpi-ico">✅</div>
-      <div class="kpi-lbl">Ventas Validadas</div>
-      <div class="kpi-val">${count}</div>
+      <div class="kpi-lbl">Validadas</div>
+      <div class="kpi-val">${validated}</div>
     </div>
     <div class="kpi">
-      <div class="kpi-ico">🟡</div>
-      <div class="kpi-lbl">Parciales</div>
-      <div class="kpi-val">${partial}</div>
+      <div class="kpi-ico">⏳</div>
+      <div class="kpi-lbl">Pendientes</div>
+      <div class="kpi-val">${pending}</div>
     </div>
     <div class="kpi">
-      <div class="kpi-ico">✔️</div>
-      <div class="kpi-lbl">Completadas</div>
-      <div class="kpi-val">${complete}</div>
+      <div class="kpi-ico">⚠️</div>
+      <div class="kpi-lbl">Saldo Pendiente</div>
+      <div class="kpi-val">$${saldoPendiente.toFixed(0)}</div>
     </div>
   `;
 
-  document.getElementById(dpId).innerHTML = `
-    <div class="card">
-      <div class="ct">📊 Últimas 10 ventas validadas</div>
-      <div class="tw">
-        <table>
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Producto</th>
-              <th>Monto</th>
-              <th>Estado</th>
-              <th>Fecha</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${vtas.slice(0, 10).map(v => `
-              <tr>
-                <td>
-                  <div class="td-m">${v.clienteNombre} ${v.clienteApellido}</div>
-                  <div class="td-s">${v.clienteCorreo}</div>
-                </td>
-                <td>${v.producto}</td>
-                <td>$${parseFloat(v.valorTotal || 0).toFixed(2)}</td>
-                <td><span class="badge ${v.estadoPago === 'COMPLETO' ? 'bg' : 'by'}">${v.estadoPago}</span></td>
-                <td>${new Date(v.fechaVenta).toLocaleDateString()}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
+  const lzActiva = LANZAMIENTOS.find(l => new Date(l.fechaFin) > new Date());
+  let bannerHTML = '';
+  if (lzActiva) {
+    const vtasLz = VENTAS.filter(v => v.lanzamientoId === lzActiva.id).length;
+    const avance = ((vtasLz / lzActiva.meta) * 100).toFixed(0);
+    bannerHTML = `
+      <div class="card" style="background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; color: white; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 16px; font-weight: 700;">🚀 ${lzActiva.nombre}</div>
+            <div style="font-size: 12px; opacity: 0.9; margin-top: 4px;">Hasta ${new Date(lzActiva.fechaFin).toLocaleDateString()}</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 20px; font-weight: 800;">${avance}%</div>
+            <div style="font-size: 12px; opacity: 0.9;">${vtasLz} / ${lzActiva.meta} meta</div>
+          </div>
+        </div>
+        <div style="background: rgba(0,0,0,0.2); height: 6px; border-radius: 3px; margin-top: 10px; overflow: hidden;">
+          <div style="background: white; height: 100%; width: ${avance}%;"></div>
+        </div>
       </div>
+    `;
+  }
+  document.getElementById('dashBanner').innerHTML = bannerHTML;
+
+  // Ranking closers
+  const byCloser = {};
+  VENTAS.filter(v => v.estadoVenta === 'VALIDADA').forEach(v => {
+    if (!byCloser[v.closerNombre]) byCloser[v.closerNombre] = 0;
+    byCloser[v.closerNombre] += parseFloat(v.totalPagado) || 0;
+  });
+
+  const ranking = Object.entries(byCloser).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([n, m]) => `
+    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: center;">
+      <span>${n}</span>
+      <div style="flex: 1; background: var(--bg3); height: 6px; border-radius: 3px; margin: 0 12px;"><div style="background: var(--accent); height: 100%; width: ${Math.min(m / totalRecaudado * 100, 100)}%;"></div></div>
+      <span style="color: var(--text2);">$${m.toFixed(0)}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('dashContent').innerHTML = `
+    <div class="card">
+      <div class="ct">🏆 Top 5 Closers</div>
+      <div>${ranking || '<div style="color: var(--text2); text-align: center; padding: 20px;">Sin ventas validadas</div>'}</div>
     </div>
   `;
 };
@@ -1507,45 +1418,56 @@ const renderVtas = () => {
   document.getElementById('vBody').innerHTML = VENTAS.map(v => `
     <tr>
       <td>
-        <div class="td-m">${v.clienteNombre} ${v.clienteApellido}</div>
+        <div class="td-m">${v.clienteNombre} ${v.clienteApellido || ''}</div>
         <div class="td-s">${v.clienteCorreo}</div>
       </td>
       <td>${v.producto}</td>
-      <td>$${parseFloat(v.valorTotal || 0).toFixed(2)} ${v.moneda}</td>
-      <td><span class="badge ${v.estadoVenta === 'VALIDADA' ? 'bg' : v.estadoVenta === 'RECHAZADA' ? 'br' : 'bb'}">${v.estadoVenta}</span></td>
-      <td><span class="badge ${v.equipo === 'EXT' ? 'bi' : 'bp'}">${v.equipo === 'EXT' ? 'Ext' : 'Int'}</span></td>
-      <td>${new Date(v.fechaVenta).toLocaleDateString()}</td>
+      <td>$${parseFloat(v.valorTotal || 0).toFixed(2)}</td>
+      <td><span class="badge ${v.estadoVenta === 'VALIDADA' ? 'bg' : v.estadoVenta === 'RECHAZADA' ? 'br' : 'by'}">${v.estadoVenta}</span></td>
+      <td>${v.fechaVenta ? new Date(v.fechaVenta).toLocaleDateString() : '—'}</td>
     </tr>
-  `).join('');
+  `).join('') || '<tr><td colspan="5" style="text-align: center; color: var(--text2);">Sin ventas</td></tr>';
 };
 
 // ============ CLIENTES ============
 const renderClis = () => {
-  let clis = [];
+  let clis = {};
   VENTAS.forEach(v => {
-    if (!clis.find(c => c.correo === v.clienteCorreo)) {
-      clis.push({
-        correo: v.clienteCorreo,
-        nombre: v.clienteNombre,
-        apellido: v.clienteApellido,
-        telefono: v.clienteTelefono
-      });
+    const key = v.clienteCorreo;
+    if (!clis[key]) {
+      clis[key] = { correo: v.clienteCorreo, nombre: v.clienteNombre, apellido: v.clienteApellido, telefono: v.clienteTelefono, ventas: [] };
     }
+    clis[key].ventas.push(v);
   });
 
-  const vtasCount = clis.map(c => ({
-    ...c,
-    count: VENTAS.filter(v => v.clienteCorreo === c.correo).length
-  }));
-
-  document.getElementById('cBody').innerHTML = vtasCount.map(c => `
-    <tr>
-      <td><div class="td-m">${c.nombre} ${c.apellido}</div></td>
+  document.getElementById('cBody').innerHTML = Object.values(clis).map(c => `
+    <tr onclick="toggleExpand(this)">
+      <td><div class="td-m">${c.nombre} ${c.apellido || ''}</div></td>
       <td class="td-s">${c.correo}</td>
       <td class="td-s">${c.telefono || '—'}</td>
-      <td><span class="badge bi">${c.count} ventas</span></td>
+      <td><span class="badge bi">${c.ventas.length} ventas</span></td>
+    </tr>
+    <tr style="display: none; background: var(--bg3);">
+      <td colspan="4" style="padding: 10px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">
+          ${c.ventas.map(v => `<div style="background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 12px;">
+            <div style="font-weight: 600;">${v.producto}</div>
+            <div>$${parseFloat(v.valorTotal || 0).toFixed(2)} - ${v.estadoPago}</div>
+            <div style="color: var(--text2); margin-top: 4px;">Por: ${v.closerNombre}</div>
+          </div>`).join('')}
+        </div>
+      </td>
     </tr>
   `).join('');
+};
+
+const toggleExpand = (row) => {
+  const next = row.nextElementSibling;
+  if (next && next.style.display === 'none') {
+    next.style.display = 'table-row';
+  } else if (next) {
+    next.style.display = 'none';
+  }
 };
 
 // ============ VALIDAR PAGOS ============
@@ -1553,12 +1475,7 @@ const renderVal = () => {
   const pending = VENTAS.filter(v => v.estadoVenta === 'PENDIENTE');
   
   if (pending.length === 0) {
-    document.getElementById('valBody').innerHTML = `
-      <div style="text-align: center; padding: 36px; color: var(--text2);">
-        <div style="font-size: 38px; margin-bottom: 8px;">✅</div>
-        <p>Sin validaciones pendientes</p>
-      </div>
-    `;
+    document.getElementById('valBody').innerHTML = `<div style="text-align: center; padding: 36px; color: var(--text2);">✅ Sin validaciones pendientes</div>`;
     return;
   }
 
@@ -1566,23 +1483,16 @@ const renderVal = () => {
     <div style="background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; padding: 16px; margin-bottom: 10px;">
       <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
         <div>
-          <div style="font-weight: 600;">${v.clienteNombre} ${v.clienteApellido}</div>
+          <div style="font-weight: 600;">${v.clienteNombre} ${v.clienteApellido || ''}</div>
           <div style="font-size: 12px; color: var(--text2);">${v.clienteCorreo}</div>
         </div>
         <div style="text-align: right;">
           <div style="font-weight: 600;">$${parseFloat(v.valorTotal || 0).toFixed(2)}</div>
-          <div style="font-size: 12px; color: var(--text2);">${new Date(v.fechaVenta).toLocaleDateString()}</div>
+          <div style="font-size: 12px; color: var(--text2);">${v.fechaVenta}</div>
         </div>
       </div>
-      <div style="margin-bottom: 10px; padding-top: 10px; border-top: 1px solid var(--border);">
-        <div style="margin-bottom: 5px;"><strong>Producto:</strong> ${v.producto}</div>
-        <div style="margin-bottom: 5px;"><strong>Método Pago:</strong> ${v.metodoPago}</div>
-        <div style="margin-bottom: 5px;"><strong>Monto Pagado:</strong> $${parseFloat(v.totalPagado || 0).toFixed(2)}</div>
-        <div><strong>Closer:</strong> ${v.closerNombre}</div>
-      </div>
       <div style="display: flex; gap: 8px; margin-top: 10px;">
-        <button class="btn btn-danger btn-sm" onclick="setValEdit('${v.id}'); openM('oMVal'); prepareVal('${v.id}')">Rechazar</button>
-        <button class="btn btn-success btn-sm" onclick="setValEdit('${v.id}'); openM('oMVal'); prepareVal('${v.id}')">Validar</button>
+        <button class="btn btn-danger btn-sm" onclick="setValEdit('${v.id}'); prepareVal('${v.id}'); openM('oMVal')">Revisar</button>
       </div>
     </div>
   `).join('');
@@ -1593,310 +1503,27 @@ const prepareVal = (id) => {
   if (v) {
     document.getElementById('valDetail').innerHTML = `
       <div class="dg">
-        <div>
-          <div class="dl">Cliente</div>
-          <div class="dv">${v.clienteNombre} ${v.clienteApellido}</div>
-        </div>
-        <div>
-          <div class="dl">Email</div>
-          <div class="dv">${v.clienteCorreo}</div>
-        </div>
-        <div>
-          <div class="dl">Producto</div>
-          <div class="dv">${v.producto}</div>
-        </div>
-        <div>
-          <div class="dl">Monto Total</div>
-          <div class="dv">$${parseFloat(v.valorTotal || 0).toFixed(2)} ${v.moneda}</div>
-        </div>
-        <div>
-          <div class="dl">Pagado</div>
-          <div class="dv">$${parseFloat(v.totalPagado || 0).toFixed(2)}</div>
-        </div>
-        <div>
-          <div class="dl">Pendiente</div>
-          <div class="dv">$${parseFloat((v.valorTotal || 0) - (v.totalPagado || 0)).toFixed(2)}</div>
-        </div>
-        <div>
-          <div class="dl">Método Pago</div>
-          <div class="dv">${v.metodoPago}</div>
-        </div>
-        <div>
-          <div class="dl">Closer</div>
-          <div class="dv">${v.closerNombre}</div>
-        </div>
+        <div><div class="dl">Cliente</div><div class="dv">${v.clienteNombre} ${v.clienteApellido || ''}</div></div>
+        <div><div class="dl">Producto</div><div class="dv">${v.producto}</div></div>
+        <div><div class="dl">Monto Total</div><div class="dv">$${parseFloat(v.valorTotal || 0).toFixed(2)}</div></div>
+        <div><div class="dl">Moneda Real</div><div class="dv">${v.moneda}</div></div>
+        <div><div class="dl">Monto Original</div><div class="dv">${v.montoOriginal || '—'}</div></div>
+        <div><div class="dl">Método Pago</div><div class="dv">${v.metodoPago}</div></div>
+        <div><div class="dl">Pagado Ahora</div><div class="dv">$${parseFloat(v.totalPagado || 0).toFixed(2)}</div></div>
+        <div><div class="dl">Closer</div><div class="dv">${v.closerNombre}</div></div>
       </div>
+      ${v.comprobanteURL ? `<img src="${v.comprobanteURL}" style="max-width: 100%; border-radius: 8px; margin-top: 12px; max-height: 300px;">` : ''}
     `;
   }
 };
 
-// ============ REPORTE FINANCIERO ============
-const renderRep = () => {
-  let vtas = VENTAS.filter(v => v.estadoVenta === 'VALIDADA');
-  const byCloser = {};
-  
-  vtas.forEach(v => {
-    if (!byCloser[v.closerNombre]) {
-      byCloser[v.closerNombre] = { ventas: 0, ingresos: 0, pagado: 0, pendiente: 0 };
-    }
-    byCloser[v.closerNombre].ventas++;
-    byCloser[v.closerNombre].ingresos += parseFloat(v.valorTotal || 0);
-    byCloser[v.closerNombre].pagado += parseFloat(v.totalPagado || 0);
-    byCloser[v.closerNombre].pendiente += parseFloat((v.valorTotal || 0) - (v.totalPagado || 0));
-  });
-
-  document.getElementById('repBody').innerHTML = `
-    <div class="card">
-      <div class="tw">
-        <table>
-          <thead>
-            <tr>
-              <th>Closer</th>
-              <th style="text-align: right;">Ventas</th>
-              <th style="text-align: right;">Ingresos</th>
-              <th style="text-align: right;">Pagado</th>
-              <th style="text-align: right;">Pendiente</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${Object.entries(byCloser).map(([k, v]) => `
-              <tr>
-                <td>${k}</td>
-                <td style="text-align: right;">${v.ventas}</td>
-                <td style="text-align: right;">$${v.ingresos.toFixed(2)}</td>
-                <td style="text-align: right;">$${v.pagado.toFixed(2)}</td>
-                <td style="text-align: right;">$${v.pendiente.toFixed(2)}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  `;
-};
-
-// ============ LANZAMIENTOS ============
-const renderLz = () => {
-  document.getElementById('lzBody').innerHTML = LANZAMIENTOS.map(l => `
-    <div class="card" style="margin-bottom: 12px;">
-      <div style="display: flex; justify-content: space-between;">
-        <div>
-          <div style="font-weight: 600;">${l.nombre}</div>
-          <div style="font-size: 12px; color: var(--text2); margin-top: 3px;">Meta: $${l.meta} | Bono: $${l.bono}</div>
-        </div>
-        <div style="text-align: right;">
-          <div style="font-size: 12px; color: var(--text2);">${new Date(l.fechaInicio).toLocaleDateString()} - ${new Date(l.fechaFin).toLocaleDateString()}</div>
-        </div>
-      </div>
-    </div>
-  `).join('') || '<div style="text-align: center; padding: 20px; color: var(--text2);">Sin lanzamientos activos</div>';
-};
-
-// ============ CLOSERS ============
-const renderClos = () => {
-  const html = CLOSERS.map(c => `
-    <div class="card" style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <div style="font-weight: 600;">${c.nombre} ${c.apellido}</div>
-        <div style="font-size: 12px; color: var(--text2); margin-top: 2px;">${c.email}</div>
-        <div style="font-size: 11px; color: var(--text2); margin-top: 3px;">Equipo: ${c.equipo === 'EXT' ? 'Comercial Externo' : 'Revenue Interno'}</div>
-      </div>
-      <button class="btn btn-danger btn-sm" onclick="delCl('${c.id}')">Eliminar</button>
-    </div>
-  `).join('');
-
-  document.getElementById('clBody').innerHTML = html || '<div style="text-align: center; color: var(--text2); padding: 20px;">Sin closers</div>';
-};
-
-// ============ CONFIGURACIÓN ============
-const renderConfig = () => {
-  const html = METODOS_PAGO.map(m => `
-    <tr>
-      <td>${m.nombre}</td>
-      <td>${m.pais}</td>
-      <td>${m.tipo}</td>
-      <td>${m.monedas.join(', ')}</td>
-      <td><span class="badge ${m.activo ? 'bg' : 'br'}">${m.activo ? 'Activo' : 'Inactivo'}</span></td>
-      <td><button class="btn btn-secondary btn-sm" onclick="editMet('${m.id}')">✏️</button></td>
-    </tr>
-  `).join('');
-
-  document.getElementById('tMet').innerHTML = html || '<tr><td colspan="6">Sin métodos</td></tr>';
-};
-
-// ============ SAVE FUNCTIONS ============
-const saveVta = async () => {
-  const eq = document.getElementById('vmEq').value;
-  const cl = document.getElementById('vmCl').value;
-  const nom = document.getElementById('vmNom').value;
-  const ape = document.getElementById('vmApe').value;
-  const mail = document.getElementById('vmMail').value.toLowerCase();
-  const tel = document.getElementById('vmTel').value;
-  const pais = document.getElementById('vmPais').value;
-  const prod = document.getElementById('vmProd').value;
-  const mto = parseFloat(document.getElementById('vmMto').value) || 0;
-  const mon = document.getElementById('vmMon').value;
-  const pag = parseFloat(document.getElementById('vmPag').value) || 0;
-  const metPago = document.getElementById('vmMetPago').value;
-  const notas = document.getElementById('vmNotas').value;
-
-  if (!eq || !cl || !nom || !ape || !mail || !prod || !mto || !metPago) {
-    showToast('Completa todos los campos requeridos', 'e');
-    return;
-  }
-
-  const closer = CLOSERS.find(c => c.id === cl);
-
-  const vta = {
-    equipo: eq,
-    closerEmail: closer.email,
-    closerNombre: closer.nombre,
-    clienteNombre: nom,
-    clienteApellido: ape,
-    clienteCorreo: mail,
-    clienteTelefono: tel,
-    clientePais: pais,
-    producto: prod,
-    valorTotal: mto,
-    totalPagado: pag,
-    saldoPendiente: mto - pag,
-    estadoPago: pag >= mto ? 'COMPLETO' : 'PARCIAL',
-    estadoVenta: 'PENDIENTE',
-    moneda: mon,
-    metodoPago: metPago,
-    fechaVenta: new Date().toISOString(),
-    fechaCreacion: new Date(),
-    notasCloser: notas
-  };
-
-  try {
-    await db.collection('ventas').add(vta);
-    showToast('Venta registrada', 's');
-    closeM('oMVta');
-    loadAll();
-    renderVtas();
-  } catch (e) {
-    showToast('Error al guardar: ' + e.message, 'e');
-  }
-};
-
-const saveCl = async () => {
-  const nom = document.getElementById('cmNom').value;
-  const ape = document.getElementById('cmApe').value;
-  const email = document.getElementById('cmEmail').value;
-  const eq = document.getElementById('cmEq').value;
-
-  if (!nom || !ape || !email) {
-    showToast('Completa los campos', 'e');
-    return;
-  }
-
-  try {
-    await db.collection('closers').add({
-      nombre: nom,
-      apellido: ape,
-      email: email.toLowerCase(),
-      rol: 'closer',
-      equipo: eq,
-      activo: true,
-      fechaCreacion: new Date()
-    });
-
-    showToast('Closer creado. Contraseña: Tradestars2026*', 's');
-    loadAll();
-    closeM('oMCl');
-  } catch (e) {
-    showToast('Error: ' + e.message, 'e');
-  }
-};
-
-const saveLz = async () => {
-  const nom = document.getElementById('lmNom').value;
-  const fin = document.getElementById('lmFin').value;
-  const fend = document.getElementById('lmFend').value;
-
-  if (!nom || !fin || !fend) {
-    showToast('Completa los campos', 'e');
-    return;
-  }
-
-  try {
-    await db.collection('lanzamientos').add({
-      nombre: nom,
-      fechaInicio: fin,
-      fechaFin: fend,
-      activo: true,
-      fechaCreacion: new Date()
-    });
-
-    showToast('Lanzamiento creado', 's');
-    loadAll();
-    closeM('oMLz');
-  } catch (e) {
-    showToast('Error: ' + e.message, 'e');
-  }
-};
-
-const saveMet = async () => {
-  const nom = document.getElementById('mmNom').value;
-  const pais = document.getElementById('mmPais').value;
-  const tipo = document.getElementById('mmTipo').value;
-  const monds = (document.getElementById('mmMon').value || '').split(',').map(m => m.trim()).filter(m => m);
-  const act = document.getElementById('mmAct').checked;
-
-  if (!nom || !pais || monds.length === 0) {
-    showToast('Completa los campos', 'e');
-    return;
-  }
-
-  const met = {
-    nombre: nom,
-    pais: pais,
-    tipo: tipo,
-    monedas: monds,
-    activo: act,
-    fechaCreacion: new Date(),
-    fechaModificacion: new Date()
-  };
-
-  try {
-    if (MET_EDIT_ID) {
-      await db.collection('metodosPago').doc(MET_EDIT_ID).update(met);
-      showToast('Método actualizado', 's');
-      MET_EDIT_ID = null;
-    } else {
-      await db.collection('metodosPago').add(met);
-      showToast('Método creado', 's');
-    }
-    loadAll();
-    closeM('oMMet');
-  } catch (e) {
-    showToast('Error: ' + e.message, 'e');
-  }
-};
-
-const editMet = (id) => {
-  MET_EDIT_ID = id;
-  const m = METODOS_PAGO.find(x => x.id === id);
-  if (m) {
-    document.getElementById('mmTitle').innerText = 'Editar método';
-    document.getElementById('mmNom').value = m.nombre;
-    document.getElementById('mmPais').value = m.pais;
-    document.getElementById('mmTipo').value = m.tipo;
-    document.getElementById('mmMon').value = m.monedas.join(',');
-    document.getElementById('mmAct').checked = m.activo;
-    openM('oMMet');
-  }
-};
-
-// ============ VALIDATION ============
 const approveVal = async () => {
   if (!VAL_EDIT_ID) return;
   try {
     await db.collection('ventas').doc(VAL_EDIT_ID).update({
       estadoVenta: 'VALIDADA',
       validadoPor: CURRENTUSER.email,
-      fechaValidacion: new Date()
+      fechaValidacion: new Date().toISOString()
     });
     showToast('Venta validada', 's');
     closeM('oMVal');
@@ -1913,7 +1540,7 @@ const rejectVal = async () => {
     await db.collection('ventas').doc(VAL_EDIT_ID).update({
       estadoVenta: 'RECHAZADA',
       validadoPor: CURRENTUSER.email,
-      fechaValidacion: new Date()
+      fechaValidacion: new Date().toISOString()
     });
     showToast('Venta rechazada', 's');
     closeM('oMVal');
@@ -1926,6 +1553,328 @@ const rejectVal = async () => {
 
 const setValEdit = (id) => {
   VAL_EDIT_ID = id;
+};
+
+// ============ REPORTE FINANCIERO ============
+const renderRep = () => {
+  const vtas = VENTAS.filter(v => v.estadoVenta === 'VALIDADA');
+  const total = vtas.reduce((sum, v) => sum + (parseFloat(v.totalPagado) || 0), 0);
+  const saldo = vtas.reduce((sum, v) => sum + (parseFloat(v.saldoPendiente) || 0), 0);
+
+  document.getElementById('repBody').innerHTML = `
+    <div class="kgrid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 18px;">
+      <div class="kpi">
+        <div class="kpi-lbl">Total Validado</div>
+        <div class="kpi-val">$${total.toFixed(0)}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-lbl">Ventas Validadas</div>
+        <div class="kpi-val">${vtas.length}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-lbl">Saldo Pendiente</div>
+        <div class="kpi-val">$${saldo.toFixed(0)}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Producto</th>
+              <th>Monto</th>
+              <th>Pagado</th>
+              <th>Saldo</th>
+              <th>Método</th>
+              <th>Closer</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${vtas.map(v => `
+              <tr>
+                <td><div class="td-m">${v.clienteNombre}</div><div class="td-s">${v.clienteCorreo}</div></td>
+                <td>${v.producto}</td>
+                <td>$${parseFloat(v.valorTotal || 0).toFixed(2)}</td>
+                <td>$${parseFloat(v.totalPagado || 0).toFixed(2)}</td>
+                <td>$${parseFloat(v.saldoPendiente || 0).toFixed(2)}</td>
+                <td>${v.metodoPago}</td>
+                <td>${v.closerNombre}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+};
+
+const exportFinanc = () => {
+  const vtas = VENTAS.filter(v => v.estadoVenta === 'VALIDADA');
+  const headers = ['CLIENTE', 'PRODUCTO', 'MONTO', 'PAGADO', 'SALDO', 'MÉTODO', 'CLOSER'];
+  const rows = vtas.map(v => [
+    v.clienteNombre + ' ' + (v.clienteApellido || ''),
+    v.producto,
+    v.valorTotal,
+    v.totalPagado,
+    v.saldoPendiente,
+    v.metodoPago,
+    v.closerNombre
+  ]);
+
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const link = document.createElement('a');
+  link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  link.download = 'reporte_financiero.csv';
+  link.click();
+};
+
+// ============ RENDIMIENTO ============
+const renderRend = () => {
+  const totalVtas = VENTAS.length;
+  const validadas = VENTAS.filter(v => v.estadoVenta === 'VALIDADA').length;
+  const tasaCierre = totalVtas > 0 ? ((validadas / totalVtas) * 100).toFixed(1) : 0;
+  const completadas = VENTAS.filter(v => v.estadoPago === 'COMPLETO').length;
+
+  const byCloser = {};
+  VENTAS.forEach(v => {
+    if (!byCloser[v.closerNombre]) byCloser[v.closerNombre] = { vtas: 0, validadas: 0, recaudado: 0 };
+    byCloser[v.closerNombre].vtas++;
+    if (v.estadoVenta === 'VALIDADA') {
+      byCloser[v.closerNombre].validadas++;
+      byCloser[v.closerNombre].recaudado += parseFloat(v.totalPagado) || 0;
+    }
+  });
+
+  document.getElementById('rendBody').innerHTML = `
+    <div class="kgrid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 18px;">
+      <div class="kpi">
+        <div class="kpi-lbl">Total Ventas</div>
+        <div class="kpi-val">${totalVtas}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-lbl">Tasa de Cierre</div>
+        <div class="kpi-val">${tasaCierre}%</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-lbl">Completadas</div>
+        <div class="kpi-val">${completadas}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-lbl">Promedio Venta</div>
+        <div class="kpi-val">$${totalVtas > 0 ? (VENTAS.reduce((sum, v) => sum + (parseFloat(v.valorTotal) || 0), 0) / totalVtas).toFixed(0) : 0}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">Por Closer</div>
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>Closer</th>
+              <th>Ventas</th>
+              <th>Validadas</th>
+              <th>Recaudado</th>
+              <th>% Conversión</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${Object.entries(byCloser).map(([name, data]) => `
+              <tr>
+                <td>${name}</td>
+                <td>${data.vtas}</td>
+                <td>${data.validadas}</td>
+                <td>$${data.recaudado.toFixed(0)}</td>
+                <td>${data.vtas > 0 ? ((data.validadas / data.vtas) * 100).toFixed(1) : 0}%</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+};
+
+// ============ LANZAMIENTOS ============
+const renderLz = () => {
+  document.getElementById('lzBody').innerHTML = LANZAMIENTOS.map(l => `
+    <div class="card" style="margin-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between;">
+        <div>
+          <div style="font-weight: 600;">${l.nombre}</div>
+          <div style="font-size: 12px; color: var(--text2); margin-top: 3px;">Meta: $${l.meta} | Bono: ${l.bono || '—'}</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 12px; color: var(--text2);">${l.fechaInicio} → ${l.fechaFin}</div>
+        </div>
+      </div>
+    </div>
+  `).join('') || '<div style="text-align: center; padding: 20px; color: var(--text2);">Sin lanzamientos activos</div>';
+};
+
+// ============ CLOSERS ============
+const renderClos = () => {
+  const html = CLOSERS.map(c => `
+    <div class="card" style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-weight: 600;">${c.nombre} ${c.apellido || ''}</div>
+        <div style="font-size: 12px; color: var(--text2); margin-top: 2px;">${c.email}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="delCl('${c.id}')">Eliminar</button>
+    </div>
+  `).join('');
+
+  document.getElementById('clBody').innerHTML = html || '<div style="text-align: center; color: var(--text2); padding: 20px;">Sin closers</div>';
+};
+
+// ============ SAVE FUNCTIONS ============
+const switchTab = (t) => {
+  VTAB = t;
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('tabContent' + i).style.display = i === t ? 'block' : 'none';
+    const btn = document.getElementById('tab' + i);
+    btn.style.background = i === t ? 'var(--accent)' : 'var(--bg3)';
+    btn.style.color = i === t ? 'white' : 'var(--text2)';
+  }
+};
+
+const saveVta = async () => {
+  const nom = document.getElementById('vmNom').value;
+  const ape = document.getElementById('vmApe').value;
+  const mail = document.getElementById('vmMail').value.toLowerCase();
+  const tel = document.getElementById('vmTel').value;
+  const pais = document.getElementById('vmPais').value;
+  const prod = document.getElementById('vmProd').value;
+  const fte = document.getElementById('vmFte').value;
+  const mto = parseFloat(document.getElementById('vmMto').value) || 0;
+  const fecha = document.getElementById('vmFecha').value;
+  const fechaLim = document.getElementById('vmFechaLim').value;
+  const pag = parseFloat(document.getElementById('vmPag').value) || 0;
+  const mon = document.getElementById('vmMon').value;
+  const monOrig = parseFloat(document.getElementById('vmMonOrig').value) || null;
+  const metPago = document.getElementById('vmMetPago').value;
+  const cta = document.getElementById('vmCta').value;
+  const comp = document.getElementById('vmComp').files[0];
+  const notas = document.getElementById('vmNotas').value;
+
+  if (!nom || !mail || !prod || !fte || !mto || !fecha || !metPago || !comp) {
+    showToast('Completa campos obligatorios (*)', 'e');
+    return;
+  }
+
+  // ANTI-DUPLICADOS
+  if (CURRENTUSER.rol === 'closer') {
+    const existe = VENTAS.find(v => v.clienteCorreo === mail && v.closerEmail !== CURRENTUSER.email);
+    if (existe) {
+      showToast('Cliente ya registrado por otro closer. Contacta a tu líder', 'e');
+      return;
+    }
+  }
+
+  try {
+    let compURL = '';
+    if (comp) {
+      const refPath = 'comprobantes/' + Date.now() + '_' + comp.name;
+      const ref = storage.ref(refPath);
+      await ref.put(comp);
+      compURL = await ref.getDownloadURL();
+    }
+
+    const vta = {
+      clienteNombre: nom,
+      clienteApellido: ape,
+      clienteCorreo: mail,
+      clienteTelefono: tel,
+      clientePais: pais,
+      closerEmail: CURRENTUSER.email,
+      closerNombre: CURRENTUSER.nombre,
+      producto: prod,
+      fuenteLead: fte,
+      lanzamientoId: document.getElementById('vmLz').value || null,
+      valorTotal: mto,
+      totalPagado: pag,
+      saldoPendiente: mto - pag,
+      estadoVenta: 'PENDIENTE',
+      estadoPago: pag >= mto ? 'COMPLETO' : 'PARCIAL',
+      moneda: mon,
+      montoOriginal: monOrig,
+      metodoPago: metPago,
+      cuentaDestino: cta,
+      comprobanteURL: compURL,
+      fechaVenta: fecha,
+      fechaLimitePago: fechaLim,
+      fechaCreacion: new Date().toISOString(),
+      notasCloser: notas
+    };
+
+    await db.collection('ventas').add(vta);
+    showToast('Venta registrada, pendiente validación', 's');
+    closeM('oMVta');
+    loadAll();
+    renderVtas();
+  } catch (e) {
+    showToast('Error: ' + e.message, 'e');
+  }
+};
+
+const saveCl = async () => {
+  const nom = document.getElementById('cmNom').value;
+  const ape = document.getElementById('cmApe').value;
+  const email = document.getElementById('cmEmail').value;
+
+  if (!nom || !ape || !email) {
+    showToast('Completa los campos', 'e');
+    return;
+  }
+
+  try {
+    await auth.createUserWithEmailAndPassword(email, 'Tradestars2026*');
+    await db.collection('closers').add({
+      nombre: nom,
+      apellido: ape,
+      email: email.toLowerCase(),
+      rol: 'closer',
+      activo: true,
+      fechaCreacion: new Date().toISOString()
+    });
+
+    showToast('Closer creado - Contraseña: Tradestars2026*', 's');
+    loadAll();
+    closeM('oMCl');
+  } catch (e) {
+    showToast('Error: ' + e.message, 'e');
+  }
+};
+
+const saveLz = async () => {
+  const nom = document.getElementById('lmNom').value;
+  const fin = document.getElementById('lmFin').value;
+  const fend = document.getElementById('lmFend').value;
+  const meta = parseFloat(document.getElementById('lmMeta').value) || 0;
+  const bono = document.getElementById('lmBono').value;
+
+  if (!nom || !fin || !fend) {
+    showToast('Completa los campos', 'e');
+    return;
+  }
+
+  try {
+    await db.collection('lanzamientos').add({
+      nombre: nom,
+      fechaInicio: fin,
+      fechaFin: fend,
+      meta: meta,
+      bono: bono,
+      activo: true,
+      fechaCreacion: new Date().toISOString()
+    });
+
+    showToast('Lanzamiento creado', 's');
+    loadAll();
+    closeM('oMLz');
+  } catch (e) {
+    showToast('Error: ' + e.message, 'e');
+  }
 };
 
 // ============ DELETE ============
@@ -1941,26 +1890,6 @@ const delCl = async (id) => {
   }
 };
 
-// ============ EXPORT ============
-const exportFinanc = () => {
-  let vtas = VENTAS.filter(v => v.estadoVenta === 'VALIDADA');
-  const headers = ['CLIENTE', 'PRODUCTO', 'MONTO', 'PAGADO', 'SALDO', 'ESTADO'];
-  const rows = vtas.map(v => [
-    v.clienteNombre + ' ' + v.clienteApellido,
-    v.producto,
-    v.valorTotal,
-    v.totalPagado,
-    (v.valorTotal || 0) - (v.totalPagado || 0),
-    v.estadoPago
-  ]);
-
-  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
-  const link = document.createElement('a');
-  link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  link.download = 'reporte_financiero.csv';
-  link.click();
-};
-
 // ============ MODALS ============
 const openM = (id) => {
   document.getElementById(id).classList.add('open');
@@ -1971,44 +1900,24 @@ const closeM = (id) => {
 };
 
 const openMVta = () => {
+  VTAB = 1;
+  switchTab(1);
   document.querySelectorAll('#oMVta input, #oMVta select, #oMVta textarea').forEach(el => el.value = '');
-  updateCloserOptions();
-  updateMetodoPagoOptions();
+  document.getElementById('vmLz').innerHTML = '<option value="">Ninguno</option>' + LANZAMIENTOS.map(l => `<option value="${l.id}">${l.nombre}</option>`).join('');
+  document.getElementById('vmFecha').valueAsDate = new Date();
   openM('oMVta');
 };
 
 const openMLz = () => {
   document.querySelectorAll('#oMLz input').forEach(el => el.value = '');
+  const hoy = new Date().toISOString().split('T')[0];
+  document.getElementById('lmFin').value = hoy;
   openM('oMLz');
 };
 
-const openMMet = () => {
-  MET_EDIT_ID = null;
-  document.getElementById('mmTitle').innerText = 'Nuevo método';
-  document.querySelectorAll('#oMMet input, #oMMet select').forEach(el => el.value = '');
-  document.getElementById('mmAct').checked = true;
-  document.getElementById('mmMon').value = 'USD';
-  openM('oMMet');
-};
-
 const openMCl = () => {
-  document.querySelectorAll('#oMCl input, #oMCl select').forEach(el => el.value = '');
-  document.getElementById('cmEq').value = 'EXT';
+  document.querySelectorAll('#oMCl input').forEach(el => el.value = '');
   openM('oMCl');
-};
-
-const updateCloserOptions = () => {
-  const vmCl = document.getElementById('vmCl');
-  vmCl.innerHTML = '<option value="">Seleccionar closer...</option>' +
-    CLOSERS.map(c => `<option value="${c.id}">${c.nombre} (${c.equipo === 'EXT' ? 'Externo' : 'Interno'})</option>`).join('');
-};
-
-const updateMetodoPagoOptions = () => {
-  const vmMetPago = document.getElementById('vmMetPago');
-  const moneda = document.getElementById('vmMon').value;
-  const metodos = METODOS_PAGO.filter(m => m.activo && m.monedas.includes(moneda));
-  vmMetPago.innerHTML = '<option value="">Seleccionar método...</option>' +
-    metodos.map(m => `<option value="${m.nombre}">${m.nombre} (${m.pais})</option>`).join('');
 };
 
 // ============ TOAST ============
@@ -2020,39 +1929,29 @@ const showToast = (msg, type = 's') => {
   setTimeout(() => el.remove(), 3000);
 };
 
-const showToastLogin = (msg) => {
-  const box = document.getElementById('loginErr');
-  box.textContent = msg;
-  box.style.display = 'block';
-};
-
 // ============ AUTH ============
 const doLogin = async () => {
   const email = document.getElementById('loginEmail').value;
   const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
 
   if (!email || !pass) {
-    showToastLogin('Completa los campos');
+    err.textContent = 'Completa los campos';
+    err.style.display = 'block';
     return;
   }
 
   try {
     await auth.signInWithEmailAndPassword(email, pass);
   } catch (e) {
-    showToastLogin('Credenciales inválidas');
+    err.textContent = 'Credenciales inválidas';
+    err.style.display = 'block';
   }
 };
 
 const doLogout = () => {
   auth.signOut();
 };
-
-// ============ START ============
-document.addEventListener('DOMContentLoaded', init);
-
-// ============ EVENT LISTENERS ============
-document.getElementById('vmMon').addEventListener('change', updateMetodoPagoOptions);
-document.getElementById('vmEq').addEventListener('change', updateCloserOptions);
 </script>
 
 </body>
