@@ -368,7 +368,7 @@
       </div>
 
       <div class="pw" id="pg-lideres">
-        <div class="ph flex jb ic"><div><h1>Líderes</h1><p>Gestión de líderes de equipo</p></div></div>
+        <div class="ph flex jb ic"><div><h1>Líderes</h1><p>Gestión de líderes de equipo</p></div><button class="btn btn-primary" onclick="openMLd()">+ Nuevo líder</button></div>
         <div id="ldBody"><div class="loading"><div class="spin"></div></div></div>
       </div>
 
@@ -489,6 +489,31 @@
   </div>
 </div>
 
+<!-- MODAL: CREAR LÍDER -->
+<div class="overlay" id="mCreateLd">
+  <div class="modal">
+    <div class="mh"><h3>Nuevo líder</h3><button class="mc" onclick="closeM('mCreateLd')">✕</button></div>
+    <div class="mb">
+      <div class="alert aw">Acceso creado con contraseña <strong>Tradestars2026*</strong></div>
+      <div class="g2"><div class="fg"><label>Nombre *</label><input class="fi" id="ldN" placeholder="Juan"></div><div class="fg"><label>Apellido *</label><input class="fi" id="ldA" placeholder="Pérez"></div></div>
+      <div class="fg"><label>Correo *</label><input class="fi" type="email" id="ldE" placeholder="juan@email.com"></div>
+      <div class="fg"><label>Rol *</label><select class="fi" id="ldRol"><option value="lider_comercial">Líder Comercial</option><option value="lider_revenue">Líder Revenue</option><option value="lider_financiero">Líder Financiero</option></select></div>
+    </div>
+    <div class="mf"><button class="btn btn-secondary" onclick="closeM('mCreateLd')">Cancelar</button><button class="btn btn-primary" id="btnCreateLd" onclick="saveCreateLd()">Crear líder</button></div>
+  </div>
+</div>
+
+<!-- MODAL: EDITAR LÍDER -->
+<div class="overlay" id="mEditLd">
+  <div class="modal">
+    <div class="mh"><h3>Editar líder</h3><button class="mc" onclick="closeM('mEditLd')">✕</button></div>
+    <div class="mb">
+      <div class="g2"><div class="fg"><label>Nombre *</label><input class="fi" id="elN" placeholder="Juan"></div><div class="fg"><label>Apellido *</label><input class="fi" id="elA" placeholder="Pérez"></div></div>
+    </div>
+    <div class="mf"><button class="btn btn-secondary" onclick="closeM('mEditLd')">Cancelar</button><button class="btn btn-primary" id="btnEditLd" onclick="saveEditLd()">Guardar cambios</button></div>
+  </div>
+</div>
+
 <!-- MODAL: RECHAZAR -->
 <div class="overlay" id="mRech">
   <div class="modal" style="max-width:420px">
@@ -524,7 +549,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 let CU=null, CUD=null, ROLE=null;
-let VENTAS=[], CLOSERS=[], LZS=[], FILTRO_EQUIPO=null;
+let VENTAS=[], CLOSERS=[], LZS=[], FILTRO_EQUIPO=null, EDIT_LD_ID=null;
 let RECH_ID=null, PAGO_VID=null, EXTEND_VID=null;
 const GUSTAVO='gustavoctradestars@gmail.com';
 const canVal=()=>['gustavo','lider_financiero'].includes(ROLE);
@@ -1002,13 +1027,17 @@ function renderLideres(){
       <div><div class="dl">Conversión</div><div class="fw7 ${conv>=50?'cg':'cy'}">${conv}%</div></div>
       <div><div class="dl">Estado</div><span class="badge ${c.activo!==false?'bg':'br'}">${c.activo!==false?'Activo':'Inactivo'}</span></div>
     </div>
-    ${ROLE==='gustavo'?`<button class="btn btn-danger btn-sm" style="margin-top:10px;width:100%" onclick="delCl('${c.id}','${c.nombre}')">🗑 Eliminar</button>`:''}
+    ${ROLE==='gustavo'?`<div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-primary btn-sm" style="flex:1" onclick="editLd('${c.id}','${c.nombre}','${c.apellido||''}')">✏️ Editar</button><button class="btn btn-danger btn-sm" style="flex:1" onclick="delCl('${c.id}','${c.nombre}')">🗑 Eliminar</button></div>`:''}
     </div>`;
   }).join('')}</div>`;
 }
 
 window.cambiarFiltroEquipo=()=>{FILTRO_EQUIPO=document.getElementById('filtroEquipo').value||null;const sub=document.getElementById('dashSubtitle');if(FILTRO_EQUIPO==='comercial')sub.textContent='Resumen del equipo comercial';else if(FILTRO_EQUIPO==='revenue')sub.textContent='Resumen del equipo revenue';else sub.textContent='Resumen de todos los equipos';renderDash();};
 window.delCl=async(id,nombre)=>{if(!confirm(`¿Eliminar a ${nombre} del equipo? Esta acción no se puede deshacer.`))return;try{await deleteDoc(doc(db,'closers',id));CLOSERS=CLOSERS.filter(c=>c.id!==id);document.getElementById('fVC').querySelectorAll('option').forEach(opt=>{if(opt.value&&CLOSERS.every(c=>c.email!==opt.value))opt.remove();});renderClosers();renderLideres();toast('Miembro eliminado del sistema','s');}catch(e){toast('Error: '+e.message,'e');}};
+window.saveCreateLd=async()=>{const N=document.getElementById('ldN').value.trim(),A=document.getElementById('ldA').value.trim(),E=document.getElementById('ldE').value.trim(),R=document.getElementById('ldRol').value;if(!N||!E){toast('Nombre y correo obligatorios','e');return;}const btn=document.getElementById('btnCreateLd');btn.disabled=true;btn.textContent='Creando...';try{const {initializeApp:ia3}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js");const {getAuth:ga3,createUserWithEmailAndPassword:cu3,signOut:so3}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js");const a3=ia3(FC,'sec-'+Date.now());const au3=ga3(a3);await cu3(au3,E,'Tradestars2026*');await so3(au3);const data={nombre:N,apellido:A,email:E,rol:R,equipo:null,activo:true,fechaCreacion:new Date().toISOString()};const ref2=await addDoc(collection(db,'closers'),data);CLOSERS.push({id:ref2.id,...data});closeM('mCreateLd');renderClosers();renderLideres();toast(`✅ Líder ${N} creado`,'s');['ldN','ldA','ldE'].forEach(id=>document.getElementById(id).value='');}catch(e){toast('Error: '+e.message,'e');}finally{btn.disabled=false;btn.textContent='Crear líder';}};
+
+window.editLd=(id,nombre,apellido)=>{EDIT_LD_ID=id;document.getElementById('elN').value=nombre;document.getElementById('elA').value=apellido;openM('mEditLd');};
+window.saveEditLd=async()=>{if(!EDIT_LD_ID)return;const N=document.getElementById('elN').value.trim(),A=document.getElementById('elA').value.trim();if(!N){toast('Nombre es requerido','e');return;}const btn=document.getElementById('btnEditLd');btn.disabled=true;try{await updateDoc(doc(db,'closers',EDIT_LD_ID),{nombre:N,apellido:A});const idx=CLOSERS.findIndex(c=>c.id===EDIT_LD_ID);if(idx>=0){CLOSERS[idx].nombre=N;CLOSERS[idx].apellido=A;}closeM('mEditLd');renderLideres();toast('✅ Líder actualizado','s');}catch(e){toast('Error: '+e.message,'e');}finally{btn.disabled=false;EDIT_LD_ID=null;}};
 
 
 // ANTI-DUPLICADOS
@@ -1062,6 +1091,7 @@ window.saveVenta=async()=>{
 
 // SAVE CLOSER
 window.openMCl=()=>openM('mCloser');
+window.openMLd=()=>{document.getElementById('ldN').value='';document.getElementById('ldA').value='';document.getElementById('ldE').value='';document.getElementById('ldRol').value='lider_comercial';openM('mCreateLd');};
 window.saveCloser=async()=>{
   const N=document.getElementById('cN').value.trim(),A=document.getElementById('cA').value.trim(),E=document.getElementById('cE').value.trim(),R=document.getElementById('cR').value;
   if(!N||!E){toast('Nombre y correo obligatorios','e');return;}
