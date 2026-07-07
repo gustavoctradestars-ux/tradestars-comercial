@@ -259,6 +259,7 @@
       <div class="sb-item" id="snRend" style="display:none" onclick="go('rendimiento')"><span class="ico">📈</span><span>Rendimiento</span></div>
       <div class="sb-item" id="snLz" style="display:none" onclick="go('lanzamientos')"><span class="ico">🚀</span><span>Lanzamientos</span></div>
       <div class="sb-item" id="snCl" style="display:none" onclick="go('closers')"><span class="ico">⚡</span><span>Closers</span></div>
+      <div class="sb-item" id="snLd" style="display:none" onclick="go('lideres')"><span class="ico">👥</span><span>Líderes</span></div>
       <div class="sb-footer">
         <div class="u-row">
           <div class="u-av" id="uAv">?</div>
@@ -364,6 +365,11 @@
       <div class="pw" id="pg-closers">
         <div class="ph flex jb ic"><div><h1>Closers</h1><p>Equipo comercial</p></div><button class="btn btn-primary" onclick="openMCl()">+ Nuevo closer</button></div>
         <div id="clBody"><div class="loading"><div class="spin"></div></div></div>
+      </div>
+
+      <div class="pw" id="pg-lideres">
+        <div class="ph flex jb ic"><div><h1>Líderes</h1><p>Gestión de líderes de equipo</p></div></div>
+        <div id="ldBody"><div class="loading"><div class="spin"></div></div></div>
       </div>
 
     </main>
@@ -544,7 +550,7 @@ onAuthStateChanged(auth,async user=>{
     CU=user; await loadUser();
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('appScreen').style.display='block';
-    setupNav(); go('dashboard'); await loadAll();
+    setupNav(); go('dashboard'); await loadAll(); renderClosers(); renderLideres();
   }else{
     CU=null; ROLE=null;
     document.getElementById('loginScreen').style.display='flex';
@@ -571,6 +577,7 @@ function setupNav(){
   if(canVal()){document.getElementById('snFin').style.display='block';document.getElementById('snVal').style.display='flex';document.getElementById('snRep').style.display='flex';}
   if(isLdr()){document.getElementById('snAdm').style.display='block';document.getElementById('snRend').style.display='flex';}
   if(canMng()){document.getElementById('snLz').style.display='flex';document.getElementById('snCl').style.display='flex';}
+  if(ROLE==='gustavo'){document.getElementById('snLd').style.display='flex';}
   if(isClsr())document.getElementById('dMV').style.display='block';
 }
 
@@ -579,7 +586,7 @@ window.go=p=>{
   document.querySelectorAll('.sb-item').forEach(x=>x.classList.remove('active'));
   document.getElementById('pg-'+p)?.classList.add('active');
   document.querySelectorAll('.sb-item').forEach(x=>{if(x.getAttribute('onclick')?.includes("'"+p+"'"))x.classList.add('active');});
-  ({dashboard:renderDash,ventas:renderVentas,clientes:renderClientes,validar:renderValidar,reporte:renderReporte,rendimiento:renderRend,lanzamientos:renderLz,closers:renderClosers})[p]?.();
+  ({dashboard:renderDash,ventas:renderVentas,clientes:renderClientes,validar:renderValidar,reporte:renderReporte,rendimiento:renderRend,lanzamientos:renderLz,closers:renderClosers,lideres:renderLideres})[p]?.();
 };
 
 async function loadAll(){await Promise.all([loadVentas(),loadClosers(),loadLzs()]);}
@@ -954,7 +961,8 @@ window.toggleLz=async(id,activo)=>{await updateDoc(doc(db,'lanzamientos',id),{ac
 // CLOSERS
 function renderClosers(){
   const el=document.getElementById('clBody');
-  el.innerHTML=CLOSERS.length===0?'<div class="empty"><div class="ei">⚡</div><p>Sin closers</p></div>':`<div class="g3">${CLOSERS.map(c=>{
+  const closers=CLOSERS.filter(c=>c.rol==='closer');
+  el.innerHTML=closers.length===0?'<div class="empty"><div class="ei">⚡</div><p>Sin closers</p></div>':`<div class="g3">${closers.map(c=>{
     const vc=VENTAS.filter(v=>v.closerEmail===c.email);
     const val=vc.filter(v=>v.estadoVenta==='VALIDADA');
     const m=val.reduce((s,v)=>s+(v.totalPagado||0),0);
@@ -973,8 +981,35 @@ function renderClosers(){
     </div>`;
   }).join('')}</div>`;
 }
+
+// LÍDERES
+function renderLideres(){
+  const el=document.getElementById('ldBody');
+  if(!el) return;
+  const lideres=CLOSERS.filter(c=>c.rol!=='closer');
+  el.innerHTML=lideres.length===0?'<div class="empty"><div class="ei">👥</div><p>Sin líderes</p></div>':`<div class="g3">${lideres.map(c=>{
+    const vc=VENTAS.filter(v=>v.closerEmail===c.email);
+    const val=vc.filter(v=>v.estadoVenta==='VALIDADA');
+    const m=val.reduce((s,v)=>s+(v.totalPagado||0),0);
+    const conv=vc.length>0?Math.round(val.length/vc.length*100):0;
+    return `<div class="card"><div class="flex g12 ic" style="margin-bottom:12px"><div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0">${(c.nombre||'?')[0].toUpperCase()}</div><div><div class="fw7">${c.nombre} ${c.apellido||''}</div><div class="f11 c2">${rLabel(c.rol)}</div></div></div>
+    <div class="f11 c2" style="margin-bottom:10px">${c.email}</div>
+    <div class="f11 c2" style="margin-bottom:10px"><strong>Equipo:</strong> ${c.equipo==='comercial'?'Comercial':'Revenue'}</div>
+    <hr class="divider">
+    <div class="g2" style="gap:8px">
+      <div><div class="dl">Ventas</div><div class="fw7">${vc.length}</div></div>
+      <div><div class="dl">Recaudado</div><div class="fw7 ca">$${fmt(m)}</div></div>
+      <div><div class="dl">Conversión</div><div class="fw7 ${conv>=50?'cg':'cy'}">${conv}%</div></div>
+      <div><div class="dl">Estado</div><span class="badge ${c.activo!==false?'bg':'br'}">${c.activo!==false?'Activo':'Inactivo'}</span></div>
+    </div>
+    ${ROLE==='gustavo'?`<button class="btn btn-danger btn-sm" style="margin-top:10px;width:100%" onclick="delCl('${c.id}','${c.nombre}')">🗑 Eliminar</button>`:''}
+    </div>`;
+  }).join('')}</div>`;
+}
+
 window.cambiarFiltroEquipo=()=>{FILTRO_EQUIPO=document.getElementById('filtroEquipo').value||null;const sub=document.getElementById('dashSubtitle');if(FILTRO_EQUIPO==='comercial')sub.textContent='Resumen del equipo comercial';else if(FILTRO_EQUIPO==='revenue')sub.textContent='Resumen del equipo revenue';else sub.textContent='Resumen de todos los equipos';renderDash();};
-window.delCl=async(id,nombre)=>{if(!confirm(`¿Eliminar a ${nombre} del equipo? Esta acción no se puede deshacer.`))return;try{await deleteDoc(doc(db,'closers',id));CLOSERS=CLOSERS.filter(c=>c.id!==id);document.getElementById('fVC').querySelectorAll('option').forEach(opt=>{if(opt.value&&CLOSERS.every(c=>c.email!==opt.value))opt.remove();});renderClosers();toast('Closer eliminado del sistema','s');}catch(e){toast('Error: '+e.message,'e');}};
+window.delCl=async(id,nombre)=>{if(!confirm(`¿Eliminar a ${nombre} del equipo? Esta acción no se puede deshacer.`))return;try{await deleteDoc(doc(db,'closers',id));CLOSERS=CLOSERS.filter(c=>c.id!==id);document.getElementById('fVC').querySelectorAll('option').forEach(opt=>{if(opt.value&&CLOSERS.every(c=>c.email!==opt.value))opt.remove();});renderClosers();renderLideres();toast('Miembro eliminado del sistema','s');}catch(e){toast('Error: '+e.message,'e');}};
+
 
 // ANTI-DUPLICADOS
 window.checkDupAndNext=async()=>{
@@ -1040,7 +1075,7 @@ window.saveCloser=async()=>{
     const ref2=await addDoc(collection(db,'closers'),data);
     CLOSERS.push({id:ref2.id,...data});
     document.getElementById('fVC').innerHTML+=`<option value="${E}">${N} ${A}</option>`;
-    closeM('mCloser');renderClosers();toast(`✅ ${rLabel(R)} ${N} creado`,'s');
+    closeM('mCloser');renderClosers();renderLideres();toast(`✅ ${rLabel(R)} ${N} creado`,'s');
     ['cN','cA','cE'].forEach(id=>document.getElementById(id).value='');
   }catch(e){toast('Error: '+e.message,'e');}
   btn.disabled=false;btn.textContent='Crear';
