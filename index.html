@@ -530,6 +530,26 @@
   </div>
 </div>
 
+<!-- MODAL: CREAR/EDITAR MÉTODO DE PAGO -->
+<div class="overlay" id="mMetodo">
+  <div class="modal" style="max-width:500px;max-height:90vh;overflow-y:auto">
+    <div class="mh"><h3 id="mMetodoTitle">Nuevo método de pago</h3><button class="mc" onclick="closeM('mMetodo')">✕</button></div>
+    <div class="mb">
+      <div class="fg"><label>Nombre del método *</label><input class="fi" id="mdNombre" placeholder="Ej: Bancolombia - Cuenta de Ahorro"></div>
+      <div class="g2">
+        <div class="fg"><label>Tipo *</label><select class="fi" id="mdTipo"><option value="">Seleccionar...</option><option value="Banco">Banco</option><option value="Cripto">Cripto</option><option value="E-wallet">E-wallet</option><option value="Wire Transfer">Wire Transfer</option><option value="Otro">Otro</option></select></div>
+        <div class="fg"><label>País *</label><select class="fi" id="mdPais"><option value="">Seleccionar...</option><option>Colombia</option><option>Perú</option><option>Brasil</option><option>Venezuela</option><option>Panamá</option><option>EEUU</option><option>México</option><option>Argentina</option><option>Chile</option><option>Ecuador</option></select></div>
+      </div>
+      <div style="background:var(--bg2);padding:12px;border-radius:6px;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px">DATOS DEL MÉTODO</div>
+        <div id="mdCampos"></div>
+        <button class="btn btn-secondary btn-sm" onclick="addCampoMetodo()" style="width:100%;margin-top:8px">+ Agregar campo</button>
+      </div>
+    </div>
+    <div class="mf"><button class="btn btn-secondary" onclick="closeM('mMetodo')">Cancelar</button><button class="btn btn-primary" id="btnSaveMetodo" onclick="saveMetodo()">Guardar método</button></div>
+  </div>
+</div>
+
 <!-- MODAL: RECHAZAR -->
 <div class="overlay" id="mRech">
   <div class="modal" style="max-width:420px">
@@ -1137,6 +1157,12 @@ window.saveVenta=async()=>{
 // SAVE CLOSER
 window.openMCl=()=>openM('mCloser');
 window.openMLd=()=>{document.getElementById('ldN').value='';document.getElementById('ldA').value='';document.getElementById('ldE').value='';document.getElementById('ldRol').value='lider_comercial';openM('mCreateLd');};
+window.openMMetodo=()=>{window.EDIT_METODO_ID=null;document.getElementById('mMetodoTitle').textContent='Nuevo método de pago';document.getElementById('mdNombre').value='';document.getElementById('mdTipo').value='';document.getElementById('mdPais').value='';document.getElementById('mdCampos').innerHTML='';openM('mMetodo');};
+window.addCampoMetodo=()=>{const container=document.getElementById('mdCampos'),id='campo_'+Date.now(),html=`<div id="${id}" style="display:flex;gap:8px;margin-bottom:8px"><input class="fi" placeholder="Label" style="flex:1" id="lbl_${id}"><input class="fi" placeholder="Valor" style="flex:1" id="val_${id}"><button class="btn btn-danger btn-xs" onclick="delCampoMetodo('${id}')" style="padding:6px 8px">🗑</button></div>`;container.innerHTML+=html;};
+window.delCampoMetodo=(id)=>{const el=document.getElementById(id);if(el)el.remove();};
+window.saveMetodo=async()=>{const nombre=document.getElementById('mdNombre').value.trim(),tipo=document.getElementById('mdTipo').value.trim(),pais=document.getElementById('mdPais').value.trim();if(!nombre||!tipo||!pais){toast('Nombre, tipo y país son obligatorios','e');return;}const datos={};document.querySelectorAll('[id^="lbl_"]').forEach(el=>{const id=el.id.replace('lbl_',''),lbl=el.value.trim(),val=document.getElementById('val_'+id).value.trim();if(lbl&&val)datos[lbl]=val;});if(Object.keys(datos).length===0){toast('Debes agregar al menos un campo de datos','e');return;}const btn=document.getElementById('btnSaveMetodo');btn.disabled=true;try{const metodo={nombre,tipo,pais,datos,fechaCreacion:new Date().toISOString()};if(window.EDIT_METODO_ID){await updateDoc(doc(db,'metodos_pago',window.EDIT_METODO_ID),metodo);const idx=METODOS.findIndex(m=>m.id===window.EDIT_METODO_ID);if(idx>=0)METODOS[idx]={id:window.EDIT_METODO_ID,...metodo};toast('✅ Método actualizado','s');}else{const ref=await addDoc(collection(db,'metodos_pago'),metodo);METODOS.push({id:ref.id,...metodo});toast('✅ Método de pago creado','s');}closeM('mMetodo');renderMetodos();}catch(e){toast('Error: '+e.message,'e');}finally{btn.disabled=false;}};
+window.editMetodo=async(id)=>{const metodo=METODOS.find(m=>m.id===id);if(!metodo)return;window.EDIT_METODO_ID=id;document.getElementById('mMetodoTitle').textContent='Editar método de pago';document.getElementById('mdNombre').value=metodo.nombre;document.getElementById('mdTipo').value=metodo.tipo;document.getElementById('mdPais').value=metodo.pais;let html='';Object.entries(metodo.datos||{}).forEach(([k,v])=>{const cid='campo_'+Date.now();html+=`<div id="${cid}" style="display:flex;gap:8px;margin-bottom:8px"><input class="fi" placeholder="Label" style="flex:1" id="lbl_${cid}" value="${k}"><input class="fi" placeholder="Valor" style="flex:1" id="val_${cid}" value="${v}"><button class="btn btn-danger btn-xs" onclick="delCampoMetodo('${cid}')" style="padding:6px 8px">🗑</button></div>`;});document.getElementById('mdCampos').innerHTML=html;openM('mMetodo');};
+window.delMetodo=async(id,nombre)=>{if(!confirm(`¿Eliminar "${nombre}"? Esta acción no se puede deshacer.`))return;try{await deleteDoc(doc(db,'metodos_pago',id));METODOS=METODOS.filter(m=>m.id!==id);renderMetodos();toast('Método eliminado','s');}catch(e){toast('Error: '+e.message,'e');}};
 window.saveCloser=async()=>{
   const N=document.getElementById('cN').value.trim(),A=document.getElementById('cA').value.trim(),E=document.getElementById('cE').value.trim(),R=document.getElementById('cR').value;
   if(!N||!E){toast('Nombre y correo obligatorios','e');return;}
