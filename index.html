@@ -611,7 +611,7 @@ onAuthStateChanged(auth,async user=>{
     CU=user; await loadUser();
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('appScreen').style.display='block';
-    setupNav(); go('dashboard'); await loadAll(); renderClosers(); renderLideres();
+    setupNav(); go('dashboard'); await loadAll(); renderClosers(); renderLideres(); renderMetodos();
   }else{
     CU=null; ROLE=null;
     document.getElementById('loginScreen').style.display='flex';
