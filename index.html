@@ -678,8 +678,8 @@ async function loadLzs(){
   try{const s=await getDocs(query(collection(db,'lanzamientos'),orderBy('fechaCreacion','desc')));LZS=s.docs.map(d=>({id:d.id,...d.data()}));}catch{LZS=[];}
 }
 async function loadMetodos(){
-  try{const s=await getDocs(query(collection(db,'metodos_pago'),orderBy('pais','asc'),orderBy('nombre','asc')));METODOS=s.docs.map(d=>({id:d.id,...d.data()}));renderMetodos();}catch{METODOS=[];}
-}
+  try{console.log('📥 Cargando métodos de pago...');const s=await getDocs(collection(db,'metodos_pago'));METODOS=s.docs.map(d=>({id:d.id,...d.data()}));console.log('✅ Métodos cargados:',METODOS.length);METODOS.sort((a,b)=>{if(a.pais!==b.pais)return a.pais.localeCompare(b.pais);return a.nombre.localeCompare(b.nombre);});renderMetodos();}catch(e){console.error('❌ Error cargando métodos:',e);METODOS=[];renderMetodos();}}
+
 function checkNotif(){const n=VENTAS.filter(v=>v.estadoVenta==='PENDIENTE').length;const d=document.getElementById('nDot');if(d)d.style.display=n>0&&canVal()?'inline-block':'none';}
 
 // DASHBOARD
