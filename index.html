@@ -484,7 +484,10 @@
       <div class="alert aw">Acceso creado con contraseña <strong>Tradestars2026*</strong></div>
       <div class="g2"><div class="fg"><label>Nombre *</label><input class="fi" id="cN" placeholder="Juan"></div><div class="fg"><label>Apellido *</label><input class="fi" id="cA" placeholder="Pérez"></div></div>
       <div class="fg"><label>Correo *</label><input class="fi" type="email" id="cE" placeholder="juan@email.com"></div>
-      <div class="fg"><label>Rol</label><select class="fi" id="cR"><option value="closer">Closer</option></select></div>
+      <div class="g2">
+        <div class="fg"><label>Equipo *</label><select class="fi" id="cEq"><option value="">Seleccionar...</option><option value="comercial">Equipo Comercial</option><option value="revenue">Equipo Revenue</option></select></div>
+        <div class="fg"><label>Rol</label><select class="fi" id="cR"><option value="closer">Closer</option></select></div>
+      </div>
     </div>
     <div class="mf"><button class="btn btn-secondary" onclick="closeM('mCloser')">Cancelar</button><button class="btn btn-primary" id="btnSC" onclick="saveCloser()">Crear</button></div>
   </div>
@@ -1167,20 +1170,24 @@ window.editMetodo=async(id)=>{const metodo=METODOS.find(m=>m.id===id);if(!metodo
 window.delMetodo=async(id,nombre)=>{if(!confirm(`¿Eliminar "${nombre}"? Esta acción no se puede deshacer.`))return;try{await deleteDoc(doc(db,'metodos_pago',id));METODOS=METODOS.filter(m=>m.id!==id);renderMetodos();toast('Método eliminado','s');}catch(e){toast('Error: '+e.message,'e');}};
 window.saveCloser=async()=>{
   const N=document.getElementById('cN').value.trim(),A=document.getElementById('cA').value.trim(),E=document.getElementById('cE').value.trim(),R=document.getElementById('cR').value;
+  const eqSelect=document.getElementById('cEq');const eqSeleccionado=eqSelect?eqSelect.value.trim():'';
   if(!N||!E){toast('Nombre y correo obligatorios','e');return;}
+  if(ROLE==='gustavo'&&!eqSeleccionado){toast('Debes seleccionar un equipo','e');return;}
+  const equipoFinal=eqSeleccionado||getEquipo();
   const btn=document.getElementById('btnSC');btn.disabled=true;btn.textContent='Creando...';
   try{
     const {initializeApp:ia2}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js");
     const {getAuth:ga2,createUserWithEmailAndPassword:cu2,signOut:so2}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js");
     const a2=ia2(FC,'sec-'+Date.now());const au2=ga2(a2);
     await cu2(au2,E,'Tradestars2026*');await so2(au2);
-    const data={nombre:N,apellido:A,email:E,rol:R,equipo:getEquipo(),activo:true,fechaCreacion:new Date().toISOString()};
+    const data={nombre:N,apellido:A,email:E,rol:R,equipo:equipoFinal,activo:true,fechaCreacion:new Date().toISOString()};
+    console.log('➕ Creando closer:',data);
     const ref2=await addDoc(collection(db,'closers'),data);
     CLOSERS.push({id:ref2.id,...data});
     document.getElementById('fVC').innerHTML+=`<option value="${E}">${N} ${A}</option>`;
-    closeM('mCloser');renderClosers();renderLideres();toast(`✅ ${rLabel(R)} ${N} creado`,'s');
-    ['cN','cA','cE'].forEach(id=>document.getElementById(id).value='');
-  }catch(e){toast('Error: '+e.message,'e');}
+    closeM('mCloser');renderClosers();renderLideres();toast(`✅ ${rLabel(R)} ${N} creado (Equipo: ${equipoFinal})`,'s');
+    ['cN','cA','cE','cEq'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  }catch(e){console.error('❌ Error:',e);toast('Error: '+e.message,'e');}
   btn.disabled=false;btn.textContent='Crear';
 };
 
