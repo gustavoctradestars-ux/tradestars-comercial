@@ -1036,7 +1036,12 @@ window.toggleLz=async(id,activo)=>{await updateDoc(doc(db,'lanzamientos',id),{ac
 // CLOSERS
 function renderClosers(){
   const el=document.getElementById('clBody');
-  const closers=CLOSERS.filter(c=>c.rol==='closer');
+  let closers=CLOSERS.filter(c=>c.rol==='closer');
+  
+  // Filtrar por equipo del líder
+  if(ROLE==='lider_comercial')closers=closers.filter(c=>c.equipo==='comercial');
+  if(ROLE==='lider_revenue')closers=closers.filter(c=>c.equipo==='revenue');
+  
   el.innerHTML=closers.length===0?'<div class="empty"><div class="ei">⚡</div><p>Sin closers</p></div>':`<div class="g3">${closers.map(c=>{
     const vc=VENTAS.filter(v=>v.closerEmail===c.email);
     const val=vc.filter(v=>v.estadoVenta==='VALIDADA');
