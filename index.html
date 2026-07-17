@@ -108,8 +108,10 @@
     }
 
     function goPage(page) {
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      event.target.classList.add('active');
+      document.querySelectorAll('.nav-item').forEach((el, i) => {
+        const pages = ['dashboard', 'ventas', 'registrar', 'closers', 'metodos'];
+        el.classList.toggle('active', pages[i] === page);
+      });
       
       const titles = { dashboard: 'Dashboard', ventas: 'Ventas', registrar: 'Registrar Venta', closers: 'Closers', metodos: 'Métodos' };
       document.getElementById('title').textContent = titles[page] || 'Página';
