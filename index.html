@@ -284,14 +284,48 @@ input,select,button{font-family:'Outfit',sans-serif;}
       </div>
     </section>
 
-    <!-- ── REGISTRAR ── -->
+    <!-- ── REGISTRAR VENTA ── -->
     <section class="page" id="sec-registrar">
       <div class="ph">
         <h1>➕ Registrar Venta</h1>
         <p>Agregar una nueva venta al sistema</p>
       </div>
       <div class="card">
-        <div class="empty"><p>Módulo en desarrollo</p></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">ID Venta</label>
+            <input type="text" id="form-venta-id" placeholder="ID" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Fecha</label>
+            <input type="date" id="form-venta-fecha" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Closer</label>
+            <input type="text" id="form-venta-closer" placeholder="Nombre del closer" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Equipo</label>
+            <select id="form-venta-equipo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="comercial">Comercial</option>
+              <option value="revenue">Revenue</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Monto USD</label>
+            <input type="number" id="form-venta-monto" placeholder="0.00" step="0.01" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
+            <select id="form-venta-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="PENDIENTE">PENDIENTE</option>
+              <option value="VALIDADA">VALIDADA</option>
+              <option value="RECHAZADA">RECHAZADA</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="guardarVenta()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Venta</button>
+        <div id="msg-venta" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
       </div>
     </section>
 
@@ -299,9 +333,39 @@ input,select,button{font-family:'Outfit',sans-serif;}
     <section class="page" id="sec-closers">
       <div class="ph">
         <h1>👥 Closers</h1>
-        <p>Gestión de closers y equipos</p>
+        <p>Crear y gestionar closers</p>
+      </div>
+      <div class="card" style="margin-bottom:24px;">
+        <div class="ctitle">➕ Crear Nuevo Closer</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre</label>
+            <input type="text" id="form-closer-nombre" placeholder="Nombre completo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Email</label>
+            <input type="email" id="form-closer-email" placeholder="email@ejemplo.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Equipo</label>
+            <select id="form-closer-equipo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="comercial">Comercial</option>
+              <option value="revenue">Revenue</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
+            <select id="form-closer-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="guardarCloser()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Closer</button>
+        <div id="msg-closer" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
       </div>
       <div class="card">
+        <div class="ctitle">📋 Closers Registrados</div>
         <div id="closersContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
       </div>
     </section>
@@ -310,9 +374,32 @@ input,select,button{font-family:'Outfit',sans-serif;}
     <section class="page" id="sec-metodos">
       <div class="ph">
         <h1>💳 Métodos de Pago</h1>
-        <p>Métodos de pago disponibles</p>
+        <p>Crear y gestionar métodos de pago disponibles</p>
+      </div>
+      <div class="card" style="margin-bottom:24px;">
+        <div class="ctitle">➕ Crear Nuevo Método</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre del Método</label>
+            <input type="text" id="form-metodo-nombre" placeholder="Ej: Transferencia Bancaria" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Descripción</label>
+            <input type="text" id="form-metodo-desc" placeholder="Descripción breve" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
+            <select id="form-metodo-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="guardarMetodo()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Método</button>
+        <div id="msg-metodo" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
       </div>
       <div class="card">
+        <div class="ctitle">📋 Métodos Registrados</div>
         <div id="metodosContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
       </div>
     </section>
@@ -327,6 +414,9 @@ const CSV_USUARIOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5e
 const CSV_VENTAS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=0';
 const CSV_CLOSERS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=1837437345';
 const CSV_METODOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=878625665';
+
+// ════ APPS SCRIPT ════
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJGvgCRmXMHj4c7WU42VqsFSQdBtBWgjLwZqB70RY89cgvB9G3R2m8OSgFtlRbMTIb6A/exec';
 
 // ════ STATE ════
 let CU = null;
@@ -538,6 +628,161 @@ function renderMetodos() {
       </tbody>
     </table>
   `;
+}
+
+// ════ GUARDAR DATOS ════
+async function guardarVenta() {
+  const id = document.getElementById('form-venta-id').value.trim();
+  const fecha = document.getElementById('form-venta-fecha').value;
+  const closer = document.getElementById('form-venta-closer').value.trim();
+  const equipo = document.getElementById('form-venta-equipo').value;
+  const monto = document.getElementById('form-venta-monto').value;
+  const estado = document.getElementById('form-venta-estado').value;
+  const msg = document.getElementById('msg-venta');
+
+  if (!id || !fecha || !closer || !monto) {
+    msg.style.background = 'rgba(239,68,68,.15)';
+    msg.style.color = '#f87171';
+    msg.textContent = '❌ Completa todos los campos';
+    msg.style.display = 'block';
+    return;
+  }
+
+  const payload = new FormData();
+  payload.append('action', 'crearVenta');
+  payload.append('id', id);
+  payload.append('fecha', fecha);
+  payload.append('closer', closer);
+  payload.append('equipo', equipo);
+  payload.append('monto', monto);
+  payload.append('estado', estado);
+
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', payload });
+    const result = await response.json();
+    
+    if (result.ok) {
+      msg.style.background = 'rgba(34,197,94,.15)';
+      msg.style.color = '#4ade80';
+      msg.textContent = '✅ Venta guardada correctamente';
+      msg.style.display = 'block';
+      
+      document.getElementById('form-venta-id').value = '';
+      document.getElementById('form-venta-fecha').value = '';
+      document.getElementById('form-venta-closer').value = '';
+      document.getElementById('form-venta-monto').value = '';
+      
+      setTimeout(() => { msg.style.display = 'none'; loadData(); renderDash(); }, 2000);
+    } else {
+      msg.style.background = 'rgba(239,68,68,.15)';
+      msg.style.color = '#f87171';
+      msg.textContent = '❌ Error: ' + (result.error || 'desconocido');
+      msg.style.display = 'block';
+    }
+  } catch (e) {
+    msg.style.background = 'rgba(239,68,68,.15)';
+    msg.style.color = '#f87171';
+    msg.textContent = '❌ Error de conexión: ' + e.message;
+    msg.style.display = 'block';
+  }
+}
+
+async function guardarCloser() {
+  const nombre = document.getElementById('form-closer-nombre').value.trim();
+  const email = document.getElementById('form-closer-email').value.trim();
+  const equipo = document.getElementById('form-closer-equipo').value;
+  const estado = document.getElementById('form-closer-estado').value;
+  const msg = document.getElementById('msg-closer');
+
+  if (!nombre || !email) {
+    msg.style.background = 'rgba(239,68,68,.15)';
+    msg.style.color = '#f87171';
+    msg.textContent = '❌ Completa nombre y email';
+    msg.style.display = 'block';
+    return;
+  }
+
+  const payload = new FormData();
+  payload.append('action', 'crearCloser');
+  payload.append('nombre', nombre);
+  payload.append('email', email);
+  payload.append('equipo', equipo);
+  payload.append('estado', estado);
+
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', payload });
+    const result = await response.json();
+    
+    if (result.ok) {
+      msg.style.background = 'rgba(34,197,94,.15)';
+      msg.style.color = '#4ade80';
+      msg.textContent = '✅ Closer guardado correctamente';
+      msg.style.display = 'block';
+      
+      document.getElementById('form-closer-nombre').value = '';
+      document.getElementById('form-closer-email').value = '';
+      
+      setTimeout(() => { msg.style.display = 'none'; loadData(); renderClosers(); }, 2000);
+    } else {
+      msg.style.background = 'rgba(239,68,68,.15)';
+      msg.style.color = '#f87171';
+      msg.textContent = '❌ Error: ' + (result.error || 'desconocido');
+      msg.style.display = 'block';
+    }
+  } catch (e) {
+    msg.style.background = 'rgba(239,68,68,.15)';
+    msg.style.color = '#f87171';
+    msg.textContent = '❌ Error de conexión: ' + e.message;
+    msg.style.display = 'block';
+  }
+}
+
+async function guardarMetodo() {
+  const nombre = document.getElementById('form-metodo-nombre').value.trim();
+  const desc = document.getElementById('form-metodo-desc').value.trim();
+  const estado = document.getElementById('form-metodo-estado').value;
+  const msg = document.getElementById('msg-metodo');
+
+  if (!nombre) {
+    msg.style.background = 'rgba(239,68,68,.15)';
+    msg.style.color = '#f87171';
+    msg.textContent = '❌ Completa el nombre del método';
+    msg.style.display = 'block';
+    return;
+  }
+
+  const payload = new FormData();
+  payload.append('action', 'crearMetodo');
+  payload.append('nombre', nombre);
+  payload.append('descripcion', desc);
+  payload.append('estado', estado);
+
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', payload });
+    const result = await response.json();
+    
+    if (result.ok) {
+      msg.style.background = 'rgba(34,197,94,.15)';
+      msg.style.color = '#4ade80';
+      msg.textContent = '✅ Método guardado correctamente';
+      msg.style.display = 'block';
+      
+      document.getElementById('form-metodo-nombre').value = '';
+      document.getElementById('form-metodo-desc').value = '';
+      
+      setTimeout(() => { msg.style.display = 'none'; loadData(); renderMetodos(); }, 2000);
+    } else {
+      msg.style.background = 'rgba(239,68,68,.15)';
+      msg.style.color = '#f87171';
+      msg.textContent = '❌ Error: ' + (result.error || 'desconocido');
+      msg.style.display = 'block';
+    }
+  } catch (e) {
+    msg.style.background = 'rgba(239,68,68,.15)';
+    msg.style.color = '#f87171';
+    msg.textContent = '❌ Error de conexión: ' + e.message;
+    msg.style.display = 'block';
+  }
 }
 
 // ════ INIT ════
