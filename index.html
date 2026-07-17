@@ -420,6 +420,22 @@ input,select,button{font-family:'Outfit',sans-serif;}
               <input type="text" id="form-pago-comprobante" placeholder="Referencia o ID" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
             </div>
           </div>
+          
+          <div style="margin-bottom:16px;padding:16px;background:rgba(59,130,246,.1);border:1px solid var(--border);border-radius:8px;">
+            <label style="font-size:12px;color:var(--text);font-weight:600;display:block;margin-bottom:10px;">📸 Subir Comprobante de Pago</label>
+            <label style="display:flex;align-items:center;justify-content:center;padding:20px;border:2px dashed var(--border);border-radius:8px;cursor:pointer;background:var(--surface);transition:all .2s;" id="drag-area">
+              <div style="text-align:center;">
+                <div style="font-size:24px;margin-bottom:8px;">📁</div>
+                <div style="font-size:12px;color:var(--muted);">Arrastra una imagen o PDF aquí<br/>o haz clic para seleccionar</div>
+              </div>
+              <input type="file" id="form-pago-archivo" accept="image/*,.pdf" style="display:none;" onchange="previewComprobante()">
+            </label>
+            <div id="preview-comprobante" style="margin-top:12px;display:none;">
+              <div style="font-size:12px;color:var(--muted);margin-bottom:6px;" id="nombre-archivo"></div>
+              <button type="button" onclick="limpiarComprobante()" style="padding:6px 12px;background:var(--danger);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✕ Eliminar</button>
+            </div>
+          </div>
+
           <div style="margin-bottom:16px;">
             <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Notas adicionales</label>
             <textarea id="form-pago-notas" placeholder="Detalles adicionales..." style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);min-height:80px;"></textarea>
@@ -771,6 +787,57 @@ function toggleBeneficiario() {
   seccion.style.display = toggle ? 'block' : 'none';
 }
 
+let archivoComprobante = null; // Variable global para guardar el archivo
+
+function previewComprobante() {
+  const file = document.getElementById('form-pago-archivo').files[0];
+  if (!file) return;
+  
+  archivoComprobante = file;
+  document.getElementById('nombre-archivo').textContent = '✓ Archivo: ' + file.name + ' (' + (file.size / 1024).toFixed(2) + ' KB)';
+  document.getElementById('preview-comprobante').style.display = 'block';
+}
+
+function limpiarComprobante() {
+  archivoComprobante = null;
+  document.getElementById('form-pago-archivo').value = '';
+  document.getElementById('preview-comprobante').style.display = 'none';
+}
+
+// Drag and drop
+const dragArea = document.getElementById('drag-area');
+if (dragArea) {
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dragArea.addEventListener(eventName, preventDefaults, false);
+  });
+  
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dragArea.addEventListener(eventName, () => {
+      dragArea.style.borderColor = 'var(--primary)';
+      dragArea.style.background = 'rgba(59,130,246,.15)';
+    });
+  });
+  
+  ['dragleave', 'drop'].forEach(eventName => {
+    dragArea.addEventListener(eventName, () => {
+      dragArea.style.borderColor = 'var(--border)';
+      dragArea.style.background = 'var(--surface)';
+    });
+  });
+  
+  dragArea.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    document.getElementById('form-pago-archivo').files = files;
+    if (files.length > 0) previewComprobante();
+  });
+}
+
 async function guardarVentaCompleta() {
   // Validar cliente
   const nombre = document.getElementById('form-cliente-nombre').value.trim();
@@ -809,85 +876,136 @@ async function guardarVentaCompleta() {
     return;
   }
 
-  // Preparar datos
-  const datos = {
-    cliente: {
-      nombre: nombre,
-      apellido: document.getElementById('form-cliente-apellido').value.trim(),
-      email: email,
-      telefono: document.getElementById('form-cliente-telefono').value.trim(),
-      pais: document.getElementById('form-cliente-pais').value
-    },
-    beneficiario: esTercero ? {
-      nombre: beneficiarioNombre,
-      apellido: document.getElementById('form-beneficiario-apellido').value.trim(),
-      email: beneficiarioEmail,
-      telefono: document.getElementById('form-beneficiario-telefono').value.trim()
-    } : null,
-    venta: {
-      closer: closer,
-      equipo: document.getElementById('form-venta-equipo').value,
-      monto: monto,
-      fecha: document.getElementById('form-venta-fecha').value || new Date().toISOString().split('T')[0]
-    },
-    pago: {
-      metodo: metodo,
-      comprobante: document.getElementById('form-pago-comprobante').value.trim(),
-      notas: document.getElementById('form-pago-notas').value.trim()
-    }
-  };
-
-  // Guardar venta
-  const payload = new FormData();
-  payload.append('action', 'crearVenta');
-  payload.append('id', 'V-' + Date.now());
-  payload.append('fecha', datos.venta.fecha);
-  payload.append('closer', datos.venta.closer);
-  payload.append('equipo', datos.venta.equipo);
-  payload.append('monto', datos.venta.monto);
-  payload.append('estado', 'PENDIENTE');
-  payload.append('clienteNombre', datos.cliente.nombre);
-  payload.append('clienteEmail', datos.cliente.email);
-  payload.append('esTercero', esTercero ? 'SÍ' : 'NO');
+  // Convertir archivo a base64 si existe
+  let comprobantBase64 = '';
+  let nombreArchivo = '';
   
-  if (esTercero && datos.beneficiario) {
-    payload.append('beneficiarioNombre', datos.beneficiario.nombre);
-    payload.append('beneficiarioEmail', datos.beneficiario.email);
-  }
-
-  try {
-    const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
-    const result = await response.json();
+  if (archivoComprobante) {
+    nombreArchivo = archivoComprobante.name;
+    const reader = new FileReader();
     
-    if (result.ok) {
-      mostrarMensajVenta('✅ Venta guardada correctamente', true);
+    return new Promise((resolve) => {
+      reader.onload = async function() {
+        comprobantBase64 = reader.result;
+        
+        // Guardar venta
+        const payload = new FormData();
+        payload.append('action', 'crearVenta');
+        payload.append('id', 'V-' + Date.now());
+        payload.append('fecha', document.getElementById('form-venta-fecha').value || new Date().toISOString().split('T')[0]);
+        payload.append('closer', closer);
+        payload.append('equipo', document.getElementById('form-venta-equipo').value);
+        payload.append('monto', monto);
+        payload.append('estado', 'PENDIENTE');
+        payload.append('clienteNombre', nombre);
+        payload.append('clienteEmail', email);
+        payload.append('esTercero', esTercero ? 'SÍ' : 'NO');
+        
+        if (esTercero) {
+          payload.append('beneficiarioNombre', beneficiarioNombre);
+          payload.append('beneficiarioEmail', beneficiarioEmail);
+        }
+        
+        if (comprobantBase64) {
+          payload.append('comprobante', comprobantBase64);
+          payload.append('nombreArchivo', nombreArchivo);
+        }
+        
+        try {
+          const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
+          const result = await response.json();
+          
+          if (result.ok) {
+            mostrarMensajVenta('✅ Venta guardada correctamente', true);
+            
+            // Limpiar formulario
+            document.getElementById('form-cliente-nombre').value = '';
+            document.getElementById('form-cliente-apellido').value = '';
+            document.getElementById('form-cliente-email').value = '';
+            document.getElementById('form-cliente-telefono').value = '';
+            document.getElementById('form-cliente-pais').value = '';
+            document.getElementById('toggle-tercero').checked = false;
+            document.getElementById('form-beneficiario-nombre').value = '';
+            document.getElementById('form-beneficiario-apellido').value = '';
+            document.getElementById('form-beneficiario-email').value = '';
+            document.getElementById('form-beneficiario-telefono').value = '';
+            document.getElementById('seccion-beneficiario').style.display = 'none';
+            document.getElementById('form-venta-closer').value = '';
+            document.getElementById('form-venta-monto').value = '';
+            document.getElementById('form-venta-fecha').value = '';
+            document.getElementById('form-pago-metodo').value = '';
+            document.getElementById('form-pago-comprobante').value = '';
+            document.getElementById('form-pago-notas').value = '';
+            limpiarComprobante();
+            
+            // Volver al paso 1
+            setTimeout(() => { cambiarPasoventa(1); loadData(); renderDash(); }, 2000);
+          } else {
+            mostrarMensajVenta('❌ Error: ' + (result.error || 'desconocido'), false);
+          }
+        } catch (e) {
+          mostrarMensajVenta('❌ Error de conexión: ' + e.message, false);
+        }
+        
+        resolve();
+      };
       
-      // Limpiar formulario
-      document.getElementById('form-cliente-nombre').value = '';
-      document.getElementById('form-cliente-apellido').value = '';
-      document.getElementById('form-cliente-email').value = '';
-      document.getElementById('form-cliente-telefono').value = '';
-      document.getElementById('form-cliente-pais').value = '';
-      document.getElementById('toggle-tercero').checked = false;
-      document.getElementById('form-beneficiario-nombre').value = '';
-      document.getElementById('form-beneficiario-apellido').value = '';
-      document.getElementById('form-beneficiario-email').value = '';
-      document.getElementById('form-beneficiario-telefono').value = '';
-      document.getElementById('seccion-beneficiario').style.display = 'none';
-      document.getElementById('form-venta-closer').value = '';
-      document.getElementById('form-venta-monto').value = '';
-      document.getElementById('form-venta-fecha').value = '';
-      document.getElementById('form-pago-metodo').value = '';
-      document.getElementById('form-pago-comprobante').value = '';
-      document.getElementById('form-pago-notas').value = '';
-      
-      // Volver al paso 1
-      setTimeout(() => { cambiarPasoventa(1); loadData(); renderDash(); }, 2000);
-    } else {
-      mostrarMensajVenta('❌ Error: ' + (result.error || 'desconocido'), false);
+      reader.readAsDataURL(archivoComprobante);
+    });
+  } else {
+    // Sin archivo, guardar normalmente
+    const payload = new FormData();
+    payload.append('action', 'crearVenta');
+    payload.append('id', 'V-' + Date.now());
+    payload.append('fecha', document.getElementById('form-venta-fecha').value || new Date().toISOString().split('T')[0]);
+    payload.append('closer', closer);
+    payload.append('equipo', document.getElementById('form-venta-equipo').value);
+    payload.append('monto', monto);
+    payload.append('estado', 'PENDIENTE');
+    payload.append('clienteNombre', nombre);
+    payload.append('clienteEmail', email);
+    payload.append('esTercero', esTercero ? 'SÍ' : 'NO');
+    
+    if (esTercero) {
+      payload.append('beneficiarioNombre', beneficiarioNombre);
+      payload.append('beneficiarioEmail', beneficiarioEmail);
     }
-  } catch (e) {
-    mostrarMensajVenta('❌ Error de conexión: ' + e.message, false);
+
+    try {
+      const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
+      const result = await response.json();
+      
+      if (result.ok) {
+        mostrarMensajVenta('✅ Venta guardada correctamente', true);
+        
+        // Limpiar formulario
+        document.getElementById('form-cliente-nombre').value = '';
+        document.getElementById('form-cliente-apellido').value = '';
+        document.getElementById('form-cliente-email').value = '';
+        document.getElementById('form-cliente-telefono').value = '';
+        document.getElementById('form-cliente-pais').value = '';
+        document.getElementById('toggle-tercero').checked = false;
+        document.getElementById('form-beneficiario-nombre').value = '';
+        document.getElementById('form-beneficiario-apellido').value = '';
+        document.getElementById('form-beneficiario-email').value = '';
+        document.getElementById('form-beneficiario-telefono').value = '';
+        document.getElementById('seccion-beneficiario').style.display = 'none';
+        document.getElementById('form-venta-closer').value = '';
+        document.getElementById('form-venta-monto').value = '';
+        document.getElementById('form-venta-fecha').value = '';
+        document.getElementById('form-pago-metodo').value = '';
+        document.getElementById('form-pago-comprobante').value = '';
+        document.getElementById('form-pago-notas').value = '';
+        limpiarComprobante();
+        
+        // Volver al paso 1
+        setTimeout(() => { cambiarPasoventa(1); loadData(); renderDash(); }, 2000);
+      } else {
+        mostrarMensajVenta('❌ Error: ' + (result.error || 'desconocido'), false);
+      }
+    } catch (e) {
+      mostrarMensajVenta('❌ Error de conexión: ' + e.message, false);
+    }
   }
 }
 
@@ -918,23 +1036,33 @@ function renderValidar() {
           <th>Closer</th>
           <th>Equipo</th>
           <th>Monto USD</th>
+          <th>Comprobante</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        ${pendientes.map((v, i) => `
-          <tr>
-            <td><strong>${v[0]}</strong></td>
-            <td>${v[1]}</td>
-            <td>${v[2]}</td>
-            <td>${v[3]}</td>
-            <td>$${parseFloat(v[4]).toFixed(2)}</td>
-            <td>
-              <button onclick="validarVenta('${v[0]}', 'VALIDADA')" style="padding:6px 12px;background:var(--success);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;margin-right:6px;">✓ Validar</button>
-              <button onclick="validarVenta('${v[0]}', 'RECHAZADA')" style="padding:6px 12px;background:var(--danger);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✗ Rechazar</button>
-            </td>
-          </tr>
-        `).join('')}
+        ${pendientes.map((v, i) => {
+          const tieneComprobante = v[15] && v[15] !== ''; // Columna 15 es comprobante base64
+          return `
+            <tr>
+              <td><strong>${v[0]}</strong></td>
+              <td>${v[1]}</td>
+              <td>${v[2]}</td>
+              <td>${v[3]}</td>
+              <td>$${parseFloat(v[4]).toFixed(2)}</td>
+              <td>
+                ${tieneComprobante ? 
+                  `<button onclick="descargarComprobante('${v[0]}', ${i})" style="padding:6px 12px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;">📥 Descargar</button>` 
+                  : '<span style="color:var(--muted);font-size:12px;">Sin archivo</span>'
+                }
+              </td>
+              <td>
+                <button onclick="validarVenta('${v[0]}', 'VALIDADA')" style="padding:6px 12px;background:var(--success);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;margin-right:6px;">✓ Validar</button>
+                <button onclick="validarVenta('${v[0]}', 'RECHAZADA')" style="padding:6px 12px;background:var(--danger);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✗ Rechazar</button>
+              </td>
+            </tr>
+          `;
+        }).join('')}
       </tbody>
     </table>
   `;
@@ -960,6 +1088,40 @@ async function validarVenta(id, estado) {
     }
   } catch (e) {
     alert('Error de conexión: ' + e.message);
+  }
+}
+
+function descargarComprobante(ventaId, indice) {
+  const venta = VENTAS[indice];
+  if (!venta || !venta[15]) {
+    alert('No hay comprobante disponible');
+    return;
+  }
+
+  const base64Data = venta[15];
+  const nombreArchivo = venta[16] || ventaId + '.pdf';
+  
+  try {
+    // Crear blob desde base64
+    const byteCharacters = atob(base64Data.split(',')[1] || base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+    
+    // Descargar
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = nombreArchivo;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (e) {
+    alert('Error al descargar: ' + e.message);
   }
 }
 
