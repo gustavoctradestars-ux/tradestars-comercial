@@ -193,6 +193,9 @@ input,select,button{font-family:'Outfit',sans-serif;}
       <button class="nav-btn" id="nb-metodos" onclick="navTo('metodos')">
         <span class="ic">💳</span>Métodos
       </button>
+      <button class="nav-btn" id="nb-validar" onclick="navTo('validar')" style="display:none;">
+        <span class="ic">✓</span>Validar
+      </button>
     </div>
     <div class="sb-foot">
       <div class="user-badge">
@@ -284,48 +287,116 @@ input,select,button{font-family:'Outfit',sans-serif;}
       </div>
     </section>
 
-    <!-- ── REGISTRAR VENTA ── -->
+    <!-- ── REGISTRAR VENTA (3 PASOS) ── -->
     <section class="page" id="sec-registrar">
       <div class="ph">
         <h1>➕ Registrar Venta</h1>
-        <p>Agregar una nueva venta al sistema</p>
+        <p>Cargar cliente, venta y pago en 3 sencillos pasos</p>
       </div>
       <div class="card">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">ID Venta</label>
-            <input type="text" id="form-venta-id" placeholder="ID" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+        <!-- PESTAÑAS -->
+        <div style="display:flex;gap:24px;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:24px;">
+          <button onclick="cambiarPasoventa(1)" id="tab-cliente" style="background:none;border:none;color:var(--primary);font-weight:600;cursor:pointer;padding:0;font-size:14px;position:relative;">
+            1. Cliente
+            <div style="position:absolute;bottom:-17px;left:0;right:0;height:2px;background:var(--primary);display:none;" class="tab-indicator"></div>
+          </button>
+          <button onclick="cambiarPasoventa(2)" id="tab-venta" style="background:none;border:none;color:var(--muted);font-weight:600;cursor:pointer;padding:0;font-size:14px;">2. Venta</button>
+          <button onclick="cambiarPasoventa(3)" id="tab-pago" style="background:none;border:none;color:var(--muted);font-weight:600;cursor:pointer;padding:0;font-size:14px;">3. Pago</button>
+        </div>
+
+        <!-- PASO 1: CLIENTE -->
+        <div id="paso-1-cliente" class="paso-venta" style="display:block;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre *</label>
+              <input type="text" id="form-cliente-nombre" placeholder="Juan" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Apellido</label>
+              <input type="text" id="form-cliente-apellido" placeholder="Pérez" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
           </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Fecha</label>
-            <input type="date" id="form-venta-fecha" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          <div style="margin-bottom:16px;">
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Correo *</label>
+            <input type="email" id="form-cliente-email" placeholder="juan@email.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
           </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Closer</label>
-            <input type="text" id="form-venta-closer" placeholder="Nombre del closer" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Teléfono (WhatsApp)</label>
+              <input type="text" id="form-cliente-telefono" placeholder="+57 300 0000000" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">País</label>
+              <select id="form-cliente-pais" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+                <option value="">Seleccionar...</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Brasil">Brasil</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Equipo</label>
-            <select id="form-venta-equipo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              <option value="comercial">Comercial</option>
-              <option value="revenue">Revenue</option>
-            </select>
+          <button onclick="cambiarPasoventa(2)" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Siguiente →</button>
+        </div>
+
+        <!-- PASO 2: VENTA -->
+        <div id="paso-2-venta" class="paso-venta" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Closer *</label>
+              <input type="text" id="form-venta-closer" placeholder="Nombre del closer" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Equipo *</label>
+              <select id="form-venta-equipo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+                <option value="comercial">Comercial</option>
+                <option value="revenue">Revenue</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Monto USD</label>
-            <input type="number" id="form-venta-monto" placeholder="0.00" step="0.01" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Monto USD *</label>
+              <input type="number" id="form-venta-monto" placeholder="0.00" step="0.01" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Fecha</label>
+              <input type="date" id="form-venta-fecha" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
           </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
-            <select id="form-venta-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              <option value="PENDIENTE">PENDIENTE</option>
-              <option value="VALIDADA">VALIDADA</option>
-              <option value="RECHAZADA">RECHAZADA</option>
-            </select>
+          <div style="display:flex;gap:12px;">
+            <button onclick="cambiarPasoventa(1)" style="padding:12px 24px;background:var(--border);color:var(--text);border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Anterior</button>
+            <button onclick="cambiarPasoventa(3)" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Siguiente →</button>
           </div>
         </div>
-        <button onclick="guardarVenta()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Venta</button>
-        <div id="msg-venta" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
+
+        <!-- PASO 3: PAGO -->
+        <div id="paso-3-pago" class="paso-venta" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Método de Pago *</label>
+              <select id="form-pago-metodo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+                <option value="">Seleccionar...</option>
+                <option value="transferencia">Transferencia Bancaria</option>
+                <option value="paypal">PayPal</option>
+                <option value="cripto">Criptomoneda</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Comprobante</label>
+              <input type="text" id="form-pago-comprobante" placeholder="Referencia o ID" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+          </div>
+          <div style="margin-bottom:16px;">
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Notas adicionales</label>
+            <textarea id="form-pago-notas" placeholder="Detalles adicionales..." style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);min-height:80px;"></textarea>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <button onclick="cambiarPasoventa(2)" style="padding:12px 24px;background:var(--border);color:var(--text);border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Anterior</button>
+            <button onclick="guardarVentaCompleta()" style="padding:12px 24px;background:var(--success);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Guardar Venta</button>
+          </div>
+        </div>
+
+        <div id="msg-venta-multi" style="margin-top:16px;padding:12px;border-radius:8px;display:none;"></div>
       </div>
     </section>
 
@@ -401,6 +472,17 @@ input,select,button{font-family:'Outfit',sans-serif;}
       <div class="card">
         <div class="ctitle">📋 Métodos Registrados</div>
         <div id="metodosContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
+
+    <!-- ── VALIDAR PAGOS ── -->
+    <section class="page" id="sec-validar">
+      <div class="ph">
+        <h1>✓ Validar Pagos</h1>
+        <p>Revisar y aprobar ventas pendientes</p>
+      </div>
+      <div class="card">
+        <div id="validarContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
       </div>
     </section>
 
@@ -487,6 +569,15 @@ function showApp() {
   document.getElementById('uName').textContent = CU.nombre || CU.email;
   document.getElementById('uRole').textContent = CU.rol;
   document.getElementById('dashRole').textContent = '👑 ' + CU.rol;
+  
+  // Mostrar botón Validar solo para CEO y financiero
+  const btnValidar = document.getElementById('nb-validar');
+  if (CU.rol === 'CEO' || CU.rol === 'lider_financiero') {
+    btnValidar.style.display = 'flex';
+  } else {
+    btnValidar.style.display = 'none';
+  }
+  
   navTo('dash');
 }
 
@@ -501,6 +592,7 @@ function navTo(page) {
   else if (page === 'ventas') renderVentas();
   else if (page === 'closers') renderClosers();
   else if (page === 'metodos') renderMetodos();
+  else if (page === 'validar') renderValidar();
 }
 
 // ════ DASHBOARD ════
@@ -534,10 +626,17 @@ function renderDash() {
 }
 
 function renderVentas() {
-  const tbody = document.querySelector('#sec-ventas .tbl') || document.createElement('table');
   const content = document.getElementById('ventasContent');
   
-  if (VENTAS.length === 0) {
+  // Filtrar ventas según rol del usuario
+  let ventasAMostrar = VENTAS;
+  if (CU.rol === 'lider_comercial') {
+    ventasAMostrar = VENTAS.filter(v => v[3] === 'comercial');
+  } else if (CU.rol === 'lider_revenue') {
+    ventasAMostrar = VENTAS.filter(v => v[3] === 'revenue');
+  }
+  
+  if (ventasAMostrar.length === 0) {
     content.innerHTML = '<div class="empty"><div class="ei">📭</div><p>Sin ventas registradas</p></div>';
     return;
   }
@@ -550,21 +649,37 @@ function renderVentas() {
           <th>Fecha</th>
           <th>Closer</th>
           <th>Equipo</th>
-          <th>Monto</th>
+          <th>Monto USD</th>
           <th>Estado</th>
         </tr>
       </thead>
       <tbody>
-        ${VENTAS.map(v => `
-          <tr>
-            <td><strong>${v[0]}</strong></td>
-            <td>${v[1]}</td>
-            <td>${v[2]}</td>
-            <td>${v[3]}</td>
-            <td>$${parseFloat(v[4]).toFixed(2)}</td>
-            <td><span class="badge ${v[9] === 'VALIDADA' ? '' : 'warning'}">${v[9]}</span></td>
-          </tr>
-        `).join('')}
+        ${ventasAMostrar.map(v => {
+          let badgeColor = '#fca5a5'; // Rojo para PENDIENTE
+          let badgeBg = 'rgba(239,68,68,.2)';
+          let estadoLabel = '🔴 PENDIENTE';
+          
+          if (v[9] === 'VALIDADA') {
+            badgeColor = '#86efac';
+            badgeBg = 'rgba(34,197,94,.2)';
+            estadoLabel = '✓ VALIDADA';
+          } else if (v[9] === 'RECHAZADA') {
+            badgeColor = '#fca5a5';
+            badgeBg = 'rgba(239,68,68,.3)';
+            estadoLabel = '✗ RECHAZADA';
+          }
+          
+          return `
+            <tr>
+              <td><strong>${v[0]}</strong></td>
+              <td>${v[1]}</td>
+              <td>${v[2]}</td>
+              <td>${v[3]}</td>
+              <td>$${parseFloat(v[4]).toFixed(2)}</td>
+              <td><span class="badge" style="background:${badgeBg};color:${badgeColor};border:1px solid ${badgeColor};padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;">${estadoLabel}</span></td>
+            </tr>
+          `;
+        }).join('')}
       </tbody>
     </table>
   `;
@@ -601,10 +716,124 @@ function renderClosers() {
   `;
 }
 
-function renderMetodos() {
-  const content = document.getElementById('metodosContent');
-  if (METODOS.length === 0) {
-    content.innerHTML = '<div class="empty"><div class="ei">💳</div><p>Sin métodos registrados</p></div>';
+function cambiarPasoventa(paso) {
+  // Ocultar todos los pasos
+  document.getElementById('paso-1-cliente').style.display = 'none';
+  document.getElementById('paso-2-venta').style.display = 'none';
+  document.getElementById('paso-3-pago').style.display = 'none';
+  
+  // Mostrar el paso actual
+  document.getElementById('paso-' + paso + '-' + ['cliente', 'venta', 'pago'][paso-1]).style.display = 'block';
+  
+  // Actualizar pestañas
+  document.getElementById('tab-cliente').style.color = paso === 1 ? 'var(--primary)' : 'var(--muted)';
+  document.getElementById('tab-venta').style.color = paso === 2 ? 'var(--primary)' : 'var(--muted)';
+  document.getElementById('tab-pago').style.color = paso === 3 ? 'var(--primary)' : 'var(--muted)';
+}
+
+async function guardarVentaCompleta() {
+  // Validar cliente
+  const nombre = document.getElementById('form-cliente-nombre').value.trim();
+  const email = document.getElementById('form-cliente-email').value.trim();
+  if (!nombre || !email) {
+    mostrarMensajVenta('❌ Faltan datos del cliente', false);
+    return;
+  }
+
+  // Validar venta
+  const closer = document.getElementById('form-venta-closer').value.trim();
+  const monto = document.getElementById('form-venta-monto').value;
+  if (!closer || !monto) {
+    mostrarMensajVenta('❌ Faltan datos de la venta', false);
+    return;
+  }
+
+  // Validar pago
+  const metodo = document.getElementById('form-pago-metodo').value;
+  if (!metodo) {
+    mostrarMensajVenta('❌ Selecciona un método de pago', false);
+    return;
+  }
+
+  // Preparar datos
+  const datos = {
+    cliente: {
+      nombre: nombre,
+      apellido: document.getElementById('form-cliente-apellido').value.trim(),
+      email: email,
+      telefono: document.getElementById('form-cliente-telefono').value.trim(),
+      pais: document.getElementById('form-cliente-pais').value
+    },
+    venta: {
+      closer: closer,
+      equipo: document.getElementById('form-venta-equipo').value,
+      monto: monto,
+      fecha: document.getElementById('form-venta-fecha').value || new Date().toISOString().split('T')[0]
+    },
+    pago: {
+      metodo: metodo,
+      comprobante: document.getElementById('form-pago-comprobante').value.trim(),
+      notas: document.getElementById('form-pago-notas').value.trim()
+    }
+  };
+
+  // Guardar venta
+  const payload = new FormData();
+  payload.append('action', 'crearVenta');
+  payload.append('id', 'V-' + Date.now());
+  payload.append('fecha', datos.venta.fecha);
+  payload.append('closer', datos.venta.closer);
+  payload.append('equipo', datos.venta.equipo);
+  payload.append('monto', datos.venta.monto);
+  payload.append('estado', 'PENDIENTE');
+  payload.append('clienteNombre', datos.cliente.nombre);
+  payload.append('clienteEmail', datos.cliente.email);
+
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
+    const result = await response.json();
+    
+    if (result.ok) {
+      mostrarMensajVenta('✅ Venta guardada correctamente', true);
+      
+      // Limpiar formulario
+      document.getElementById('form-cliente-nombre').value = '';
+      document.getElementById('form-cliente-apellido').value = '';
+      document.getElementById('form-cliente-email').value = '';
+      document.getElementById('form-cliente-telefono').value = '';
+      document.getElementById('form-cliente-pais').value = '';
+      document.getElementById('form-venta-closer').value = '';
+      document.getElementById('form-venta-monto').value = '';
+      document.getElementById('form-venta-fecha').value = '';
+      document.getElementById('form-pago-metodo').value = '';
+      document.getElementById('form-pago-comprobante').value = '';
+      document.getElementById('form-pago-notas').value = '';
+      
+      // Volver al paso 1
+      setTimeout(() => { cambiarPasoventa(1); loadData(); renderDash(); }, 2000);
+    } else {
+      mostrarMensajVenta('❌ Error: ' + (result.error || 'desconocido'), false);
+    }
+  } catch (e) {
+    mostrarMensajVenta('❌ Error de conexión: ' + e.message, false);
+  }
+}
+
+function mostrarMensajVenta(msg, ok) {
+  const el = document.getElementById('msg-venta-multi');
+  el.textContent = msg;
+  el.style.background = ok ? 'rgba(34,197,94,.15)' : 'rgba(239,68,68,.15)';
+  el.style.color = ok ? '#4ade80' : '#f87171';
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+function renderValidar() {
+  const content = document.getElementById('validarContent');
+  const pendientes = VENTAS.filter(v => v[9] === 'PENDIENTE');
+  
+  if (pendientes.length === 0) {
+    content.innerHTML = '<div class="empty"><div class="ei">✓</div><p>Sin ventas por validar</p></div>';
     return;
   }
 
@@ -612,22 +841,54 @@ function renderMetodos() {
     <table class="tbl">
       <thead>
         <tr>
-          <th>Método</th>
-          <th>Descripción</th>
-          <th>Estado</th>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Closer</th>
+          <th>Equipo</th>
+          <th>Monto USD</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        ${METODOS.map(m => `
+        ${pendientes.map((v, i) => `
           <tr>
-            <td><strong>${m[0]}</strong></td>
-            <td>${m[1]}</td>
-            <td><span class="badge">${m[2] || 'Activo'}</span></td>
+            <td><strong>${v[0]}</strong></td>
+            <td>${v[1]}</td>
+            <td>${v[2]}</td>
+            <td>${v[3]}</td>
+            <td>$${parseFloat(v[4]).toFixed(2)}</td>
+            <td>
+              <button onclick="validarVenta('${v[0]}', 'VALIDADA')" style="padding:6px 12px;background:var(--success);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;margin-right:6px;">✓ Validar</button>
+              <button onclick="validarVenta('${v[0]}', 'RECHAZADA')" style="padding:6px 12px;background:var(--danger);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✗ Rechazar</button>
+            </td>
           </tr>
         `).join('')}
       </tbody>
     </table>
   `;
+}
+
+async function validarVenta(id, estado) {
+  const payload = new FormData();
+  payload.append('action', 'validarVenta');
+  payload.append('id', id);
+  payload.append('estado', estado);
+
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
+    const result = await response.json();
+    
+    if (result.ok) {
+      alert(estado === 'VALIDADA' ? '✓ Venta validada' : '✗ Venta rechazada');
+      loadData();
+      renderValidar();
+      renderDash();
+    } else {
+      alert('Error al actualizar: ' + result.error);
+    }
+  } catch (e) {
+    alert('Error de conexión: ' + e.message);
+  }
 }
 
 // ════ GUARDAR DATOS ════
