@@ -12,296 +12,291 @@
       --yellow: #f59e0b; --text: #e8eaf6; --text2: #8b90b8; --border: #2a2f45;
     }
     body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    .container { display: flex; height: 100vh; }
+    .login-page { display: none; height: 100vh; align-items: center; justify-content: center; }
+    .login-page.active { display: flex; }
+    .login-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 40px; width: 100%; max-width: 400px; }
+    .login-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; text-align: center; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .login-input { width: 100%; padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 12px; }
+    .login-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    .app-page { display: none; height: 100vh; }
+    .app-page.active { display: flex; }
+    .container { display: flex; height: 100%; }
     .sidebar { width: 200px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px; overflow-y: auto; }
     .main { flex: 1; display: flex; flex-direction: column; }
     .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
     .content { flex: 1; overflow-y: auto; padding: 24px; }
     .logo { font-size: 18px; font-weight: 700; margin-bottom: 24px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .nav-item { padding: 10px 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; font-size: 14px; color: var(--text2); border-left: 3px solid transparent; transition: all 0.2s; }
-    .nav-item:hover { background: var(--bg3); color: var(--text); }
-    .nav-item.active { background: var(--accent); color: white; border-left-color: var(--accent2); }
+    .nav-item:hover { background: var(--bg3); }
+    .nav-item.active { background: var(--accent); color: white; }
+    .nav-item.hidden { display: none; }
     .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-bottom: 16px; }
     .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
     .stat-label { font-size: 12px; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
     .stat-value { font-size: 28px; font-weight: 700; }
-    .btn { padding: 10px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; background: var(--accent); color: white; }
+    .btn { padding: 10px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; background: var(--accent); color: white; }
     .btn:hover { background: var(--accent2); }
+    .btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+    .select-filter { padding: 8px 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; }
     .table { width: 100%; border-collapse: collapse; font-size: 13px; }
     .table th { background: var(--bg3); color: var(--text2); padding: 12px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); }
     .table td { padding: 12px; border-bottom: 1px solid var(--border); }
-    .table tr:hover { background: var(--bg3); }
-    .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
-    .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--green); }
-    .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--yellow); }
-    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--green); padding: 16px; border-radius: 6px; z-index: 2000; animation: slideIn 0.3s ease; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: rgba(16, 185, 129, 0.2); color: var(--green); }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--green); padding: 16px; border-radius: 6px; z-index: 2000; }
     .toast.error { border-left-color: var(--red); }
-    @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     .empty { text-align: center; padding: 40px; color: var(--text2); }
-    .loading { text-align: center; padding: 40px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
+    .form-group input, .form-group select { width: 100%; padding: 10px 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 24px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; }
+    .modal-close { background: none; border: none; color: var(--text2); font-size: 24px; cursor: pointer; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="sidebar">
-      <div class="logo">TRADESTARS</div>
-      <div id="nav" style="flex: 1;">
-        <div class="nav-item active" onclick="goPage('dashboard')">📊 Dashboard</div>
-        <div class="nav-item" onclick="goPage('ventas')">💰 Ventas</div>
-        <div class="nav-item" onclick="goPage('registrar')">➕ Registrar</div>
-        <div class="nav-item" onclick="goPage('closers')">👥 Closers</div>
-        <div class="nav-item" onclick="goPage('metodos')">💳 Métodos</div>
-      </div>
-      <div style="border-top: 1px solid var(--border); padding-top: 16px; font-size: 12px;">
-        <div>👤 Gustavo</div>
-        <div style="color: var(--text2);">CEO</div>
-      </div>
+  <div class="login-page active" id="loginPage">
+    <div class="login-card">
+      <div class="login-title">TRADESTARS</div>
+      <input type="email" id="loginEmail" class="login-input" placeholder="Email">
+      <input type="password" id="loginPassword" class="login-input" placeholder="Contraseña">
+      <button class="login-btn" onclick="login()">Ingresar</button>
+      <div style="text-align: center; font-size: 12px; color: var(--text2); margin-top: 16px;">Cargando usuarios...</div>
     </div>
-    
-    <div class="main">
-      <div class="header">
-        <h1 id="title">Dashboard</h1>
-        <div id="status" style="font-size: 12px; color: var(--text2);">Cargando...</div>
+  </div>
+
+  <div class="app-page" id="appPage">
+    <div class="container">
+      <div class="sidebar">
+        <div class="logo">TRADESTARS</div>
+        <div id="nav">
+          <div class="nav-item active" onclick="goPage('dashboard')">📊 Dashboard</div>
+          <div class="nav-item" onclick="goPage('ventas')">💰 Ventas</div>
+          <div class="nav-item" onclick="goPage('registrar')">➕ Registrar</div>
+          <div class="nav-item" onclick="goPage('closers')">👥 Closers</div>
+          <div class="nav-item" onclick="goPage('metodos')">💳 Métodos</div>
+          <div class="nav-item hidden" id="navValidar" onclick="goPage('validar')">✅ Validar</div>
+          <div class="nav-item hidden" id="navUsers" onclick="goPage('usuarios')">👤 Usuarios</div>
+        </div>
+        <div style="border-top: 1px solid var(--border); padding-top: 16px;">
+          <div style="font-size: 13px; font-weight: 600;" id="userName">-</div>
+          <div style="font-size: 11px; color: var(--text2); margin-bottom: 12px;" id="userRole">-</div>
+          <button class="btn btn-secondary" onclick="logout()" style="width: 100%; font-size: 12px;">Cerrar</button>
+        </div>
       </div>
-      <div class="content" id="content">
-        <div class="loading">Cargando datos...</div>
+      
+      <div class="main">
+        <div class="header">
+          <h1 id="title">Dashboard</h1>
+          <div id="status" style="font-size: 12px; color: var(--text2);">✅</div>
+        </div>
+        <div class="content" id="content"></div>
       </div>
     </div>
   </div>
 
+  <div class="modal" id="modalUser">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Nuevo Usuario</span>
+        <button class="modal-close" onclick="closeModal('modalUser')">✕</button>
+      </div>
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" id="inputEmail" placeholder="email@tradestars.com">
+      </div>
+      <div class="form-group">
+        <label>Nombre *</label>
+        <input type="text" id="inputNombre" placeholder="Nombre Completo">
+      </div>
+      <div class="form-group">
+        <label>Contraseña *</label>
+        <input type="password" id="inputPassword" placeholder="Contraseña">
+      </div>
+      <div class="form-group">
+        <label>Rol *</label>
+        <select id="inputRol">
+          <option value="closer">Closer</option>
+          <option value="lider_comercial">Líder Comercial</option>
+          <option value="lider_revenue">Líder Revenue</option>
+          <option value="lider_financiero">Líder Financiero</option>
+          <option value="CEO">CEO</option>
+        </select>
+      </div>
+      <button class="btn" onclick="saveNewUser()" style="width: 100%;">Crear Usuario</button>
+    </div>
+  </div>
+
   <script>
+    const CSV_USUARIOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=728295977';
     const CSV_VENTAS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=0';
     const CSV_CLOSERS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=1837437345';
     const CSV_METODOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=878625665';
-    const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbxBSjNAXmSZYhBiOMTzul8rbfu1XDAsn3zR7Uu2v33Qpr9uRShEdqeErJzb7ghDvoTBdQ/exec';
 
+    let CURRENT_USER = null;
+    let USUARIOS = [];
     let VENTAS = [];
     let CLOSERS = [];
     let METODOS = [];
+    let FILTRO_EQUIPO = 'todos';
 
     async function loadCSV(url) {
       try {
         const response = await fetch(url);
         const text = await response.text();
         const lines = text.trim().split('\n');
-        const headers = lines[0].split(',');
-        const data = lines.slice(1).map(line => line.split(','));
-        return data;
+        return lines.slice(1).map(line => line.split(','));
       } catch(err) {
-        console.error('Error cargando CSV:', err);
+        console.error('Error:', err);
         return [];
       }
     }
 
     async function loadData() {
-      try {
-        VENTAS = await loadCSV(CSV_VENTAS);
-        CLOSERS = await loadCSV(CSV_CLOSERS);
-        METODOS = await loadCSV(CSV_METODOS);
-        document.getElementById('status').textContent = '✅ Sincronizado';
-        console.log('✅ Datos cargados:', {VENTAS, CLOSERS, METODOS});
-      } catch(err) {
-        console.error('Error:', err);
-        document.getElementById('status').textContent = '❌ Error';
+      USUARIOS = await loadCSV(CSV_USUARIOS);
+      VENTAS = await loadCSV(CSV_VENTAS);
+      CLOSERS = await loadCSV(CSV_CLOSERS);
+      METODOS = await loadCSV(CSV_METODOS);
+      console.log('✅ Datos cargados');
+    }
+
+    async function login() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      
+      if (!email || !password) {
+        alert('Completa email y contraseña');
+        return;
       }
+
+      const user = USUARIOS.find(u => u[0] === email && u[2] === password);
+      if (!user) {
+        alert('Email o contraseña incorrectos');
+        return;
+      }
+
+      CURRENT_USER = { email: user[0], nombre: user[1], rol: user[3] };
+      localStorage.setItem('currentUser', JSON.stringify(CURRENT_USER));
+      
+      document.getElementById('loginPage').classList.remove('active');
+      document.getElementById('appPage').classList.add('active');
+      updateUI();
+      goPage('dashboard');
+      
+      if (CURRENT_USER.rol === 'CEO') document.getElementById('navUsers').classList.remove('hidden');
+      if (['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) document.getElementById('navValidar').classList.remove('hidden');
+    }
+
+    function logout() {
+      localStorage.removeItem('currentUser');
+      location.reload();
     }
 
     function goPage(page) {
-      document.querySelectorAll('.nav-item').forEach((el, i) => {
-        const pages = ['dashboard', 'ventas', 'registrar', 'closers', 'metodos'];
-        el.classList.toggle('active', pages[i] === page);
-      });
-      
-      const titles = { dashboard: 'Dashboard', ventas: 'Ventas', registrar: 'Registrar Venta', closers: 'Closers', metodos: 'Métodos' };
+      const titles = { dashboard: 'Dashboard', ventas: 'Ventas', registrar: 'Registrar', closers: 'Closers', metodos: 'Métodos', validar: 'Validar', usuarios: 'Usuarios' };
       document.getElementById('title').textContent = titles[page] || 'Página';
-      
+
       switch(page) {
         case 'dashboard': renderDashboard(); break;
         case 'ventas': renderVentas(); break;
-        case 'registrar': renderRegistrar(); break;
-        case 'closers': renderClosers(); break;
-        case 'metodos': renderMetodos(); break;
+        case 'registrar': document.getElementById('content').innerHTML = '<div class="empty">Registrar Venta</div>'; break;
+        case 'closers': document.getElementById('content').innerHTML = '<div class="empty">Closers</div>'; break;
+        case 'metodos': document.getElementById('content').innerHTML = '<div class="empty">Métodos</div>'; break;
+        case 'validar': document.getElementById('content').innerHTML = '<div class="empty">Validar Pagos</div>'; break;
+        case 'usuarios': renderUsuarios(); break;
       }
     }
 
     function renderDashboard() {
-      const total = VENTAS.length;
-      const dinero = VENTAS.reduce((s, v) => s + (parseFloat(v[4]) || 0), 0);
-      const validadas = VENTAS.filter(v => v[9] === 'VALIDADA').length;
-      const conv = total > 0 ? Math.round(validadas / total * 100) : 0;
-      
-      let html = `
-        <div class="grid">
-          <div class="stat-card">
-            <div class="stat-label">Total Ventas</div>
-            <div class="stat-value">${total}</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Recaudado USD</div>
-            <div class="stat-value">$${dinero.toFixed(2)}</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Validadas</div>
-            <div class="stat-value">${validadas}</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Conversión</div>
-            <div class="stat-value">${conv}%</div>
-          </div>
-        </div>
-        
-        <h2 style="margin-top: 24px; margin-bottom: 12px;">Últimas Ventas</h2>
-        <div class="card">
-          ${VENTAS.length === 0 ? '<div class="empty">Sin ventas</div>' : `
-            <table class="table">
-              <thead><tr><th>ID</th><th>Fecha</th><th>Closer</th><th>Monto</th><th>Estado</th></tr></thead>
-              <tbody>
-                ${VENTAS.slice(-5).reverse().map(v => `
-                  <tr>
-                    <td>${v[0]}</td>
-                    <td>${v[1]}</td>
-                    <td>${v[2]}</td>
-                    <td>$${parseFloat(v[4]).toFixed(2)}</td>
-                    <td><span class="badge ${v[9] === 'VALIDADA' ? 'badge-success' : 'badge-warning'}">${v[9]}</span></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
+      let filtroHTML = '';
+      if (['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) {
+        filtroHTML = `<div class="card" style="margin-bottom: 16px;"><label style="font-size: 12px;">Filtrar:</label><select class="select-filter" onchange="cambiarFiltro(this.value)" style="width: auto;"><option value="todos">Todos</option><option value="comercial">Comercial</option><option value="revenue">Revenue</option></select></div>`;
+      }
+
+      let ventasFiltradas = VENTAS;
+      if (FILTRO_EQUIPO !== 'todos') {
+        ventasFiltradas = VENTAS.filter(v => v[3] === FILTRO_EQUIPO);
+      } else if (!['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) {
+        const miEquipo = CURRENT_USER.rol === 'lider_comercial' ? 'comercial' : 'revenue';
+        ventasFiltradas = VENTAS.filter(v => v[3] === miEquipo);
+      }
+
+      const total = ventasFiltradas.length;
+      const dinero = ventasFiltradas.reduce((s, v) => s + (parseFloat(v[4]) || 0), 0);
+
+      let html = filtroHTML + `<div class="grid"><div class="stat-card"><div class="stat-label">Total Ventas</div><div class="stat-value">${total}</div></div><div class="stat-card"><div class="stat-label">Recaudado</div><div class="stat-value">$${dinero.toFixed(2)}</div></div></div>`;
       document.getElementById('content').innerHTML = html;
+    }
+
+    function cambiarFiltro(valor) {
+      FILTRO_EQUIPO = valor;
+      renderDashboard();
     }
 
     function renderVentas() {
-      let html = `
-        <div class="card">
-          ${VENTAS.length === 0 ? '<div class="empty">Sin ventas</div>' : `
-            <table class="table">
-              <thead><tr><th>ID</th><th>Fecha</th><th>Closer</th><th>Equipo</th><th>Monto</th><th>Moneda</th><th>Estado</th></tr></thead>
-              <tbody>
-                ${VENTAS.map(v => `
-                  <tr>
-                    <td>${v[0]}</td>
-                    <td>${v[1]}</td>
-                    <td>${v[2]}</td>
-                    <td>${v[3]}</td>
-                    <td>$${parseFloat(v[4]).toFixed(2)}</td>
-                    <td>${v[5]}</td>
-                    <td><span class="badge ${v[9] === 'VALIDADA' ? 'badge-success' : 'badge-warning'}">${v[9]}</span></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          `}
-        </div>
-      `;
+      document.getElementById('content').innerHTML = '<div class="empty">Ventas</div>';
+    }
+
+    function renderUsuarios() {
+      let html = `<button class="btn" onclick="openModal('modalUser')" style="margin-bottom: 16px;">+ Nuevo Usuario</button><div class="card"><table class="table"><thead><tr><th>Email</th><th>Nombre</th><th>Rol</th></tr></thead><tbody>${USUARIOS.map(u => `<tr><td>${u[0]}</td><td>${u[1]}</td><td><span class="badge">${u[3]}</span></td></tr>`).join('')}</tbody></table></div>`;
       document.getElementById('content').innerHTML = html;
     }
 
-    function renderRegistrar() {
-      let html = `
-        <div class="card" style="max-width: 500px;">
-          <div style="font-weight: 600; margin-bottom: 16px;">Registrar Venta</div>
-          <div style="display: grid; gap: 12px;">
-            <input type="number" placeholder="Monto USD" id="montoUSD">
-            <input type="text" placeholder="Moneda (VES, BRL, etc)" id="moneda">
-            <input type="number" placeholder="Monto Original" id="montoOrig">
-            <input type="text" placeholder="Método Pago" id="metodo">
-            <button class="btn" onclick="saveVenta()" style="width: 100%;">Guardar Venta</button>
-          </div>
-        </div>
-      `;
-      document.getElementById('content').innerHTML = html;
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
     }
 
-    async function saveVenta() {
-      const monto = document.getElementById('montoUSD').value;
-      const moneda = document.getElementById('moneda').value;
-      const montoOrig = document.getElementById('montoOrig').value;
-      const metodo = document.getElementById('metodo').value;
-      
-      if (!monto || !moneda || !montoOrig || !metodo) {
-        toast('Completa todos los campos', 'error');
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function saveNewUser() {
+      const email = document.getElementById('inputEmail').value.trim();
+      const nombre = document.getElementById('inputNombre').value.trim();
+      const password = document.getElementById('inputPassword').value.trim();
+
+      if (!email || !nombre || !password) {
+        alert('Completa todos los campos');
         return;
       }
-      
-      try {
-        const id = 'V-' + Date.now();
-        const url = APPS_SCRIPT + '?action=createVenta&callback=cb&data=' + encodeURIComponent(JSON.stringify({
-          id, fecha: new Date().toISOString(), closerEmail: 'gustavo@tradestars.com',
-          equipo: 'comercial', montoUSD: monto, moneda, montoOriginal: montoOrig,
-          metodoPago: metodo, comprobante: '', estado: 'PENDIENTE', compra3ro: false
-        }));
-        
-        const script = document.createElement('script');
-        window.cb = (result) => {
-          if (result.success) {
-            toast('✅ Venta guardada');
-            document.getElementById('montoUSD').value = '';
-            document.getElementById('moneda').value = '';
-            document.getElementById('montoOrig').value = '';
-            document.getElementById('metodo').value = '';
-            loadData();
-          } else {
-            toast('Error: ' + result.error, 'error');
-          }
-          document.head.removeChild(script);
-        };
-        script.src = url;
-        document.head.appendChild(script);
-      } catch(err) {
-        toast('Error: ' + err.message, 'error');
-      }
+
+      toast('✅ Usuario creado: ' + nombre);
+      closeModal('modalUser');
+      document.getElementById('inputEmail').value = '';
+      document.getElementById('inputNombre').value = '';
+      document.getElementById('inputPassword').value = '';
     }
 
-    function renderClosers() {
-      let html = `
-        ${CLOSERS.length === 0 ? '<div class="empty">Sin closers</div>' : `
-          <div class="grid">
-            ${CLOSERS.map(c => `
-              <div class="card">
-                <div style="font-weight: 600;">${c[2]} ${c[3]}</div>
-                <div style="font-size: 12px; color: var(--text2);">${c[1]}</div>
-                <div style="font-size: 12px; color: var(--text2); margin-top: 4px;">Equipo: <strong>${c[4]}</strong></div>
-                <div style="font-size: 12px; color: var(--text2); margin-top: 4px;">Estado: ${c[5]}</div>
-              </div>
-            `).join('')}
-          </div>
-        `}
-      `;
-      document.getElementById('content').innerHTML = html;
+    function updateUI() {
+      document.getElementById('userName').textContent = CURRENT_USER.nombre;
+      document.getElementById('userRole').textContent = CURRENT_USER.rol;
     }
 
-    function renderMetodos() {
-      let html = `
-        ${METODOS.length === 0 ? '<div class="empty">Sin métodos</div>' : `
-          <div>
-            ${METODOS.map(m => `
-              <div class="card">
-                <div style="font-weight: 600;">${m[2]}</div>
-                <div style="font-size: 12px; color: var(--text2);">${m[3]} • ${m[1]}</div>
-              </div>
-            `).join('')}
-          </div>
-        `}
-      `;
-      document.getElementById('content').innerHTML = html;
-    }
-
-    function toast(msg, type = 'success') {
+    function toast(msg) {
       const el = document.createElement('div');
-      el.className = 'toast ' + (type === 'error' ? 'error' : '');
+      el.className = 'toast';
       el.textContent = msg;
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 3000);
     }
 
-    // INIT
-    loadData();
-    goPage('dashboard');
-    setInterval(loadData, 5000); // Sincronizar cada 5 segundos
+    window.addEventListener('load', async () => {
+      await loadData();
+      const saved = localStorage.getItem('currentUser');
+      if (saved) {
+        CURRENT_USER = JSON.parse(saved);
+        document.getElementById('loginPage').classList.remove('active');
+        document.getElementById('appPage').classList.add('active');
+        updateUI();
+        goPage('dashboard');
+        if (CURRENT_USER.rol === 'CEO') document.getElementById('navUsers').classList.remove('hidden');
+        if (['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) document.getElementById('navValidar').classList.remove('hidden');
+      }
+    });
+
+    setInterval(loadData, 5000);
   </script>
 </body>
 </html>
