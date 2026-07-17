@@ -142,460 +142,6 @@ input,select,button{font-family:'Outfit',sans-serif;}
 .dots span:nth-child(3){animation-delay:.4s;}
 @keyframes db{0%,80%,100%{transform:scale(.65);opacity:.35;}40%{transform:scale(1);opacity:1;}}
 </style>
-</head>
-<body>
-
-<!-- ════ LOGIN ════ -->
-<div id="loginScreen">
-  <div class="login-box">
-    <div class="login-logo">
-      <span class="star">⭐</span>
-      <h1>Tradestars</h1>
-      <p>LATAM · CRM Comercial</p>
-    </div>
-    <div class="login-err" id="loginErr"></div>
-    <div class="fg">
-      <label>Correo electrónico</label>
-      <input type="email" id="lEmail" placeholder="tu@correo.com">
-    </div>
-    <div class="fg">
-      <label>Contraseña</label>
-      <input type="password" id="lPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="btn-main" onclick="doLogin()">Ingresar al sistema</button>
-  </div>
-</div>
-
-<!-- ════ APP ════ -->
-<div id="appShell">
-<div class="app">
-
-  <!-- SIDEBAR -->
-  <nav class="sidebar">
-    <div class="sb-logo">
-      <span class="star">⭐</span>
-      <h2>Tradestars</h2>
-      <p>LATAM · Comercial</p>
-    </div>
-    <div class="sb-nav">
-      <button class="nav-btn active" id="nb-dash" onclick="navTo('dash')">
-        <span class="ic">📊</span>Dashboard
-      </button>
-      <button class="nav-btn" id="nb-ventas" onclick="navTo('ventas')">
-        <span class="ic">💰</span>Ventas
-      </button>
-      <button class="nav-btn" id="nb-registrar" onclick="navTo('registrar')">
-        <span class="ic">➕</span>Registrar
-      </button>
-      <button class="nav-btn" id="nb-closers" onclick="navTo('closers')">
-        <span class="ic">👥</span>Closers
-      </button>
-      <button class="nav-btn" id="nb-metodos" onclick="navTo('metodos')">
-        <span class="ic">💳</span>Métodos
-      </button>
-      <button class="nav-btn" id="nb-productos" onclick="navTo('productos')">
-        <span class="ic">📦</span>Productos
-      </button>
-      <button class="nav-btn" id="nb-validar" onclick="navTo('validar')" style="display:none;">
-        <span class="ic">✓</span>Validar
-      </button>
-    </div>
-    <div class="sb-foot">
-      <div class="user-badge">
-        <div class="u-av" id="uAv">?</div>
-        <div>
-          <div class="u-name" id="uName">—</div>
-          <div class="u-role" id="uRole">—</div>
-        </div>
-      </div>
-      <button class="btn-logout" onclick="doLogout()">⏻ Cerrar sesión</button>
-    </div>
-  </nav>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <!-- ── DASHBOARD ── -->
-    <section class="page active" id="sec-dash">
-      <div class="dashboard-header">
-        <div class="dashboard-label">Dashboard General</div>
-        <h1 class="dashboard-title">TRADESTARS LATAM</h1>
-        <span class="dashboard-badge" id="dashRole">👑 CEO</span>
-      </div>
-
-      <div class="dashboard-hero">
-        <div class="kpi-grid">
-          <div class="kpi-card kpi-bar-blue">
-            <div class="kpi-icon">📊</div>
-            <div class="kpi-label">Total Ventas</div>
-            <div class="kpi-value" id="kpi-total">0</div>
-            <div class="kpi-subtitle">En el período</div>
-            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
-          </div>
-
-          <div class="kpi-card kpi-bar-green">
-            <div class="kpi-icon">💰</div>
-            <div class="kpi-label">Recaudado USD</div>
-            <div class="kpi-value" id="kpi-monto">$0</div>
-            <div class="kpi-subtitle">Dinero en caja</div>
-            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
-          </div>
-
-          <div class="kpi-card kpi-bar-yellow">
-            <div class="kpi-icon">✅</div>
-            <div class="kpi-label">Validadas</div>
-            <div class="kpi-value" id="kpi-validadas">0</div>
-            <div class="kpi-subtitle">Pagos confirmados</div>
-            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
-          </div>
-
-          <div class="kpi-card kpi-bar-blue">
-            <div class="kpi-icon">📈</div>
-            <div class="kpi-label">Conversión</div>
-            <div class="kpi-value" id="kpi-conv">0%</div>
-            <div class="kpi-subtitle">Tasa de validación</div>
-            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="ctitle">📋 Últimas Ventas</div>
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Fecha</th>
-              <th>Closer</th>
-              <th>Equipo</th>
-              <th>Monto</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody id="ventasBody">
-            <tr><td colspan="6" style="text-align:center;padding:32px;">Cargando...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ── VENTAS ── -->
-    <section class="page" id="sec-ventas">
-      <div class="ph">
-        <h1>💰 Ventas</h1>
-        <p>Listado de todas las ventas registradas</p>
-      </div>
-      <div class="card">
-        <div id="ventasContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
-      </div>
-    </section>
-
-    <!-- ── REGISTRAR VENTA (3 PASOS) ── -->
-    <section class="page" id="sec-registrar">
-      <div class="ph">
-        <h1>➕ Registrar Venta</h1>
-        <p>Cargar cliente, venta y pago en 3 sencillos pasos</p>
-      </div>
-      <div class="card">
-        <!-- PESTAÑAS -->
-        <div style="display:flex;gap:24px;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:24px;">
-          <button onclick="cambiarPasoventa(1)" id="tab-cliente" style="background:none;border:none;color:var(--primary);font-weight:600;cursor:pointer;padding:0;font-size:14px;position:relative;">
-            1. Cliente
-            <div style="position:absolute;bottom:-17px;left:0;right:0;height:2px;background:var(--primary);display:none;" class="tab-indicator"></div>
-          </button>
-          <button onclick="cambiarPasoventa(2)" id="tab-venta" style="background:none;border:none;color:var(--muted);font-weight:600;cursor:pointer;padding:0;font-size:14px;">2. Venta</button>
-          <button onclick="cambiarPasoventa(3)" id="tab-pago" style="background:none;border:none;color:var(--muted);font-weight:600;cursor:pointer;padding:0;font-size:14px;">3. Pago</button>
-        </div>
-
-        <!-- PASO 1: CLIENTE -->
-        <div id="paso-1-cliente" class="paso-venta" style="display:block;">
-          <div style="margin-bottom:20px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
-            <label style="font-size:12px;color:var(--text);font-weight:600;display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;">
-              <input type="checkbox" id="toggle-tercero" onchange="toggleBeneficiario()" style="width:18px;height:18px;cursor:pointer;">
-              <span>Pago de tercero (el que paga no es quien usa)</span>
-            </label>
-          </div>
-
-          <div style="margin-bottom:20px;">
-            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">👤 Datos de quien PAGA</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-              <div>
-                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre *</label>
-                <input type="text" id="form-cliente-nombre" placeholder="Juan" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              </div>
-              <div>
-                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Apellido</label>
-                <input type="text" id="form-cliente-apellido" placeholder="Pérez" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              </div>
-            </div>
-            <div style="margin-bottom:16px;">
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Correo *</label>
-              <input type="email" id="form-cliente-email" placeholder="juan@email.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-              <div>
-                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Teléfono (WhatsApp)</label>
-                <input type="text" id="form-cliente-telefono" placeholder="+57 300 0000000" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              </div>
-              <div>
-                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">País</label>
-                <select id="form-cliente-pais" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-                  <option value="">Seleccionar...</option>
-                  <option value="Colombia">Colombia</option>
-                  <option value="Brasil">Brasil</option>
-                  <option value="Otro">Otro</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- BENEFICIARIO (oculto por defecto) -->
-          <div id="seccion-beneficiario" style="display:none;margin-bottom:20px;padding:16px;background:rgba(59,130,246,.1);border:1px solid var(--border);border-radius:8px;">
-            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">👥 Datos del BENEFICIARIO (quien usará)</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-              <div>
-                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre Beneficiario *</label>
-                <input type="text" id="form-beneficiario-nombre" placeholder="María" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              </div>
-              <div>
-                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Apellido Beneficiario</label>
-                <input type="text" id="form-beneficiario-apellido" placeholder="García" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              </div>
-            </div>
-            <div style="margin-bottom:16px;">
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Correo Beneficiario *</label>
-              <input type="email" id="form-beneficiario-email" placeholder="maria@email.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-            </div>
-            <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Teléfono Beneficiario</label>
-              <input type="text" id="form-beneficiario-telefono" placeholder="+57 300 0000000" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-            </div>
-          </div>
-
-          <button onclick="cambiarPasoventa(2)" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Siguiente →</button>
-        </div>
-
-        <!-- PASO 2: VENTA -->
-        <div id="paso-2-venta" class="paso-venta" style="display:none;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-            <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Fuente de Venta *</label>
-              <select id="form-venta-fuente" onchange="cambiarFuenteProducto()" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-                <option value="">Seleccionar...</option>
-                <option value="perpetuo">Perpetuo</option>
-                <option value="lanzamiento">Lanzamiento</option>
-                <option value="redes">Redes Sociales</option>
-                <option value="referido">Referido</option>
-                <option value="otro">Otro</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Producto *</label>
-              <select id="form-venta-producto" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-                <option value="">Seleccionar fuente primero</option>
-              </select>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-            <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Monto USD *</label>
-              <input type="number" id="form-venta-monto" placeholder="0.00" step="0.01" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-            </div>
-            <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Fecha</label>
-              <input type="date" id="form-venta-fecha" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-            </div>
-          </div>
-          <div style="display:flex;gap:12px;">
-            <button onclick="cambiarPasoventa(1)" style="padding:12px 24px;background:var(--border);color:var(--text);border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Anterior</button>
-            <button onclick="cambiarPasoventa(3)" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Siguiente →</button>
-          </div>
-        </div>
-
-        <!-- PASO 3: PAGO -->
-        <div id="paso-3-pago" class="paso-venta" style="display:none;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-            <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Método de Pago *</label>
-              <select id="form-pago-metodo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-                <option value="">Seleccionar...</option>
-                <option value="transferencia">Transferencia Bancaria</option>
-                <option value="paypal">PayPal</option>
-                <option value="cripto">Criptomoneda</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Comprobante</label>
-              <input type="text" id="form-pago-comprobante" placeholder="Referencia o ID" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-            </div>
-          </div>
-          
-          <div style="margin-bottom:16px;padding:16px;background:rgba(59,130,246,.1);border:1px solid var(--border);border-radius:8px;">
-            <label style="font-size:12px;color:var(--text);font-weight:600;display:block;margin-bottom:10px;">📸 Subir Comprobante de Pago</label>
-            <label style="display:flex;align-items:center;justify-content:center;padding:20px;border:2px dashed var(--border);border-radius:8px;cursor:pointer;background:var(--surface);transition:all .2s;" id="drag-area">
-              <div style="text-align:center;">
-                <div style="font-size:24px;margin-bottom:8px;">📁</div>
-                <div style="font-size:12px;color:var(--muted);">Arrastra una imagen o PDF aquí<br/>o haz clic para seleccionar</div>
-              </div>
-              <input type="file" id="form-pago-archivo" accept="image/*,.pdf" style="display:none;" onchange="previewComprobante()">
-            </label>
-            <div id="preview-comprobante" style="margin-top:12px;display:none;">
-              <div style="font-size:12px;color:var(--muted);margin-bottom:6px;" id="nombre-archivo"></div>
-              <button type="button" onclick="limpiarComprobante()" style="padding:6px 12px;background:var(--danger);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✕ Eliminar</button>
-            </div>
-          </div>
-
-          <div style="margin-bottom:16px;">
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Notas adicionales</label>
-            <textarea id="form-pago-notas" placeholder="Detalles adicionales..." style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);min-height:80px;"></textarea>
-          </div>
-          <div style="display:flex;gap:12px;">
-            <button onclick="cambiarPasoventa(2)" style="padding:12px 24px;background:var(--border);color:var(--text);border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Anterior</button>
-            <button onclick="guardarVentaCompleta()" style="padding:12px 24px;background:var(--success);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Guardar Venta</button>
-          </div>
-        </div>
-
-        <div id="msg-venta-multi" style="margin-top:16px;padding:12px;border-radius:8px;display:none;"></div>
-      </div>
-    </section>
-
-    <!-- ── CLOSERS ── -->
-    <section class="page" id="sec-closers">
-      <div class="ph">
-        <h1>👥 Closers</h1>
-        <p>Crear y gestionar closers</p>
-      </div>
-      <div class="card" style="margin-bottom:24px;">
-        <div class="ctitle">➕ Crear Nuevo Closer</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre</label>
-            <input type="text" id="form-closer-nombre" placeholder="Nombre completo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-          </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Email</label>
-            <input type="email" id="form-closer-email" placeholder="email@ejemplo.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-          </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Equipo</label>
-            <select id="form-closer-equipo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              <option value="comercial">Comercial</option>
-              <option value="revenue">Revenue</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
-            <select id="form-closer-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              <option value="Activo">Activo</option>
-              <option value="Inactivo">Inactivo</option>
-            </select>
-          </div>
-        </div>
-        <button onclick="guardarCloser()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Closer</button>
-        <div id="msg-closer" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
-      </div>
-      <div class="card">
-        <div class="ctitle">📋 Closers Registrados</div>
-        <div id="closersContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
-      </div>
-    </section>
-
-    <!-- ── MÉTODOS ── -->
-    <section class="page" id="sec-metodos">
-      <div class="ph">
-        <h1>💳 Métodos de Pago</h1>
-        <p>Crear y gestionar métodos de pago disponibles</p>
-      </div>
-      <div class="card" style="margin-bottom:24px;">
-        <div class="ctitle">➕ Crear Nuevo Método</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre del Método</label>
-            <input type="text" id="form-metodo-nombre" placeholder="Ej: Transferencia Bancaria" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-          </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Descripción</label>
-            <input type="text" id="form-metodo-desc" placeholder="Descripción breve" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-          </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
-            <select id="form-metodo-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              <option value="Activo">Activo</option>
-              <option value="Inactivo">Inactivo</option>
-            </select>
-          </div>
-        </div>
-        <button onclick="guardarMetodo()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Método</button>
-        <div id="msg-metodo" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
-      </div>
-      <div class="card">
-        <div class="ctitle">📋 Métodos Registrados</div>
-        <div id="metodosContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
-      </div>
-    </section>
-
-    <!-- ── PRODUCTOS ── -->
-    <section class="page" id="sec-productos">
-      <div class="ph">
-        <h1>📦 Productos</h1>
-        <p>Gestionar Perpetuos y Lanzamientos</p>
-      </div>
-      
-      <!-- PERPETUOS -->
-      <div class="card" style="margin-bottom:24px;">
-        <div class="ctitle">♾️ Perpetuos</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre Perpetuo</label>
-            <input type="text" id="form-perpetuo-nombre" placeholder="Ej: Plan Premium" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-          </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
-            <select id="form-perpetuo-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              <option value="Activo">Activo</option>
-              <option value="Inactivo">Inactivo</option>
-            </select>
-          </div>
-        </div>
-        <button onclick="guardarPerpetuo()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Perpetuo</button>
-        <div id="msg-perpetuo" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
-        <div id="perpetuosContent" style="margin-top:16px;"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
-      </div>
-
-      <!-- LANZAMIENTOS -->
-      <div class="card">
-        <div class="ctitle">🚀 Lanzamientos</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre Lanzamiento</label>
-            <input type="text" id="form-lanzamiento-nombre" placeholder="Ej: Curso Python 2024" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-          </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
-            <select id="form-lanzamiento-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-              <option value="Activo">Activo</option>
-              <option value="Inactivo">Inactivo</option>
-            </select>
-          </div>
-        </div>
-        <button onclick="guardarLanzamiento()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Lanzamiento</button>
-        <div id="msg-lanzamiento" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
-        <div id="lanzamientosContent" style="margin-top:16px;"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
-      </div>
-    </section>
-    <section class="page" id="sec-validar">
-      <div class="ph">
-        <h1>✓ Validar Pagos</h1>
-        <p>Revisar y aprobar ventas pendientes</p>
-      </div>
-      <div class="card">
-        <div id="validarContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
-      </div>
-    </section>
-
-  </main>
-</div>
-</div>
 
 <script>
 // ════ CSV URLs ════
@@ -1651,6 +1197,463 @@ window.addEventListener('load', async () => {
     showLogin();
   }
 });
+</script>
+
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <span class="star">⭐</span>
+      <h1>Tradestars</h1>
+      <p>LATAM · CRM Comercial</p>
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <div class="fg">
+      <label>Correo electrónico</label>
+      <input type="email" id="lEmail" placeholder="tu@correo.com">
+    </div>
+    <div class="fg">
+      <label>Contraseña</label>
+      <input type="password" id="lPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-main" onclick="doLogin()">Ingresar al sistema</button>
+  </div>
+</div>
+
+<!-- ════ APP ════ -->
+<div id="appShell">
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sb-logo">
+      <span class="star">⭐</span>
+      <h2>Tradestars</h2>
+      <p>LATAM · Comercial</p>
+    </div>
+    <div class="sb-nav">
+      <button class="nav-btn active" id="nb-dash" onclick="navTo('dash')">
+        <span class="ic">📊</span>Dashboard
+      </button>
+      <button class="nav-btn" id="nb-ventas" onclick="navTo('ventas')">
+        <span class="ic">💰</span>Ventas
+      </button>
+      <button class="nav-btn" id="nb-registrar" onclick="navTo('registrar')">
+        <span class="ic">➕</span>Registrar
+      </button>
+      <button class="nav-btn" id="nb-closers" onclick="navTo('closers')">
+        <span class="ic">👥</span>Closers
+      </button>
+      <button class="nav-btn" id="nb-metodos" onclick="navTo('metodos')">
+        <span class="ic">💳</span>Métodos
+      </button>
+      <button class="nav-btn" id="nb-productos" onclick="navTo('productos')">
+        <span class="ic">📦</span>Productos
+      </button>
+      <button class="nav-btn" id="nb-validar" onclick="navTo('validar')" style="display:none;">
+        <span class="ic">✓</span>Validar
+      </button>
+    </div>
+    <div class="sb-foot">
+      <div class="user-badge">
+        <div class="u-av" id="uAv">?</div>
+        <div>
+          <div class="u-name" id="uName">—</div>
+          <div class="u-role" id="uRole">—</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">⏻ Cerrar sesión</button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ── DASHBOARD ── -->
+    <section class="page active" id="sec-dash">
+      <div class="dashboard-header">
+        <div class="dashboard-label">Dashboard General</div>
+        <h1 class="dashboard-title">TRADESTARS LATAM</h1>
+        <span class="dashboard-badge" id="dashRole">👑 CEO</span>
+      </div>
+
+      <div class="dashboard-hero">
+        <div class="kpi-grid">
+          <div class="kpi-card kpi-bar-blue">
+            <div class="kpi-icon">📊</div>
+            <div class="kpi-label">Total Ventas</div>
+            <div class="kpi-value" id="kpi-total">0</div>
+            <div class="kpi-subtitle">En el período</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
+          </div>
+
+          <div class="kpi-card kpi-bar-green">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-label">Recaudado USD</div>
+            <div class="kpi-value" id="kpi-monto">$0</div>
+            <div class="kpi-subtitle">Dinero en caja</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
+          </div>
+
+          <div class="kpi-card kpi-bar-yellow">
+            <div class="kpi-icon">✅</div>
+            <div class="kpi-label">Validadas</div>
+            <div class="kpi-value" id="kpi-validadas">0</div>
+            <div class="kpi-subtitle">Pagos confirmados</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
+          </div>
+
+          <div class="kpi-card kpi-bar-blue">
+            <div class="kpi-icon">📈</div>
+            <div class="kpi-label">Conversión</div>
+            <div class="kpi-value" id="kpi-conv">0%</div>
+            <div class="kpi-subtitle">Tasa de validación</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ctitle">📋 Últimas Ventas</div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Closer</th>
+              <th>Equipo</th>
+              <th>Monto</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="ventasBody">
+            <tr><td colspan="6" style="text-align:center;padding:32px;">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── VENTAS ── -->
+    <section class="page" id="sec-ventas">
+      <div class="ph">
+        <h1>💰 Ventas</h1>
+        <p>Listado de todas las ventas registradas</p>
+      </div>
+      <div class="card">
+        <div id="ventasContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
+
+    <!-- ── REGISTRAR VENTA (3 PASOS) ── -->
+    <section class="page" id="sec-registrar">
+      <div class="ph">
+        <h1>➕ Registrar Venta</h1>
+        <p>Cargar cliente, venta y pago en 3 sencillos pasos</p>
+      </div>
+      <div class="card">
+        <!-- PESTAÑAS -->
+        <div style="display:flex;gap:24px;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:24px;">
+          <button onclick="cambiarPasoventa(1)" id="tab-cliente" style="background:none;border:none;color:var(--primary);font-weight:600;cursor:pointer;padding:0;font-size:14px;position:relative;">
+            1. Cliente
+            <div style="position:absolute;bottom:-17px;left:0;right:0;height:2px;background:var(--primary);display:none;" class="tab-indicator"></div>
+          </button>
+          <button onclick="cambiarPasoventa(2)" id="tab-venta" style="background:none;border:none;color:var(--muted);font-weight:600;cursor:pointer;padding:0;font-size:14px;">2. Venta</button>
+          <button onclick="cambiarPasoventa(3)" id="tab-pago" style="background:none;border:none;color:var(--muted);font-weight:600;cursor:pointer;padding:0;font-size:14px;">3. Pago</button>
+        </div>
+
+        <!-- PASO 1: CLIENTE -->
+        <div id="paso-1-cliente" class="paso-venta" style="display:block;">
+          <div style="margin-bottom:20px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
+            <label style="font-size:12px;color:var(--text);font-weight:600;display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;">
+              <input type="checkbox" id="toggle-tercero" onchange="toggleBeneficiario()" style="width:18px;height:18px;cursor:pointer;">
+              <span>Pago de tercero (el que paga no es quien usa)</span>
+            </label>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">👤 Datos de quien PAGA</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre *</label>
+                <input type="text" id="form-cliente-nombre" placeholder="Juan" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Apellido</label>
+                <input type="text" id="form-cliente-apellido" placeholder="Pérez" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              </div>
+            </div>
+            <div style="margin-bottom:16px;">
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Correo *</label>
+              <input type="email" id="form-cliente-email" placeholder="juan@email.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Teléfono (WhatsApp)</label>
+                <input type="text" id="form-cliente-telefono" placeholder="+57 300 0000000" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">País</label>
+                <select id="form-cliente-pais" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+                  <option value="">Seleccionar...</option>
+                  <option value="Colombia">Colombia</option>
+                  <option value="Brasil">Brasil</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- BENEFICIARIO (oculto por defecto) -->
+          <div id="seccion-beneficiario" style="display:none;margin-bottom:20px;padding:16px;background:rgba(59,130,246,.1);border:1px solid var(--border);border-radius:8px;">
+            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">👥 Datos del BENEFICIARIO (quien usará)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre Beneficiario *</label>
+                <input type="text" id="form-beneficiario-nombre" placeholder="María" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Apellido Beneficiario</label>
+                <input type="text" id="form-beneficiario-apellido" placeholder="García" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              </div>
+            </div>
+            <div style="margin-bottom:16px;">
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Correo Beneficiario *</label>
+              <input type="email" id="form-beneficiario-email" placeholder="maria@email.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Teléfono Beneficiario</label>
+              <input type="text" id="form-beneficiario-telefono" placeholder="+57 300 0000000" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+          </div>
+
+          <button onclick="cambiarPasoventa(2)" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Siguiente →</button>
+        </div>
+
+        <!-- PASO 2: VENTA -->
+        <div id="paso-2-venta" class="paso-venta" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Fuente de Venta *</label>
+              <select id="form-venta-fuente" onchange="cambiarFuenteProducto()" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+                <option value="">Seleccionar...</option>
+                <option value="perpetuo">Perpetuo</option>
+                <option value="lanzamiento">Lanzamiento</option>
+                <option value="redes">Redes Sociales</option>
+                <option value="referido">Referido</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Producto *</label>
+              <select id="form-venta-producto" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+                <option value="">Seleccionar fuente primero</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Monto USD *</label>
+              <input type="number" id="form-venta-monto" placeholder="0.00" step="0.01" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Fecha</label>
+              <input type="date" id="form-venta-fecha" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <button onclick="cambiarPasoventa(1)" style="padding:12px 24px;background:var(--border);color:var(--text);border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Anterior</button>
+            <button onclick="cambiarPasoventa(3)" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Siguiente →</button>
+          </div>
+        </div>
+
+        <!-- PASO 3: PAGO -->
+        <div id="paso-3-pago" class="paso-venta" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Método de Pago *</label>
+              <select id="form-pago-metodo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+                <option value="">Seleccionar...</option>
+                <option value="transferencia">Transferencia Bancaria</option>
+                <option value="paypal">PayPal</option>
+                <option value="cripto">Criptomoneda</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Comprobante</label>
+              <input type="text" id="form-pago-comprobante" placeholder="Referencia o ID" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+          </div>
+          
+          <div style="margin-bottom:16px;padding:16px;background:rgba(59,130,246,.1);border:1px solid var(--border);border-radius:8px;">
+            <label style="font-size:12px;color:var(--text);font-weight:600;display:block;margin-bottom:10px;">📸 Subir Comprobante de Pago</label>
+            <label style="display:flex;align-items:center;justify-content:center;padding:20px;border:2px dashed var(--border);border-radius:8px;cursor:pointer;background:var(--surface);transition:all .2s;" id="drag-area">
+              <div style="text-align:center;">
+                <div style="font-size:24px;margin-bottom:8px;">📁</div>
+                <div style="font-size:12px;color:var(--muted);">Arrastra una imagen o PDF aquí<br/>o haz clic para seleccionar</div>
+              </div>
+              <input type="file" id="form-pago-archivo" accept="image/*,.pdf" style="display:none;" onchange="previewComprobante()">
+            </label>
+            <div id="preview-comprobante" style="margin-top:12px;display:none;">
+              <div style="font-size:12px;color:var(--muted);margin-bottom:6px;" id="nombre-archivo"></div>
+              <button type="button" onclick="limpiarComprobante()" style="padding:6px 12px;background:var(--danger);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✕ Eliminar</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Notas adicionales</label>
+            <textarea id="form-pago-notas" placeholder="Detalles adicionales..." style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);min-height:80px;"></textarea>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <button onclick="cambiarPasoventa(2)" style="padding:12px 24px;background:var(--border);color:var(--text);border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Anterior</button>
+            <button onclick="guardarVentaCompleta()" style="padding:12px 24px;background:var(--success);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Guardar Venta</button>
+          </div>
+        </div>
+
+        <div id="msg-venta-multi" style="margin-top:16px;padding:12px;border-radius:8px;display:none;"></div>
+      </div>
+    </section>
+
+    <!-- ── CLOSERS ── -->
+    <section class="page" id="sec-closers">
+      <div class="ph">
+        <h1>👥 Closers</h1>
+        <p>Crear y gestionar closers</p>
+      </div>
+      <div class="card" style="margin-bottom:24px;">
+        <div class="ctitle">➕ Crear Nuevo Closer</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre</label>
+            <input type="text" id="form-closer-nombre" placeholder="Nombre completo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Email</label>
+            <input type="email" id="form-closer-email" placeholder="email@ejemplo.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Equipo</label>
+            <select id="form-closer-equipo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="comercial">Comercial</option>
+              <option value="revenue">Revenue</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
+            <select id="form-closer-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="guardarCloser()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Closer</button>
+        <div id="msg-closer" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
+      </div>
+      <div class="card">
+        <div class="ctitle">📋 Closers Registrados</div>
+        <div id="closersContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
+
+    <!-- ── MÉTODOS ── -->
+    <section class="page" id="sec-metodos">
+      <div class="ph">
+        <h1>💳 Métodos de Pago</h1>
+        <p>Crear y gestionar métodos de pago disponibles</p>
+      </div>
+      <div class="card" style="margin-bottom:24px;">
+        <div class="ctitle">➕ Crear Nuevo Método</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre del Método</label>
+            <input type="text" id="form-metodo-nombre" placeholder="Ej: Transferencia Bancaria" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Descripción</label>
+            <input type="text" id="form-metodo-desc" placeholder="Descripción breve" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
+            <select id="form-metodo-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="guardarMetodo()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Método</button>
+        <div id="msg-metodo" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
+      </div>
+      <div class="card">
+        <div class="ctitle">📋 Métodos Registrados</div>
+        <div id="metodosContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
+
+    <!-- ── PRODUCTOS ── -->
+    <section class="page" id="sec-productos">
+      <div class="ph">
+        <h1>📦 Productos</h1>
+        <p>Gestionar Perpetuos y Lanzamientos</p>
+      </div>
+      
+      <!-- PERPETUOS -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="ctitle">♾️ Perpetuos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre Perpetuo</label>
+            <input type="text" id="form-perpetuo-nombre" placeholder="Ej: Plan Premium" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
+            <select id="form-perpetuo-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="guardarPerpetuo()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Perpetuo</button>
+        <div id="msg-perpetuo" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
+        <div id="perpetuosContent" style="margin-top:16px;"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+
+      <!-- LANZAMIENTOS -->
+      <div class="card">
+        <div class="ctitle">🚀 Lanzamientos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre Lanzamiento</label>
+            <input type="text" id="form-lanzamiento-nombre" placeholder="Ej: Curso Python 2024" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
+            <select id="form-lanzamiento-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="guardarLanzamiento()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Lanzamiento</button>
+        <div id="msg-lanzamiento" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
+        <div id="lanzamientosContent" style="margin-top:16px;"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
+    <section class="page" id="sec-validar">
+      <div class="ph">
+        <h1>✓ Validar Pagos</h1>
+        <p>Revisar y aprobar ventas pendientes</p>
+      </div>
+      <div class="card">
+        <div id="validarContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+</div>
+
 </script>
 
 </body>
