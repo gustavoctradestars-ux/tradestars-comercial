@@ -38,20 +38,19 @@
     .nav-item.active { background: var(--accent); color: white; border-left-color: var(--accent2); }
     .nav-item.hidden { display: none; }
     
-    .dashboard-header { margin-bottom: 40px; }
-    .dashboard-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-    .dashboard-title { font-size: 42px; font-weight: 800; margin-bottom: 16px; }
-    .dashboard-badge { display: inline-block; background: var(--accent); color: white; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+    .dashboard-header { margin-bottom: 24px; }
+    .dashboard-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); margin-bottom: 4px; }
+    .dashboard-title { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 700; line-height: 1.1; }
+    .dashboard-badge { display: inline-block; background: var(--primary-g); border: 1px solid rgba(59,130,246,.3); color: var(--primary); padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-top: 6px; }
     
-    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-bottom: 40px; }
-    .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; position: relative; }
-    .kpi-icon { font-size: 36px; margin-bottom: 16px; }
-    .kpi-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; font-weight: 600; line-height: 1.2; }
-    .kpi-value { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
-    .kpi-subtitle { font-size: 13px; color: var(--text2); line-height: 1.4; }
-    .kpi-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 16px; overflow: hidden; }
-    .kpi-bar-fill { height: 100%; border-radius: 2px; animation: fillBar 0.8s ease; }
-    @keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .kpi-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 18px 20px; position: relative; transition: border-color .2s, transform .2s; }
+    .kpi-icon { font-size: 20px; margin-bottom: 10px; }
+    .kpi-label { font-size: 10.5px; color: var(--text2); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px; font-weight: 600; }
+    .kpi-value { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 700; line-height: 1; color: var(--text); }
+    .kpi-subtitle { font-size: 11px; color: var(--text2); margin-top: 5px; }
+    .kpi-bar { height: 3px; background: rgba(255,255,255,.07); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+    .kpi-bar-fill { height: 100%; border-radius: 2px; transition: width .8s cubic-bezier(.4,0,.2,1); }
     .kpi-bar-blue .kpi-bar-fill { background: var(--accent); width: 100%; }
     .kpi-bar-green .kpi-bar-fill { background: var(--green); width: 100%; }
     .kpi-bar-yellow .kpi-bar-fill { background: var(--yellow); width: 100%; }
