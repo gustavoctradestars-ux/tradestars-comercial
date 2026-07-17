@@ -11,62 +11,393 @@
       --accent: #4f46e5; --accent2: #7c3aed; --green: #22c55e; --red: #ef4444;
       --yellow: #f59e0b; --text: #e8eaf6; --text2: #8b90b8; --border: #2a2f45;
     }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    .login-page { display: none; height: 100vh; align-items: center; justify-content: center; }
-    .login-page.active { display: flex; }
-    .login-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 40px; width: 100%; max-width: 400px; }
-    .login-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; text-align: center; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .login-input { width: 100%; padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 12px; }
-    .login-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
-    .app-page { display: none; height: 100vh; }
-    .app-page.active { display: flex; }
-    .container { display: flex; height: 100%; }
-    .sidebar { width: 200px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px; overflow-y: auto; }
-    .main { flex: 1; display: flex; flex-direction: column; }
-    .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
-    .content { flex: 1; overflow-y: auto; padding: 24px; }
-    .logo { font-size: 18px; font-weight: 700; margin-bottom: 24px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .nav-item { padding: 10px 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; font-size: 14px; color: var(--text2); border-left: 3px solid transparent; transition: all 0.2s; }
-    .nav-item:hover { background: var(--bg3); }
-    .nav-item.active { background: var(--accent); color: white; }
-    .nav-item.hidden { display: none; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-bottom: 16px; }
-    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
-    .stat-label { font-size: 12px; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
-    .stat-value { font-size: 28px; font-weight: 700; }
-    .btn { padding: 10px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; background: var(--accent); color: white; }
-    .btn:hover { background: var(--accent2); }
-    .btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
-    .select-filter { padding: 8px 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; }
-    .table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .table th { background: var(--bg3); color: var(--text2); padding: 12px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); }
-    .table td { padding: 12px; border-bottom: 1px solid var(--border); }
-    .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: rgba(16, 185, 129, 0.2); color: var(--green); }
-    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--green); padding: 16px; border-radius: 6px; z-index: 2000; }
-    .toast.error { border-left-color: var(--red); }
-    .empty { text-align: center; padding: 40px; color: var(--text2); }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
-    .form-group input, .form-group select { width: 100%; padding: 10px 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; align-items: center; justify-content: center; }
-    .modal.active { display: flex; }
-    .modal-content { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 24px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-    .modal-header { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; }
-    .modal-close { background: none; border: none; color: var(--text2); font-size: 24px; cursor: pointer; }
+    body { 
+      background: var(--bg); 
+      color: var(--text); 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+    }
+    
+    /* LOGIN */
+    .login-page { 
+      display: none; 
+      height: 100vh; 
+      align-items: center; 
+      justify-content: center; 
+    }
+    .login-page.active { 
+      display: flex; 
+    }
+    .login-card { 
+      background: var(--card); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      padding: 48px; 
+      width: 100%; 
+      max-width: 400px; 
+    }
+    .login-title { 
+      font-size: 28px; 
+      font-weight: 800; 
+      margin-bottom: 32px; 
+      text-align: center; 
+      background: linear-gradient(135deg, var(--accent), var(--accent2)); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    .login-input { 
+      width: 100%; 
+      padding: 12px 16px; 
+      background: var(--bg3); 
+      border: 1px solid var(--border); 
+      border-radius: 8px; 
+      color: var(--text); 
+      margin-bottom: 16px; 
+      font-size: 14px;
+    }
+    .login-input:focus { 
+      outline: none; 
+      border-color: var(--accent); 
+    }
+    .login-btn { 
+      width: 100%; 
+      padding: 12px; 
+      background: var(--accent); 
+      color: white; 
+      border: none; 
+      border-radius: 8px; 
+      font-weight: 700; 
+      cursor: pointer; 
+      font-size: 14px;
+    }
+    .login-btn:hover { 
+      background: var(--accent2); 
+    }
+    .login-error { 
+      color: var(--red); 
+      font-size: 12px; 
+      margin-bottom: 16px; 
+      text-align: center; 
+    }
+    
+    /* APP */
+    .app-page { 
+      display: none; 
+      height: 100vh; 
+    }
+    .app-page.active { 
+      display: flex; 
+    }
+    .container { 
+      display: flex; 
+      height: 100%; 
+    }
+    .sidebar { 
+      width: 220px; 
+      background: var(--bg2); 
+      border-right: 1px solid var(--border); 
+      padding: 24px; 
+      overflow-y: auto; 
+    }
+    .main { 
+      flex: 1; 
+      display: flex; 
+      flex-direction: column; 
+    }
+    .header { 
+      background: var(--bg2); 
+      border-bottom: 1px solid var(--border); 
+      padding: 20px 32px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+    }
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .content { 
+      flex: 1; 
+      overflow-y: auto; 
+      padding: 32px; 
+    }
+    .logo { 
+      font-size: 20px; 
+      font-weight: 800; 
+      margin-bottom: 32px; 
+      background: linear-gradient(135deg, var(--accent), var(--accent2)); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    .nav-item { 
+      padding: 12px 14px; 
+      margin-bottom: 8px; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-size: 14px; 
+      color: var(--text2); 
+      border-left: 3px solid transparent; 
+      transition: all 0.2s; 
+    }
+    .nav-item:hover { 
+      background: var(--bg3); 
+      color: var(--text); 
+    }
+    .nav-item.active { 
+      background: var(--accent); 
+      color: white; 
+      border-left-color: var(--accent2); 
+    }
+    .nav-item.hidden { 
+      display: none; 
+    }
+    .card { 
+      background: var(--card); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      padding: 24px; 
+      margin-bottom: 24px; 
+    }
+    .grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 24px; 
+      margin-bottom: 32px; 
+    }
+    .stat-card { 
+      background: var(--card); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      padding: 28px; 
+    }
+    .stat-label { 
+      font-size: 12px; 
+      color: var(--text2); 
+      text-transform: uppercase; 
+      margin-bottom: 12px; 
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .stat-value { 
+      font-size: 36px; 
+      font-weight: 800;
+      line-height: 1;
+    }
+    .filter-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .filter-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .filter-select {
+      padding: 10px 14px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      min-width: 180px;
+    }
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .btn { 
+      padding: 12px 20px; 
+      border: none; 
+      border-radius: 8px; 
+      font-size: 14px; 
+      font-weight: 600; 
+      cursor: pointer; 
+      background: var(--accent); 
+      color: white; 
+      transition: all 0.2s;
+    }
+    .btn:hover { 
+      background: var(--accent2); 
+    }
+    .btn-secondary { 
+      background: var(--bg3); 
+      color: var(--text); 
+      border: 1px solid var(--border); 
+    }
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+    .table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      font-size: 14px; 
+    }
+    .table th { 
+      background: var(--bg3); 
+      color: var(--text2); 
+      padding: 16px; 
+      text-align: left; 
+      font-weight: 700; 
+      border-bottom: 2px solid var(--border); 
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+    .table td { 
+      padding: 16px; 
+      border-bottom: 1px solid var(--border); 
+    }
+    .table tr:hover { 
+      background: var(--bg3); 
+    }
+    .badge { 
+      display: inline-block; 
+      padding: 6px 12px; 
+      border-radius: 6px; 
+      font-size: 12px; 
+      font-weight: 600; 
+      text-transform: uppercase; 
+      background: rgba(16, 185, 129, 0.2); 
+      color: var(--green); 
+    }
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--yellow);
+    }
+    .toast { 
+      position: fixed; 
+      bottom: 24px; 
+      right: 24px; 
+      background: var(--card); 
+      border: 1px solid var(--border); 
+      border-left: 4px solid var(--green); 
+      padding: 16px 20px; 
+      border-radius: 8px; 
+      z-index: 2000; 
+      animation: slideIn 0.3s ease;
+    }
+    .toast.error { 
+      border-left-color: var(--red); 
+    }
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .empty { 
+      text-align: center; 
+      padding: 60px 40px; 
+      color: var(--text2); 
+      font-size: 16px;
+    }
+    .form-group { 
+      margin-bottom: 20px; 
+    }
+    .form-group label { 
+      display: block; 
+      font-size: 13px; 
+      font-weight: 700; 
+      color: var(--text); 
+      margin-bottom: 8px; 
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-group input, 
+    .form-group select { 
+      width: 100%; 
+      padding: 12px 14px; 
+      background: var(--bg3); 
+      border: 1px solid var(--border); 
+      border-radius: 8px; 
+      color: var(--text); 
+      font-size: 14px;
+    }
+    .form-group input:focus, 
+    .form-group select:focus { 
+      outline: none; 
+      border-color: var(--accent); 
+    }
+    .modal { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0, 0, 0, 0.8); 
+      z-index: 1000; 
+      align-items: center; 
+      justify-content: center; 
+    }
+    .modal.active { 
+      display: flex; 
+    }
+    .modal-content { 
+      background: var(--bg2); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      padding: 32px; 
+      width: 90%; 
+      max-width: 480px; 
+      max-height: 90vh; 
+      overflow-y: auto; 
+    }
+    .modal-header { 
+      font-size: 20px; 
+      font-weight: 700; 
+      margin-bottom: 24px; 
+      display: flex; 
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-close { 
+      background: none; 
+      border: none; 
+      color: var(--text2); 
+      font-size: 28px; 
+      cursor: pointer; 
+      line-height: 1;
+    }
+    .sidebar-user {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      margin-top: auto;
+    }
+    .user-name {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .user-role {
+      font-size: 12px;
+      color: var(--text2);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
   </style>
 </head>
 <body>
+  <!-- LOGIN PAGE -->
   <div class="login-page active" id="loginPage">
     <div class="login-card">
       <div class="login-title">TRADESTARS</div>
+      <div id="loginError" class="login-error"></div>
       <input type="email" id="loginEmail" class="login-input" placeholder="Email">
       <input type="password" id="loginPassword" class="login-input" placeholder="Contraseña">
       <button class="login-btn" onclick="login()">Ingresar</button>
-      <div style="text-align: center; font-size: 12px; color: var(--text2); margin-top: 16px;">Cargando usuarios...</div>
+      <div style="text-align: center; font-size: 12px; color: var(--text2); margin-top: 20px;">
+        Cargando usuarios desde Google Sheets...
+      </div>
     </div>
   </div>
 
+  <!-- APP PAGE -->
   <div class="app-page" id="appPage">
     <div class="container">
       <div class="sidebar">
@@ -80,23 +411,25 @@
           <div class="nav-item hidden" id="navValidar" onclick="goPage('validar')">✅ Validar</div>
           <div class="nav-item hidden" id="navUsers" onclick="goPage('usuarios')">👤 Usuarios</div>
         </div>
-        <div style="border-top: 1px solid var(--border); padding-top: 16px;">
-          <div style="font-size: 13px; font-weight: 600;" id="userName">-</div>
-          <div style="font-size: 11px; color: var(--text2); margin-bottom: 12px;" id="userRole">-</div>
-          <button class="btn btn-secondary" onclick="logout()" style="width: 100%; font-size: 12px;">Cerrar</button>
+        
+        <div class="sidebar-user">
+          <div class="user-name" id="userName">-</div>
+          <div class="user-role" id="userRole">-</div>
+          <button class="btn btn-secondary" onclick="logout()" style="width: 100%;">Cerrar sesión</button>
         </div>
       </div>
       
       <div class="main">
         <div class="header">
           <h1 id="title">Dashboard</h1>
-          <div id="status" style="font-size: 12px; color: var(--text2);">✅</div>
+          <div id="status" style="font-size: 13px; color: var(--text2);">✅ Sincronizado</div>
         </div>
         <div class="content" id="content"></div>
       </div>
     </div>
   </div>
 
+  <!-- MODAL NUEVO USUARIO -->
   <div class="modal" id="modalUser">
     <div class="modal-content">
       <div class="modal-header">
@@ -104,19 +437,19 @@
         <button class="modal-close" onclick="closeModal('modalUser')">✕</button>
       </div>
       <div class="form-group">
-        <label>Email *</label>
-        <input type="email" id="inputEmail" placeholder="email@tradestars.com">
+        <label>Email</label>
+        <input type="email" id="inputEmail" placeholder="usuario@tradestars.com">
       </div>
       <div class="form-group">
-        <label>Nombre *</label>
+        <label>Nombre</label>
         <input type="text" id="inputNombre" placeholder="Nombre Completo">
       </div>
       <div class="form-group">
-        <label>Contraseña *</label>
+        <label>Contraseña</label>
         <input type="password" id="inputPassword" placeholder="Contraseña">
       </div>
       <div class="form-group">
-        <label>Rol *</label>
+        <label>Rol</label>
         <select id="inputRol">
           <option value="closer">Closer</option>
           <option value="lider_comercial">Líder Comercial</option>
@@ -149,7 +482,7 @@
         const lines = text.trim().split('\n');
         return lines.slice(1).map(line => line.split(','));
       } catch(err) {
-        console.error('Error:', err);
+        console.error('Error cargando CSV:', err);
         return [];
       }
     }
@@ -159,7 +492,6 @@
       VENTAS = await loadCSV(CSV_VENTAS);
       CLOSERS = await loadCSV(CSV_CLOSERS);
       METODOS = await loadCSV(CSV_METODOS);
-      console.log('✅ Datos cargados');
     }
 
     async function login() {
@@ -167,17 +499,22 @@
       const password = document.getElementById('loginPassword').value.trim();
       
       if (!email || !password) {
-        alert('Completa email y contraseña');
+        showLoginError('Completa email y contraseña');
         return;
       }
 
       const user = USUARIOS.find(u => u[0] === email && u[2] === password);
       if (!user) {
-        alert('Email o contraseña incorrectos');
+        showLoginError('Email o contraseña incorrectos');
         return;
       }
 
-      CURRENT_USER = { email: user[0], nombre: user[1], rol: user[3] };
+      CURRENT_USER = {
+        email: user[0],
+        nombre: user[1],
+        rol: user[3]
+      };
+
       localStorage.setItem('currentUser', JSON.stringify(CURRENT_USER));
       
       document.getElementById('loginPage').classList.remove('active');
@@ -185,8 +522,19 @@
       updateUI();
       goPage('dashboard');
       
-      if (CURRENT_USER.rol === 'CEO') document.getElementById('navUsers').classList.remove('hidden');
-      if (['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) document.getElementById('navValidar').classList.remove('hidden');
+      if (CURRENT_USER.rol === 'CEO') {
+        document.getElementById('navUsers').classList.remove('hidden');
+      }
+      if (['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) {
+        document.getElementById('navValidar').classList.remove('hidden');
+      }
+    }
+
+    function showLoginError(msg) {
+      document.getElementById('loginError').textContent = msg;
+      setTimeout(() => {
+        document.getElementById('loginError').textContent = '';
+      }, 3000);
     }
 
     function logout() {
@@ -195,38 +543,120 @@
     }
 
     function goPage(page) {
-      const titles = { dashboard: 'Dashboard', ventas: 'Ventas', registrar: 'Registrar', closers: 'Closers', metodos: 'Métodos', validar: 'Validar', usuarios: 'Usuarios' };
+      const titles = {
+        dashboard: 'Dashboard',
+        ventas: 'Ventas',
+        registrar: 'Registrar Venta',
+        closers: 'Closers',
+        metodos: 'Métodos de Pago',
+        validar: 'Validar Pagos',
+        usuarios: 'Gestión de Usuarios'
+      };
       document.getElementById('title').textContent = titles[page] || 'Página';
 
       switch(page) {
         case 'dashboard': renderDashboard(); break;
         case 'ventas': renderVentas(); break;
-        case 'registrar': document.getElementById('content').innerHTML = '<div class="empty">Registrar Venta</div>'; break;
-        case 'closers': document.getElementById('content').innerHTML = '<div class="empty">Closers</div>'; break;
-        case 'metodos': document.getElementById('content').innerHTML = '<div class="empty">Métodos</div>'; break;
-        case 'validar': document.getElementById('content').innerHTML = '<div class="empty">Validar Pagos</div>'; break;
+        case 'registrar': renderRegistrar(); break;
+        case 'closers': renderClosers(); break;
+        case 'metodos': renderMetodos(); break;
+        case 'validar': renderValidar(); break;
         case 'usuarios': renderUsuarios(); break;
       }
     }
 
     function renderDashboard() {
-      let filtroHTML = '';
+      let html = '';
+
+      // Filtro (solo CEO y Financiero)
       if (['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) {
-        filtroHTML = `<div class="card" style="margin-bottom: 16px;"><label style="font-size: 12px;">Filtrar:</label><select class="select-filter" onchange="cambiarFiltro(this.value)" style="width: auto;"><option value="todos">Todos</option><option value="comercial">Comercial</option><option value="revenue">Revenue</option></select></div>`;
+        html += `
+          <div class="filter-section">
+            <span class="filter-label">Filtrar por Equipo:</span>
+            <select class="filter-select" onchange="cambiarFiltro(this.value)">
+              <option value="todos" ${FILTRO_EQUIPO === 'todos' ? 'selected' : ''}>Todos los equipos</option>
+              <option value="comercial" ${FILTRO_EQUIPO === 'comercial' ? 'selected' : ''}>Equipo Comercial</option>
+              <option value="revenue" ${FILTRO_EQUIPO === 'revenue' ? 'selected' : ''}>Equipo Revenue</option>
+            </select>
+          </div>
+        `;
       }
 
+      // Filtrar datos
       let ventasFiltradas = VENTAS;
+      let closersFiltrados = CLOSERS;
+
       if (FILTRO_EQUIPO !== 'todos') {
         ventasFiltradas = VENTAS.filter(v => v[3] === FILTRO_EQUIPO);
+        closersFiltrados = CLOSERS.filter(c => c[4] === FILTRO_EQUIPO);
       } else if (!['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) {
         const miEquipo = CURRENT_USER.rol === 'lider_comercial' ? 'comercial' : 'revenue';
         ventasFiltradas = VENTAS.filter(v => v[3] === miEquipo);
+        closersFiltrados = CLOSERS.filter(c => c[4] === miEquipo);
       }
 
       const total = ventasFiltradas.length;
       const dinero = ventasFiltradas.reduce((s, v) => s + (parseFloat(v[4]) || 0), 0);
+      const validadas = ventasFiltradas.filter(v => v[9] === 'VALIDADA').length;
+      const conv = total > 0 ? Math.round(validadas / total * 100) : 0;
 
-      let html = filtroHTML + `<div class="grid"><div class="stat-card"><div class="stat-label">Total Ventas</div><div class="stat-value">${total}</div></div><div class="stat-card"><div class="stat-label">Recaudado</div><div class="stat-value">$${dinero.toFixed(2)}</div></div></div>`;
+      html += `
+        <div class="grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Ventas</div>
+            <div class="stat-value">${total}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Recaudado USD</div>
+            <div class="stat-value">$${dinero.toFixed(2)}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Validadas</div>
+            <div class="stat-value">${validadas}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Conversión</div>
+            <div class="stat-value">${conv}%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Closers Activos</div>
+            <div class="stat-value">${closersFiltrados.length}</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px;">
+          <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Últimas Ventas</h2>
+          <div class="card">
+            ${ventasFiltradas.length === 0 ? '<div class="empty">Sin ventas en este período</div>' : `
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Closer</th>
+                    <th>Equipo</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${ventasFiltradas.slice(-10).reverse().map(v => `
+                    <tr>
+                      <td><strong>${v[0]}</strong></td>
+                      <td>${v[1]}</td>
+                      <td>${v[2]}</td>
+                      <td>${v[3]}</td>
+                      <td>$${parseFloat(v[4]).toFixed(2)}</td>
+                      <td><span class="badge ${v[9] === 'VALIDADA' ? '' : 'badge-warning'}">${v[9]}</span></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            `}
+          </div>
+        </div>
+      `;
+
       document.getElementById('content').innerHTML = html;
     }
 
@@ -236,11 +666,49 @@
     }
 
     function renderVentas() {
-      document.getElementById('content').innerHTML = '<div class="empty">Ventas</div>';
+      document.getElementById('content').innerHTML = '<div class="empty">Módulo de Ventas - En construcción</div>';
+    }
+
+    function renderRegistrar() {
+      document.getElementById('content').innerHTML = '<div class="empty">Módulo de Registro - En construcción</div>';
+    }
+
+    function renderClosers() {
+      document.getElementById('content').innerHTML = '<div class="empty">Módulo de Closers - En construcción</div>';
+    }
+
+    function renderMetodos() {
+      document.getElementById('content').innerHTML = '<div class="empty">Módulo de Métodos - En construcción</div>';
+    }
+
+    function renderValidar() {
+      document.getElementById('content').innerHTML = '<div class="empty">Panel de Validación - En construcción</div>';
     }
 
     function renderUsuarios() {
-      let html = `<button class="btn" onclick="openModal('modalUser')" style="margin-bottom: 16px;">+ Nuevo Usuario</button><div class="card"><table class="table"><thead><tr><th>Email</th><th>Nombre</th><th>Rol</th></tr></thead><tbody>${USUARIOS.map(u => `<tr><td>${u[0]}</td><td>${u[1]}</td><td><span class="badge">${u[3]}</span></td></tr>`).join('')}</tbody></table></div>`;
+      let html = `
+        <button class="btn" onclick="openModal('modalUser')" style="margin-bottom: 24px;">+ Nuevo Usuario</button>
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Nombre</th>
+                <th>Rol</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${USUARIOS.map(u => `
+                <tr>
+                  <td>${u[0]}</td>
+                  <td>${u[1]}</td>
+                  <td><span class="badge">${u[3]}</span></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
       document.getElementById('content').innerHTML = html;
     }
 
@@ -258,7 +726,7 @@
       const password = document.getElementById('inputPassword').value.trim();
 
       if (!email || !nombre || !password) {
-        alert('Completa todos los campos');
+        toast('Completa todos los campos', 'error');
         return;
       }
 
@@ -274,14 +742,15 @@
       document.getElementById('userRole').textContent = CURRENT_USER.rol;
     }
 
-    function toast(msg) {
+    function toast(msg, type = 'success') {
       const el = document.createElement('div');
-      el.className = 'toast';
+      el.className = 'toast ' + (type === 'error' ? 'error' : '');
       el.textContent = msg;
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 3000);
     }
 
+    // INIT
     window.addEventListener('load', async () => {
       await loadData();
       const saved = localStorage.getItem('currentUser');
