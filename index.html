@@ -1,356 +1,557 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tradestars CRM</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --bg: #0d0f1a; --bg2: #131626; --bg3: #1a1e30; --card: #161929;
-      --accent: #4f46e5; --accent2: #7c3aed; --green: #22c55e; --red: #ef4444;
-      --yellow: #f59e0b; --text: #e8eaf6; --text2: #8b90b8; --border: #2a2f45;
-    }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    
-    .login-page { display: none; height: 100vh; align-items: center; justify-content: center; }
-    .login-page.active { display: flex; }
-    .login-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 48px; width: 100%; max-width: 420px; }
-    .login-title { font-size: 32px; font-weight: 800; margin-bottom: 40px; text-align: center; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .login-input { width: 100%; padding: 14px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); margin-bottom: 16px; font-size: 14px; }
-    .login-input:focus { outline: none; border-color: var(--accent); }
-    .login-btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 15px; }
-    .login-btn:hover { background: var(--accent2); }
-    .login-error { color: var(--red); font-size: 13px; margin-bottom: 16px; text-align: center; }
-    
-    .app-page { display: none; height: 100vh; }
-    .app-page.active { display: flex; }
-    .container { display: flex; height: 100%; }
-    .sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 28px 20px; overflow-y: auto; display: flex; flex-direction: column; }
-    .main { flex: 1; display: flex; flex-direction: column; }
-    .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; }
-    .header-title { font-size: 28px; font-weight: 800; }
-    .content { flex: 1; overflow-y: auto; padding: 40px; }
-    
-    .logo { font-size: 18px; font-weight: 800; margin-bottom: 32px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .nav-item { padding: 13px 14px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; font-size: 14px; color: var(--text2); border-left: 3px solid transparent; transition: all 0.2s; }
-    .nav-item:hover { background: var(--bg3); color: var(--text); }
-    .nav-item.active { background: var(--accent); color: white; border-left-color: var(--accent2); }
-    .nav-item.hidden { display: none; }
-    
-    .dashboard-header { margin-bottom: 24px; }
-    .dashboard-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); margin-bottom: 4px; }
-    .dashboard-title { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 700; line-height: 1.1; }
-    .dashboard-badge { display: inline-block; background: var(--primary-g); border: 1px solid rgba(59,130,246,.3); color: var(--primary); padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-top: 6px; }
-    
-    .dashboard-hero { width: 100%; background: linear-gradient(135deg,#0d1a3a 0%,#111d35 60%,#0d1527 100%); border: 1px solid var(--border); border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; position: relative; overflow: hidden; box-sizing: border-box; }
-    .dashboard-hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(59,130,246,.18) 0%, transparent 70%); pointer-events: none; }
-    .dashboard-hero::after { content: ''; position: absolute; bottom: -40px; left: 30%; width: 160px; height: 160px; background: radial-gradient(circle, rgba(34,197,94,.08) 0%, transparent 70%); pointer-events: none; }
-    
-    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-    .kpi-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 18px 20px; position: relative; transition: border-color .2s, transform .2s; }
-    .kpi-icon { font-size: 20px; margin-bottom: 10px; }
-    .kpi-label { font-size: 10.5px; color: var(--text2); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px; font-weight: 600; }
-    .kpi-value { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 700; line-height: 1; color: var(--text); }
-    .kpi-subtitle { font-size: 11px; color: var(--text2); margin-top: 5px; }
-    .kpi-bar { height: 3px; background: rgba(255,255,255,.07); border-radius: 2px; margin-top: 12px; overflow: hidden; }
-    .kpi-bar-fill { height: 100%; border-radius: 2px; transition: width .8s cubic-bezier(.4,0,.2,1); }
-    .kpi-bar-blue .kpi-bar-fill { background: var(--accent); width: 100%; }
-    .kpi-bar-green .kpi-bar-fill { background: var(--green); width: 100%; }
-    .kpi-bar-yellow .kpi-bar-fill { background: var(--yellow); width: 100%; }
-    .kpi-bar-red .kpi-bar-fill { background: var(--red); width: 100%; }
-    
-    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-    .section-icon { font-size: 24px; }
-    
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 28px; }
-    .table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    .table th { background: var(--bg3); color: var(--text2); padding: 16px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--border); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-    .table td { padding: 16px; border-bottom: 1px solid var(--border); }
-    .table tr:hover { background: var(--bg3); }
-    
-    .badge { display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: rgba(16, 185, 129, 0.2); color: var(--green); }
-    .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--yellow); }
-    
-    .btn { padding: 12px 20px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; background: var(--accent); color: white; }
-    .btn:hover { background: var(--accent2); }
-    .btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
-    .btn-secondary:hover { background: var(--border); }
-    
-    .sidebar-user { border-top: 1px solid var(--border); padding-top: 20px; margin-top: auto; }
-    .user-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-    .user-role { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
-    
-    .empty { text-align: center; padding: 60px 40px; color: var(--text2); font-size: 16px; }
-    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--green); padding: 16px 20px; border-radius: 8px; z-index: 2000; }
-    .toast.error { border-left-color: var(--red); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRADESTARS LATAM — CRM Comercial</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #070d1a;
+  --surface:   #0d1527;
+  --card:      #111d35;
+  --border:    #1a3050;
+  --primary:   #3b82f6;
+  --primary-g: rgba(59,130,246,.18);
+  --text:      #e2e8f5;
+  --muted:     #7a90aa;
+  --success:   #22c55e;
+  --danger:    #ef4444;
+  --warning:   #f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+input,select,button{font-family:'Outfit',sans-serif;}
+
+/* ── LOGIN ── */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 30% 50%,rgba(59,130,246,.07) 0%,transparent 60%),var(--bg);}
+.login-box{width:100%;max-width:400px;padding:44px 36px;background:var(--surface);
+  border:1px solid var(--border);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,.5);}
+.login-logo{text-align:center;margin-bottom:32px;}
+.login-logo .star{font-size:30px;display:block;margin-bottom:8px;}
+.login-logo h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;}
+.login-logo p{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:11px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.fg input{width:100%;padding:11px 14px;background:var(--card);border:1px solid var(--border);
+  border-radius:9px;color:var(--text);font-size:14px;outline:none;transition:border-color .2s;}
+.fg input:focus{border-color:var(--primary);}
+.btn-main{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;
+  border-radius:9px;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;transition:opacity .2s;}
+.btn-main:hover{opacity:.9;}
+.login-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;
+  padding:9px 13px;border-radius:7px;font-size:13px;margin-bottom:14px;display:none;}
+
+/* ── APP ── */
+#appShell{display:none;}
+.app{display:flex;min-height:100vh;}
+.sidebar{width:215px;min-height:100vh;background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;}
+.sb-logo{padding:20px 18px;border-bottom:1px solid var(--border);}
+.sb-logo .star{font-size:16px;}
+.sb-logo h2{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+.sb-logo p{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+.sb-nav{flex:1;padding:14px 10px;}
+.nav-btn{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;
+  color:var(--muted);font-size:13.5px;font-weight:500;cursor:pointer;border:none;
+  background:none;width:100%;text-align:left;transition:all .15s;margin-bottom:3px;}
+.nav-btn:hover{background:rgba(255,255,255,.04);color:var(--text);}
+.nav-btn.active{background:var(--primary-g);color:var(--primary);}
+.nav-btn .ic{font-size:15px;width:18px;text-align:center;}
+.sb-foot{padding:14px 10px;border-top:1px solid var(--border);}
+.user-badge{display:flex;align-items:center;gap:9px;padding:10px 11px;
+  background:var(--card);border-radius:9px;margin-bottom:7px;}
+.u-av{width:30px;height:30px;background:var(--primary-g);border:1px solid var(--primary);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:var(--primary);flex-shrink:0;}
+.u-name{font-size:12px;font-weight:600;color:var(--text);}
+.u-role{font-size:10px;color:var(--muted);}
+.btn-logout{width:100%;padding:7px;background:none;border:1px solid var(--border);
+  border-radius:7px;color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;}
+.btn-logout:hover{border-color:var(--danger);color:var(--danger);}
+
+/* ── MAIN ── */
+.main{margin-left:215px;flex:1;padding:28px 32px;}
+.page{display:none;}
+.page.active{display:block;}
+.ph{margin-bottom:24px;}
+.ph h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;letter-spacing:.5px;}
+.ph p{font-size:13px;color:var(--muted);margin-top:3px;}
+
+/* ── DASHBOARD HERO ── */
+.dashboard-hero{width:100%;background:linear-gradient(135deg,#0d1a3a 0%,#111d35 60%,#0d1527 100%);
+  border:1px solid var(--border);border-radius:18px;padding:28px 32px;margin-bottom:20px;
+  position:relative;overflow:hidden;box-sizing:border-box;}
+.dashboard-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;
+  background:radial-gradient(circle,rgba(59,130,246,.18) 0%,transparent 70%);pointer-events:none;}
+.dashboard-hero::after{content:'';position:absolute;bottom:-40px;left:30%;width:160px;height:160px;
+  background:radial-gradient(circle,rgba(34,197,94,.08) 0%,transparent 70%);pointer-events:none;}
+
+.dashboard-header{margin-bottom:24px;}
+.dashboard-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:4px;}
+.dashboard-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:700;line-height:1.1;}
+.dashboard-badge{display:inline-block;background:var(--primary-g);border:1px solid rgba(59,130,246,.3);
+  color:var(--primary);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;margin-top:6px;}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.kpi-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:18px 20px;position:relative;transition:border-color .2s,transform .2s;}
+.kpi-card:hover{border-color:rgba(59,130,246,.35);transform:translateY(-1px);}
+.kpi-icon{font-size:20px;margin-bottom:10px;}
+.kpi-label{font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;
+  letter-spacing:1.2px;margin-bottom:6px;}
+.kpi-value{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:700;line-height:1;color:var(--text);}
+.kpi-subtitle{font-size:11px;color:var(--muted);margin-top:5px;}
+.kpi-bar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:12px;overflow:hidden;}
+.kpi-bar-fill{height:100%;border-radius:2px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+.kpi-bar-blue .kpi-bar-fill{background:var(--primary);width:100%;}
+.kpi-bar-green .kpi-bar-fill{background:var(--success);width:100%;}
+.kpi-bar-yellow .kpi-bar-fill{background:var(--warning);width:100%;}
+
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:20px;margin-bottom:18px;}
+.ctitle{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:left;font-size:10px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1px;padding:7px 10px;border-bottom:1px solid var(--border);}
+.tbl td{padding:11px 10px;font-size:13.5px;border-bottom:1px solid rgba(255,255,255,.025);}
+.tbl tr:hover td{background:rgba(255,255,255,.015);}
+
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:6px;
+  font-size:10.5px;font-weight:700;text-transform:uppercase;background:rgba(34,197,94,.15);
+  color:var(--success);border:1px solid rgba(34,197,94,.25);}
+.badge.warning{background:rgba(245,158,11,.15);color:var(--warning);border-color:rgba(245,158,11,.25);}
+
+.empty{text-align:center;padding:44px 20px;color:var(--muted);}
+.empty .ei{font-size:38px;margin-bottom:10px;}
+
+.loading{text-align:center;padding:28px;color:var(--muted);font-size:13px;}
+.dots{display:inline-flex;gap:4px;align-items:center;}
+.dots span{width:6px;height:6px;background:var(--primary);border-radius:50%;animation:db 1.2s infinite;}
+.dots span:nth-child(2){animation-delay:.2s;}
+.dots span:nth-child(3){animation-delay:.4s;}
+@keyframes db{0%,80%,100%{transform:scale(.65);opacity:.35;}40%{transform:scale(1);opacity:1;}}
+</style>
 </head>
 <body>
-  <!-- LOGIN -->
-  <div class="login-page active" id="loginPage">
-    <div class="login-card">
-      <div class="login-title">TRADESTARS</div>
-      <div id="loginError" class="login-error"></div>
-      <input type="email" id="loginEmail" class="login-input" placeholder="Email">
-      <input type="password" id="loginPassword" class="login-input" placeholder="Contraseña">
-      <button class="login-btn" onclick="login()">Ingresar</button>
-    </div>
-  </div>
 
-  <!-- APP -->
-  <div class="app-page" id="appPage">
-    <div class="container">
-      <div class="sidebar">
-        <div class="logo">TRADESTARS</div>
-        <div id="nav" style="flex: 1;">
-          <div class="nav-item active" onclick="goPage('dashboard')">📊 Dashboard</div>
-          <div class="nav-item" onclick="goPage('ventas')">💰 Ventas</div>
-          <div class="nav-item" onclick="goPage('registrar')">➕ Registrar</div>
-          <div class="nav-item" onclick="goPage('closers')">👥 Closers</div>
-          <div class="nav-item" onclick="goPage('metodos')">💳 Métodos</div>
-          <div class="nav-item hidden" id="navValidar" onclick="goPage('validar')">✅ Validar</div>
-          <div class="nav-item hidden" id="navUsers" onclick="goPage('usuarios')">👤 Usuarios</div>
-        </div>
-        
-        <div class="sidebar-user">
-          <div class="user-name" id="userName">-</div>
-          <div class="user-role" id="userRole">-</div>
-          <button class="btn btn-secondary" onclick="logout()" style="width: 100%;">Cerrar sesión</button>
+<!-- ════ LOGIN ════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <span class="star">⭐</span>
+      <h1>Tradestars</h1>
+      <p>LATAM · CRM Comercial</p>
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <div class="fg">
+      <label>Correo electrónico</label>
+      <input type="email" id="lEmail" placeholder="tu@correo.com">
+    </div>
+    <div class="fg">
+      <label>Contraseña</label>
+      <input type="password" id="lPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-main" onclick="doLogin()">Ingresar al sistema</button>
+  </div>
+</div>
+
+<!-- ════ APP ════ -->
+<div id="appShell">
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sb-logo">
+      <span class="star">⭐</span>
+      <h2>Tradestars</h2>
+      <p>LATAM · Comercial</p>
+    </div>
+    <div class="sb-nav">
+      <button class="nav-btn active" id="nb-dash" onclick="navTo('dash')">
+        <span class="ic">📊</span>Dashboard
+      </button>
+      <button class="nav-btn" id="nb-ventas" onclick="navTo('ventas')">
+        <span class="ic">💰</span>Ventas
+      </button>
+      <button class="nav-btn" id="nb-registrar" onclick="navTo('registrar')">
+        <span class="ic">➕</span>Registrar
+      </button>
+      <button class="nav-btn" id="nb-closers" onclick="navTo('closers')">
+        <span class="ic">👥</span>Closers
+      </button>
+      <button class="nav-btn" id="nb-metodos" onclick="navTo('metodos')">
+        <span class="ic">💳</span>Métodos
+      </button>
+    </div>
+    <div class="sb-foot">
+      <div class="user-badge">
+        <div class="u-av" id="uAv">?</div>
+        <div>
+          <div class="u-name" id="uName">—</div>
+          <div class="u-role" id="uRole">—</div>
         </div>
       </div>
-      
-      <div class="main">
-        <div class="header">
-          <div></div>
-          <div id="status" style="font-size: 13px; color: var(--text2);">✅</div>
-        </div>
-        <div class="content" id="content"></div>
-      </div>
+      <button class="btn-logout" onclick="doLogout()">⏻ Cerrar sesión</button>
     </div>
-  </div>
+  </nav>
 
-  <script>
-    const CSV_USUARIOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=728295977';
-    const CSV_VENTAS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=0';
-    const CSV_CLOSERS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=1837437345';
-    const CSV_METODOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=878625665';
+  <!-- MAIN -->
+  <main class="main">
 
-    let CURRENT_USER = null;
-    let USUARIOS = [];
-    let VENTAS = [];
-    let CLOSERS = [];
-    let METODOS = [];
-    let FILTRO_EQUIPO = 'todos';
+    <!-- ── DASHBOARD ── -->
+    <section class="page active" id="sec-dash">
+      <div class="dashboard-header">
+        <div class="dashboard-label">Dashboard General</div>
+        <h1 class="dashboard-title">TRADESTARS LATAM</h1>
+        <span class="dashboard-badge" id="dashRole">👑 CEO</span>
+      </div>
 
-    async function loadCSV(url) {
-      try {
-        const response = await fetch(url);
-        const text = await response.text();
-        const lines = text.trim().split('\n');
-        return lines.slice(1).map(line => line.split(','));
-      } catch(err) {
-        return [];
-      }
-    }
+      <div class="dashboard-hero">
+        <div class="kpi-grid">
+          <div class="kpi-card kpi-bar-blue">
+            <div class="kpi-icon">📊</div>
+            <div class="kpi-label">Total Ventas</div>
+            <div class="kpi-value" id="kpi-total">0</div>
+            <div class="kpi-subtitle">En el período</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
+          </div>
 
-    async function loadData() {
-      USUARIOS = await loadCSV(CSV_USUARIOS);
-      VENTAS = await loadCSV(CSV_VENTAS);
-      CLOSERS = await loadCSV(CSV_CLOSERS);
-      METODOS = await loadCSV(CSV_METODOS);
-    }
+          <div class="kpi-card kpi-bar-green">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-label">Recaudado USD</div>
+            <div class="kpi-value" id="kpi-monto">$0</div>
+            <div class="kpi-subtitle">Dinero en caja</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
+          </div>
 
-    async function login() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value.trim();
-      
-      if (!email || !password) {
-        showLoginError('Completa email y contraseña');
-        return;
-      }
+          <div class="kpi-card kpi-bar-yellow">
+            <div class="kpi-icon">✅</div>
+            <div class="kpi-label">Validadas</div>
+            <div class="kpi-value" id="kpi-validadas">0</div>
+            <div class="kpi-subtitle">Pagos confirmados</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
+          </div>
 
-      const user = USUARIOS.find(u => u[0] === email && u[2] === password);
-      if (!user) {
-        showLoginError('Email o contraseña incorrectos');
-        return;
-      }
-
-      CURRENT_USER = { email: user[0], nombre: user[1], rol: user[3] };
-      localStorage.setItem('currentUser', JSON.stringify(CURRENT_USER));
-      
-      document.getElementById('loginPage').classList.remove('active');
-      document.getElementById('appPage').classList.add('active');
-      updateUI();
-      goPage('dashboard');
-      
-      if (CURRENT_USER.rol === 'CEO') document.getElementById('navUsers').classList.remove('hidden');
-      if (['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) document.getElementById('navValidar').classList.remove('hidden');
-    }
-
-    function showLoginError(msg) {
-      document.getElementById('loginError').textContent = msg;
-      setTimeout(() => { document.getElementById('loginError').textContent = ''; }, 3000);
-    }
-
-    function logout() {
-      localStorage.removeItem('currentUser');
-      location.reload();
-    }
-
-    function goPage(page) {
-      switch(page) {
-        case 'dashboard': renderDashboard(); break;
-        case 'ventas': renderVentas(); break;
-        case 'registrar': renderRegistrar(); break;
-        case 'closers': renderClosers(); break;
-        case 'metodos': renderMetodos(); break;
-        case 'validar': renderValidar(); break;
-        case 'usuarios': renderUsuarios(); break;
-      }
-    }
-
-    function renderDashboard() {
-      let ventasFiltradas = VENTAS;
-      let closersFiltrados = CLOSERS;
-
-      if (FILTRO_EQUIPO !== 'todos') {
-        ventasFiltradas = VENTAS.filter(v => v[3] === FILTRO_EQUIPO);
-        closersFiltrados = CLOSERS.filter(c => c[4] === FILTRO_EQUIPO);
-      } else if (!['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) {
-        const miEquipo = CURRENT_USER.rol === 'lider_comercial' ? 'comercial' : 'revenue';
-        ventasFiltradas = VENTAS.filter(v => v[3] === miEquipo);
-        closersFiltrados = CLOSERS.filter(c => c[4] === miEquipo);
-      }
-
-      const total = ventasFiltradas.length;
-      const dinero = ventasFiltradas.reduce((s, v) => s + (parseFloat(v[4]) || 0), 0);
-      const validadas = ventasFiltradas.filter(v => v[9] === 'VALIDADA').length;
-      const conv = total > 0 ? Math.round(validadas / total * 100) : 0;
-
-      let html = `
-        <div class="dashboard-header">
-          <div class="dashboard-label">Dashboard General</div>
-          <h1 class="dashboard-title">TRADESTARS LATAM</h1>
-          <span class="dashboard-badge">👑 ${CURRENT_USER.rol}</span>
-        </div>
-
-        <div class="dashboard-hero">
-          <div class="kpi-grid">
-            <div class="kpi-card kpi-bar-blue">
-              <div class="kpi-icon">📊</div>
-              <div class="kpi-label">Total Ventas</div>
-              <div class="kpi-value">${total}</div>
-              <div class="kpi-subtitle">En el período</div>
-              <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
-            </div>
-
-            <div class="kpi-card kpi-bar-green">
-              <div class="kpi-icon">💰</div>
-              <div class="kpi-label">Recaudado USD</div>
-              <div class="kpi-value">$${(dinero / 1000).toFixed(1)}K</div>
-              <div class="kpi-subtitle">Dinero en caja</div>
-              <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
-            </div>
-
-            <div class="kpi-card kpi-bar-yellow">
-              <div class="kpi-icon">✅</div>
-              <div class="kpi-label">Validadas</div>
-              <div class="kpi-value">${validadas}</div>
-              <div class="kpi-subtitle">Pagos confirmados</div>
-              <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
-            </div>
-
-            <div class="kpi-card kpi-bar-blue">
-              <div class="kpi-icon">📈</div>
-              <div class="kpi-label">Conversión</div>
-              <div class="kpi-value">${conv}%</div>
-              <div class="kpi-subtitle">Tasa de validación</div>
-              <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
-            </div>
+          <div class="kpi-card kpi-bar-blue">
+            <div class="kpi-icon">📈</div>
+            <div class="kpi-label">Conversión</div>
+            <div class="kpi-value" id="kpi-conv">0%</div>
+            <div class="kpi-subtitle">Tasa de validación</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill"></div></div>
           </div>
         </div>
+      </div>
 
-        <div class="card">
-          <div class="section-title"><span class="section-icon">📋</span> Últimas Ventas</div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Fecha</th>
-                <th>Closer</th>
-                <th>Equipo</th>
-                <th>Monto</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${ventasFiltradas.length === 0 ? '<tr><td colspan="6" style="text-align: center; padding: 32px;">Sin ventas</td></tr>' : ventasFiltradas.slice(-10).reverse().map(v => `
-                <tr>
-                  <td><strong>${v[0]}</strong></td>
-                  <td>${v[1]}</td>
-                  <td>${v[2]}</td>
-                  <td>${v[3]}</td>
-                  <td>$${parseFloat(v[4]).toFixed(2)}</td>
-                  <td><span class="badge ${v[9] === 'VALIDADA' ? '' : 'badge-warning'}">${v[9]}</span></td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
+      <div class="card">
+        <div class="ctitle">📋 Últimas Ventas</div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Closer</th>
+              <th>Equipo</th>
+              <th>Monto</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="ventasBody">
+            <tr><td colspan="6" style="text-align:center;padding:32px;">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-      document.getElementById('content').innerHTML = html;
-    }
+    <!-- ── VENTAS ── -->
+    <section class="page" id="sec-ventas">
+      <div class="ph">
+        <h1>💰 Ventas</h1>
+        <p>Listado de todas las ventas registradas</p>
+      </div>
+      <div class="card">
+        <div id="ventasContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
 
-    function renderVentas() { document.getElementById('content').innerHTML = '<div class="empty">Módulo de Ventas</div>'; }
-    function renderRegistrar() { document.getElementById('content').innerHTML = '<div class="empty">Módulo de Registro</div>'; }
-    function renderClosers() { document.getElementById('content').innerHTML = '<div class="empty">Módulo de Closers</div>'; }
-    function renderMetodos() { document.getElementById('content').innerHTML = '<div class="empty">Módulo de Métodos</div>'; }
-    function renderValidar() { document.getElementById('content').innerHTML = '<div class="empty">Panel de Validación</div>'; }
-    function renderUsuarios() {
-      let html = `
-        <button class="btn" style="margin-bottom: 24px;">+ Nuevo Usuario</button>
-        <div class="card">
-          <table class="table">
-            <thead><tr><th>Email</th><th>Nombre</th><th>Rol</th></tr></thead>
-            <tbody>
-              ${USUARIOS.map(u => `<tr><td>${u[0]}</td><td>${u[1]}</td><td><span class="badge">${u[3]}</span></td></tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-      document.getElementById('content').innerHTML = html;
-    }
+    <!-- ── REGISTRAR ── -->
+    <section class="page" id="sec-registrar">
+      <div class="ph">
+        <h1>➕ Registrar Venta</h1>
+        <p>Agregar una nueva venta al sistema</p>
+      </div>
+      <div class="card">
+        <div class="empty"><p>Módulo en desarrollo</p></div>
+      </div>
+    </section>
 
-    function updateUI() {
-      document.getElementById('userName').textContent = CURRENT_USER.nombre;
-      document.getElementById('userRole').textContent = CURRENT_USER.rol;
-    }
+    <!-- ── CLOSERS ── -->
+    <section class="page" id="sec-closers">
+      <div class="ph">
+        <h1>👥 Closers</h1>
+        <p>Gestión de closers y equipos</p>
+      </div>
+      <div class="card">
+        <div id="closersContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
 
-    function toast(msg) {
-      const el = document.createElement('div');
-      el.className = 'toast';
-      el.textContent = msg;
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 3000);
-    }
+    <!-- ── MÉTODOS ── -->
+    <section class="page" id="sec-metodos">
+      <div class="ph">
+        <h1>💳 Métodos de Pago</h1>
+        <p>Métodos de pago disponibles</p>
+      </div>
+      <div class="card">
+        <div id="metodosContent"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
 
-    window.addEventListener('load', async () => {
-      await loadData();
-      const saved = localStorage.getItem('currentUser');
-      if (saved) {
-        CURRENT_USER = JSON.parse(saved);
-        document.getElementById('loginPage').classList.remove('active');
-        document.getElementById('appPage').classList.add('active');
-        updateUI();
-        goPage('dashboard');
-        if (CURRENT_USER.rol === 'CEO') document.getElementById('navUsers').classList.remove('hidden');
-        if (['CEO', 'lider_financiero'].includes(CURRENT_USER.rol)) document.getElementById('navValidar').classList.remove('hidden');
-      }
-    });
+  </main>
+</div>
+</div>
 
-    setInterval(loadData, 5000);
-  </script>
+<script>
+// ════ CSV URLs ════
+const CSV_USUARIOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=728295977';
+const CSV_VENTAS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=0';
+const CSV_CLOSERS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=1837437345';
+const CSV_METODOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=878625665';
+
+// ════ STATE ════
+let CU = null;
+let USUARIOS = [];
+let VENTAS = [];
+let CLOSERS = [];
+let METODOS = [];
+
+// ════ CSV LOADER ════
+async function loadCSV(url) {
+  try {
+    const response = await fetch(url);
+    const text = await response.text();
+    const lines = text.trim().split('\n');
+    return lines.slice(1).map(line => line.split(','));
+  } catch(err) {
+    console.error('CSV load error:', err);
+    return [];
+  }
+}
+
+async function loadData() {
+  USUARIOS = await loadCSV(CSV_USUARIOS);
+  VENTAS = await loadCSV(CSV_VENTAS);
+  CLOSERS = await loadCSV(CSV_CLOSERS);
+  METODOS = await loadCSV(CSV_METODOS);
+}
+
+// ════ AUTH ════
+async function doLogin() {
+  const email = document.getElementById('lEmail').value.trim();
+  const password = document.getElementById('lPass').value.trim();
+  const err = document.getElementById('loginErr');
+  err.style.display = 'none';
+
+  if (!email || !password) {
+    err.textContent = 'Completa email y contraseña.';
+    err.style.display = 'block';
+    return;
+  }
+
+  const user = USUARIOS.find(u => u[0] === email && u[2] === password);
+  if (!user) {
+    err.textContent = 'Correo o contraseña incorrectos.';
+    err.style.display = 'block';
+    return;
+  }
+
+  CU = { email: user[0], nombre: user[1], rol: user[3] };
+  localStorage.setItem('currentUser', JSON.stringify(CU));
+  showApp();
+}
+
+function doLogout() {
+  localStorage.removeItem('currentUser');
+  location.reload();
+}
+
+function showLogin() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('appShell').style.display = 'none';
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appShell').style.display = 'block';
+  document.getElementById('uAv').textContent = CU.email[0].toUpperCase();
+  document.getElementById('uName').textContent = CU.nombre || CU.email;
+  document.getElementById('uRole').textContent = CU.rol;
+  document.getElementById('dashRole').textContent = '👑 ' + CU.rol;
+  navTo('dash');
+}
+
+// ════ NAVIGATION ════
+function navTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + page).classList.add('active');
+  document.getElementById('nb-' + page).classList.add('active');
+
+  if (page === 'dash') renderDash();
+  else if (page === 'ventas') renderVentas();
+  else if (page === 'closers') renderClosers();
+  else if (page === 'metodos') renderMetodos();
+}
+
+// ════ DASHBOARD ════
+function renderDash() {
+  const total = VENTAS.length;
+  const dinero = VENTAS.reduce((s, v) => s + (parseFloat(v[4]) || 0), 0);
+  const validadas = VENTAS.filter(v => v[9] === 'VALIDADA').length;
+  const conv = total > 0 ? Math.round(validadas / total * 100) : 0;
+
+  document.getElementById('kpi-total').textContent = total;
+  document.getElementById('kpi-monto').textContent = '$' + (dinero / 1000).toFixed(1) + 'K';
+  document.getElementById('kpi-validadas').textContent = validadas;
+  document.getElementById('kpi-conv').textContent = conv + '%';
+
+  const tbody = document.getElementById('ventasBody');
+  if (total === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;">Sin ventas</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = VENTAS.slice(-10).reverse().map(v => `
+    <tr>
+      <td><strong>${v[0]}</strong></td>
+      <td>${v[1]}</td>
+      <td>${v[2]}</td>
+      <td>${v[3]}</td>
+      <td>$${parseFloat(v[4]).toFixed(2)}</td>
+      <td><span class="badge ${v[9] === 'VALIDADA' ? '' : 'warning'}">${v[9]}</span></td>
+    </tr>
+  `).join('');
+}
+
+function renderVentas() {
+  const tbody = document.querySelector('#sec-ventas .tbl') || document.createElement('table');
+  const content = document.getElementById('ventasContent');
+  
+  if (VENTAS.length === 0) {
+    content.innerHTML = '<div class="empty"><div class="ei">📭</div><p>Sin ventas registradas</p></div>';
+    return;
+  }
+
+  content.innerHTML = `
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Closer</th>
+          <th>Equipo</th>
+          <th>Monto</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${VENTAS.map(v => `
+          <tr>
+            <td><strong>${v[0]}</strong></td>
+            <td>${v[1]}</td>
+            <td>${v[2]}</td>
+            <td>${v[3]}</td>
+            <td>$${parseFloat(v[4]).toFixed(2)}</td>
+            <td><span class="badge ${v[9] === 'VALIDADA' ? '' : 'warning'}">${v[9]}</span></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderClosers() {
+  const content = document.getElementById('closersContent');
+  if (CLOSERS.length === 0) {
+    content.innerHTML = '<div class="empty"><div class="ei">👥</div><p>Sin closers registrados</p></div>';
+    return;
+  }
+
+  content.innerHTML = `
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Equipo</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${CLOSERS.map(c => `
+          <tr>
+            <td><strong>${c[1]}</strong></td>
+            <td>${c[2]}</td>
+            <td>${c[3]}</td>
+            <td><span class="badge">${c[4] || 'Activo'}</span></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderMetodos() {
+  const content = document.getElementById('metodosContent');
+  if (METODOS.length === 0) {
+    content.innerHTML = '<div class="empty"><div class="ei">💳</div><p>Sin métodos registrados</p></div>';
+    return;
+  }
+
+  content.innerHTML = `
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${METODOS.map(m => `
+          <tr>
+            <td><strong>${m[0]}</strong></td>
+            <td>${m[1]}</td>
+            <td><span class="badge">${m[2] || 'Activo'}</span></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+// ════ INIT ════
+window.addEventListener('load', async () => {
+  await loadData();
+  const saved = localStorage.getItem('currentUser');
+  if (saved) {
+    CU = JSON.parse(saved);
+    showApp();
+  } else {
+    showLogin();
+  }
+});
+</script>
+
 </body>
 </html>
