@@ -306,35 +306,69 @@ input,select,button{font-family:'Outfit',sans-serif;}
 
         <!-- PASO 1: CLIENTE -->
         <div id="paso-1-cliente" class="paso-venta" style="display:block;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-            <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre *</label>
-              <input type="text" id="form-cliente-nombre" placeholder="Juan" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          <div style="margin-bottom:20px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
+            <label style="font-size:12px;color:var(--text);font-weight:600;display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;">
+              <input type="checkbox" id="toggle-tercero" onchange="toggleBeneficiario()" style="width:18px;height:18px;cursor:pointer;">
+              <span>Pago de tercero (el que paga no es quien usa)</span>
+            </label>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">👤 Datos de quien PAGA</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre *</label>
+                <input type="text" id="form-cliente-nombre" placeholder="Juan" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Apellido</label>
+                <input type="text" id="form-cliente-apellido" placeholder="Pérez" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              </div>
             </div>
-            <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Apellido</label>
-              <input type="text" id="form-cliente-apellido" placeholder="Pérez" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            <div style="margin-bottom:16px;">
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Correo *</label>
+              <input type="email" id="form-cliente-email" placeholder="juan@email.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Teléfono (WhatsApp)</label>
+                <input type="text" id="form-cliente-telefono" placeholder="+57 300 0000000" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">País</label>
+                <select id="form-cliente-pais" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+                  <option value="">Seleccionar...</option>
+                  <option value="Colombia">Colombia</option>
+                  <option value="Brasil">Brasil</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </div>
             </div>
           </div>
-          <div style="margin-bottom:16px;">
-            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Correo *</label>
-            <input type="email" id="form-cliente-email" placeholder="juan@email.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-            <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Teléfono (WhatsApp)</label>
-              <input type="text" id="form-cliente-telefono" placeholder="+57 300 0000000" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+
+          <!-- BENEFICIARIO (oculto por defecto) -->
+          <div id="seccion-beneficiario" style="display:none;margin-bottom:20px;padding:16px;background:rgba(59,130,246,.1);border:1px solid var(--border);border-radius:8px;">
+            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">👥 Datos del BENEFICIARIO (quien usará)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre Beneficiario *</label>
+                <input type="text" id="form-beneficiario-nombre" placeholder="María" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Apellido Beneficiario</label>
+                <input type="text" id="form-beneficiario-apellido" placeholder="García" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              </div>
+            </div>
+            <div style="margin-bottom:16px;">
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Correo Beneficiario *</label>
+              <input type="email" id="form-beneficiario-email" placeholder="maria@email.com" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
             </div>
             <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">País</label>
-              <select id="form-cliente-pais" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-                <option value="">Seleccionar...</option>
-                <option value="Colombia">Colombia</option>
-                <option value="Brasil">Brasil</option>
-                <option value="Otro">Otro</option>
-              </select>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Teléfono Beneficiario</label>
+              <input type="text" id="form-beneficiario-telefono" placeholder="+57 300 0000000" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
             </div>
           </div>
+
           <button onclick="cambiarPasoventa(2)" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Siguiente →</button>
         </div>
 
@@ -731,6 +765,12 @@ function cambiarPasoventa(paso) {
   document.getElementById('tab-pago').style.color = paso === 3 ? 'var(--primary)' : 'var(--muted)';
 }
 
+function toggleBeneficiario() {
+  const toggle = document.getElementById('toggle-tercero').checked;
+  const seccion = document.getElementById('seccion-beneficiario');
+  seccion.style.display = toggle ? 'block' : 'none';
+}
+
 async function guardarVentaCompleta() {
   // Validar cliente
   const nombre = document.getElementById('form-cliente-nombre').value.trim();
@@ -738,6 +778,20 @@ async function guardarVentaCompleta() {
   if (!nombre || !email) {
     mostrarMensajVenta('❌ Faltan datos del cliente', false);
     return;
+  }
+
+  // Si es pago de tercero, validar beneficiario
+  const esTercero = document.getElementById('toggle-tercero').checked;
+  let beneficiarioNombre = '';
+  let beneficiarioEmail = '';
+  
+  if (esTercero) {
+    beneficiarioNombre = document.getElementById('form-beneficiario-nombre').value.trim();
+    beneficiarioEmail = document.getElementById('form-beneficiario-email').value.trim();
+    if (!beneficiarioNombre || !beneficiarioEmail) {
+      mostrarMensajVenta('❌ Faltan datos del beneficiario', false);
+      return;
+    }
   }
 
   // Validar venta
@@ -764,6 +818,12 @@ async function guardarVentaCompleta() {
       telefono: document.getElementById('form-cliente-telefono').value.trim(),
       pais: document.getElementById('form-cliente-pais').value
     },
+    beneficiario: esTercero ? {
+      nombre: beneficiarioNombre,
+      apellido: document.getElementById('form-beneficiario-apellido').value.trim(),
+      email: beneficiarioEmail,
+      telefono: document.getElementById('form-beneficiario-telefono').value.trim()
+    } : null,
     venta: {
       closer: closer,
       equipo: document.getElementById('form-venta-equipo').value,
@@ -788,6 +848,12 @@ async function guardarVentaCompleta() {
   payload.append('estado', 'PENDIENTE');
   payload.append('clienteNombre', datos.cliente.nombre);
   payload.append('clienteEmail', datos.cliente.email);
+  payload.append('esTercero', esTercero ? 'SÍ' : 'NO');
+  
+  if (esTercero && datos.beneficiario) {
+    payload.append('beneficiarioNombre', datos.beneficiario.nombre);
+    payload.append('beneficiarioEmail', datos.beneficiario.email);
+  }
 
   try {
     const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
@@ -802,6 +868,12 @@ async function guardarVentaCompleta() {
       document.getElementById('form-cliente-email').value = '';
       document.getElementById('form-cliente-telefono').value = '';
       document.getElementById('form-cliente-pais').value = '';
+      document.getElementById('toggle-tercero').checked = false;
+      document.getElementById('form-beneficiario-nombre').value = '';
+      document.getElementById('form-beneficiario-apellido').value = '';
+      document.getElementById('form-beneficiario-email').value = '';
+      document.getElementById('form-beneficiario-telefono').value = '';
+      document.getElementById('seccion-beneficiario').style.display = 'none';
       document.getElementById('form-venta-closer').value = '';
       document.getElementById('form-venta-monto').value = '';
       document.getElementById('form-venta-fecha').value = '';
