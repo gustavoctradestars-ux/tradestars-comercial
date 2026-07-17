@@ -3,634 +3,141 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tradestars CRM Comercial</title>
+  <title>Tradestars CRM</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
     :root {
-      --bg: #0d0f1a;
-      --bg2: #131626;
-      --bg3: #1a1e30;
-      --card: #161929;
-      --accent: #4f46e5;
-      --accent2: #7c3aed;
-      --green: #22c55e;
-      --red: #ef4444;
-      --yellow: #f59e0b;
-      --blue: #3b82f6;
-      --text: #e8eaf6;
-      --text2: #8b90b8;
-      --text3: #4a4f70;
-      --border: #2a2f45;
-      --success: #10b981;
+      --bg: #0d0f1a; --bg2: #131626; --bg3: #1a1e30; --card: #161929;
+      --accent: #4f46e5; --accent2: #7c3aed; --green: #22c55e; --red: #ef4444;
+      --yellow: #f59e0b; --text: #e8eaf6; --text2: #8b90b8; --border: #2a2f45;
     }
-    
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-    
-    /* LAYOUT */
-    .container {
-      display: flex;
-      height: 100vh;
-    }
-    
-    .sidebar {
-      width: 200px;
-      background: var(--bg2);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      padding: 20px;
-    }
-    
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    
-    .header {
-      background: var(--bg2);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px;
-    }
-    
-    /* SIDEBAR */
-    .logo {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 24px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .nav-item {
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s;
-      color: var(--text2);
-      border-left: 3px solid transparent;
-    }
-    
-    .nav-item:hover {
-      background: var(--bg3);
-      color: var(--text);
-    }
-    
-    .nav-item.active {
-      background: var(--accent);
-      color: white;
-      border-left-color: var(--accent2);
-    }
-    
-    /* HEADER */
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 14px;
-    }
-    
-    /* CARDS */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 16px;
-      transition: all 0.2s;
-    }
-    
-    .card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
-    }
-    
-    /* FORMS */
-    .form-group {
-      margin-bottom: 16px;
-    }
-    
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text2);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 10px 12px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      font-size: 14px;
-      font-family: inherit;
-      transition: all 0.2s;
-    }
-    
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    }
-    
-    /* BUTTONS */
-    .btn {
-      padding: 10px 16px;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background: var(--accent2);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-    }
-    
-    .btn-secondary {
-      background: var(--bg3);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    
-    .btn-secondary:hover {
-      background: var(--border);
-    }
-    
-    .btn-danger {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--red);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-    
-    .btn-danger:hover {
-      background: rgba(239, 68, 68, 0.2);
-    }
-    
-    .btn-success {
-      background: var(--success);
-      color: white;
-    }
-    
-    .btn-success:hover {
-      background: #059669;
-    }
-    
-    /* MODAL */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .modal.active {
-      display: flex;
-    }
-    
-    .modal-content {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 24px;
-      width: 90%;
-      max-width: 500px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    }
-    
-    .modal-header {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .modal-close {
-      background: none;
-      border: none;
-      color: var(--text2);
-      font-size: 24px;
-      cursor: pointer;
-      padding: 0;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .modal-close:hover {
-      color: var(--text);
-    }
-    
-    /* TABLE */
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-    
-    .table th {
-      background: var(--bg3);
-      color: var(--text2);
-      padding: 12px;
-      text-align: left;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 2px solid var(--border);
-    }
-    
-    .table td {
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .table tr:hover {
-      background: var(--bg3);
-    }
-    
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--success);
-      padding: 16px;
-      border-radius: 6px;
-      z-index: 2000;
-      animation: slideIn 0.3s ease;
-    }
-    
-    .toast.error {
-      border-left-color: var(--red);
-    }
-    
-    @keyframes slideIn {
-      from { transform: translateX(400px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    
-    /* EMPTY STATE */
-    .empty {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--text2);
-    }
-    
-    .empty-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-    
-    /* BADGES */
-    .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    
-    .badge-success {
-      background: rgba(16, 185, 129, 0.2);
-      color: var(--success);
-    }
-    
-    .badge-warning {
-      background: rgba(245, 158, 11, 0.2);
-      color: var(--yellow);
-    }
-    
-    .badge-danger {
-      background: rgba(239, 68, 68, 0.2);
-      color: var(--red);
-    }
-    
-    /* GRID */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    
-    .stat-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-    }
-    
-    .stat-label {
-      font-size: 12px;
-      color: var(--text2);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-    
-    .stat-value {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--text);
-    }
-    
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      .sidebar { width: 160px; }
-      .grid { grid-template-columns: 1fr; }
-      .modal-content { width: 95%; }
-    }
-    
-    .hidden { display: none !important; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .container { display: flex; height: 100vh; }
+    .sidebar { width: 200px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px; overflow-y: auto; }
+    .main { flex: 1; display: flex; flex-direction: column; }
+    .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .content { flex: 1; overflow-y: auto; padding: 24px; }
+    .logo { font-size: 18px; font-weight: 700; margin-bottom: 24px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-item { padding: 10px 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; font-size: 14px; color: var(--text2); border-left: 3px solid transparent; transition: all 0.2s; }
+    .nav-item:hover { background: var(--bg3); color: var(--text); }
+    .nav-item.active { background: var(--accent); color: white; border-left-color: var(--accent2); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-bottom: 16px; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+    .stat-label { font-size: 12px; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+    .stat-value { font-size: 28px; font-weight: 700; }
+    .btn { padding: 10px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; background: var(--accent); color: white; }
+    .btn:hover { background: var(--accent2); }
+    .table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .table th { background: var(--bg3); color: var(--text2); padding: 12px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); }
+    .table td { padding: 12px; border-bottom: 1px solid var(--border); }
+    .table tr:hover { background: var(--bg3); }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--green); }
+    .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--yellow); }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--green); padding: 16px; border-radius: 6px; z-index: 2000; animation: slideIn 0.3s ease; }
+    .toast.error { border-left-color: var(--red); }
+    @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .empty { text-align: center; padding: 40px; color: var(--text2); }
+    .loading { text-align: center; padding: 40px; }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="logo">TRADESTARS</div>
-      
       <div id="nav" style="flex: 1;">
         <div class="nav-item active" onclick="goPage('dashboard')">📊 Dashboard</div>
         <div class="nav-item" onclick="goPage('ventas')">💰 Ventas</div>
-        <div class="nav-item" onclick="goPage('registrar-venta')">➕ Registrar Venta</div>
+        <div class="nav-item" onclick="goPage('registrar')">➕ Registrar</div>
         <div class="nav-item" onclick="goPage('closers')">👥 Closers</div>
-        <div class="nav-item" onclick="goPage('metodos')">💳 Métodos de Pago</div>
-        <div class="nav-item" onclick="goPage('validar')">✅ Validar Pagos</div>
+        <div class="nav-item" onclick="goPage('metodos')">💳 Métodos</div>
       </div>
-      
-      <div class="user-info" style="border-top: 1px solid var(--border); padding-top: 16px;">
-        <div class="user-avatar" id="avatar">G</div>
-        <div>
-          <div id="userName" style="font-size: 13px; font-weight: 600;">Gustavo</div>
-          <div id="userRole" style="font-size: 11px; color: var(--text2);">CEO</div>
-        </div>
+      <div style="border-top: 1px solid var(--border); padding-top: 16px; font-size: 12px;">
+        <div>👤 Gustavo</div>
+        <div style="color: var(--text2);">CEO</div>
       </div>
     </div>
     
-    <!-- MAIN -->
     <div class="main">
       <div class="header">
-        <h1 id="pageTitle">Dashboard</h1>
-        <button class="btn btn-secondary" onclick="logout()">Cerrar sesión</button>
+        <h1 id="title">Dashboard</h1>
+        <div id="status" style="font-size: 12px; color: var(--text2);">Cargando...</div>
       </div>
-      
       <div class="content" id="content">
-        <!-- CONTENIDO DINAMICO -->
+        <div class="loading">Cargando datos...</div>
       </div>
     </div>
   </div>
-  
-  <!-- MODALS -->
-  <div class="modal" id="modalVenta">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span>Registrar Venta</span>
-        <button class="modal-close" onclick="closeModal('modalVenta')">✕</button>
-      </div>
-      <div class="form-group">
-        <label>Monto USD *</label>
-        <input type="number" id="montoUSD" placeholder="20" step="0.01">
-      </div>
-      <div class="form-group">
-        <label>Moneda Real *</label>
-        <select id="moneda">
-          <option>VES — Bolívares</option>
-          <option>BRL — Reales</option>
-          <option>COP — Pesos</option>
-          <option>PEN — Soles</option>
-          <option>USD — Dólares</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Monto en Moneda Original *</label>
-        <input type="number" id="montoOriginal" placeholder="15600">
-      </div>
-      <div class="form-group">
-        <label>Método de Pago *</label>
-        <select id="metodoPago">
-          <option>Seleccionar...</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>¿Compra de Tercero?</label>
-        <select id="compra3ro" onchange="toggleCompra3ro()">
-          <option value="no">No</option>
-          <option value="si">Sí</option>
-        </select>
-      </div>
-      <div id="receptor3ro" class="hidden">
-        <div class="form-group">
-          <label>Nombre Receptor *</label>
-          <input type="text" id="receptorNombre" placeholder="Juan">
-        </div>
-        <div class="form-group">
-          <label>Apellido Receptor *</label>
-          <input type="text" id="receptorApellido" placeholder="Pérez">
-        </div>
-        <div class="form-group">
-          <label>Email Receptor *</label>
-          <input type="email" id="receptorEmail" placeholder="juan@email.com">
-        </div>
-        <div class="form-group">
-          <label>Teléfono Receptor</label>
-          <input type="tel" id="receptorTelefono" placeholder="+58 412 1234567">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Comprobante de Pago</label>
-        <input type="file" id="comprobante" accept="image/*">
-      </div>
-      <button class="btn btn-primary" onclick="saveVenta()" style="width: 100%;">Guardar Venta</button>
-    </div>
-  </div>
-  
+
   <script>
-    // ==========================================
-    // CONFIG
-    // ==========================================
-    
-    const API_URL = 'https://script.google.com/macros/s/AKfycbw8_GaePGBApyItnCntfT_wh_lFj6uhaL9LEM70BAQy1qqcnN5krXBbnEi08BbBX-8aRA/exec';
-    
-    let USER = { email: 'gustavo@tradestars.com', nombre: 'Gustavo', rol: 'CEO', equipo: null };
+    const CSV_VENTAS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=0';
+    const CSV_CLOSERS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=1837437345';
+    const CSV_METODOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=878625665';
+    const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbxBSjNAXmSZYhBiOMTzul8rbfu1XDAsn3zR7Uu2v33Qpr9uRShEdqeErJzb7ghDvoTBdQ/exec';
+
     let VENTAS = [];
     let CLOSERS = [];
     let METODOS = [];
-    let CURRENT_PAGE = 'dashboard';
-    
-    // ==========================================
-    // MAIN
-    // ==========================================
-    
-    window.addEventListener('load', () => {
-      loadData();
-      goPage('dashboard');
-      updateUI();
-    });
-    
-    async function loadData() {
+
+    async function loadCSV(url) {
       try {
-        const ventasRes = await apiCall('getVentas');
-        const closersRes = await apiCall('getClosers');
-        const metodosRes = await apiCall('getMetodos');
-        
-        VENTAS = ventasRes.data || [];
-        CLOSERS = closersRes.data || [];
-        METODOS = metodosRes.data || [];
-        
-        console.log('✅ Datos cargados:', { VENTAS, CLOSERS, METODOS });
-      } catch (err) {
-        console.error('❌ Error cargando:', err);
-        toast('Error cargando datos', 'error');
+        const response = await fetch(url);
+        const text = await response.text();
+        const lines = text.trim().split('\n');
+        const headers = lines[0].split(',');
+        const data = lines.slice(1).map(line => line.split(','));
+        return data;
+      } catch(err) {
+        console.error('Error cargando CSV:', err);
+        return [];
       }
     }
-    
-    async function apiCall(action, data = {}) {
-      return new Promise((resolve, reject) => {
-        const params = new URLSearchParams();
-        params.append('action', action);
-        params.append('data', JSON.stringify(data));
-        params.append('callback', 'apiCallback_' + Date.now());
-        
-        const url = API_URL + '?' + params.toString();
-        
-        window['apiCallback_' + Date.now()] = (result) => {
-          delete window['apiCallback_' + Date.now()];
-          if (result.success === false) {
-            reject(new Error(result.error || 'Error desconocido'));
-          } else {
-            resolve(result);
-          }
-        };
-        
-        const script = document.createElement('script');
-        script.src = url;
-        script.onerror = () => reject(new Error('Error en la petición'));
-        document.head.appendChild(script);
-        
-        setTimeout(() => {
-          document.head.removeChild(script);
-          reject(new Error('Timeout'));
-        }, 10000);
-      });
+
+    async function loadData() {
+      try {
+        VENTAS = await loadCSV(CSV_VENTAS);
+        CLOSERS = await loadCSV(CSV_CLOSERS);
+        METODOS = await loadCSV(CSV_METODOS);
+        document.getElementById('status').textContent = '✅ Sincronizado';
+        console.log('✅ Datos cargados:', {VENTAS, CLOSERS, METODOS});
+      } catch(err) {
+        console.error('Error:', err);
+        document.getElementById('status').textContent = '❌ Error';
+      }
     }
-    
-    // ==========================================
-    // NAVIGATION
-    // ==========================================
-    
+
     function goPage(page) {
-      CURRENT_PAGE = page;
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      event.target?.classList.add('active');
+      event.target.classList.add('active');
       
-      const titles = {
-        'dashboard': 'Dashboard',
-        'ventas': 'Ventas',
-        'registrar-venta': 'Registrar Venta',
-        'closers': 'Closers',
-        'metodos': 'Métodos de Pago',
-        'validar': 'Validar Pagos'
-      };
-      
-      document.getElementById('pageTitle').textContent = titles[page] || 'Página';
+      const titles = { dashboard: 'Dashboard', ventas: 'Ventas', registrar: 'Registrar Venta', closers: 'Closers', metodos: 'Métodos' };
+      document.getElementById('title').textContent = titles[page] || 'Página';
       
       switch(page) {
         case 'dashboard': renderDashboard(); break;
         case 'ventas': renderVentas(); break;
-        case 'registrar-venta': openModal('modalVenta'); break;
+        case 'registrar': renderRegistrar(); break;
         case 'closers': renderClosers(); break;
         case 'metodos': renderMetodos(); break;
-        case 'validar': renderValidar(); break;
       }
     }
-    
-    // ==========================================
-    // PAGES
-    // ==========================================
-    
+
     function renderDashboard() {
-      const ventas = VENTAS.length;
+      const total = VENTAS.length;
       const dinero = VENTAS.reduce((s, v) => s + (parseFloat(v[4]) || 0), 0);
       const validadas = VENTAS.filter(v => v[9] === 'VALIDADA').length;
-      const conversion = ventas > 0 ? Math.round(validadas / ventas * 100) : 0;
+      const conv = total > 0 ? Math.round(validadas / total * 100) : 0;
       
       let html = `
         <div class="grid">
           <div class="stat-card">
             <div class="stat-label">Total Ventas</div>
-            <div class="stat-value">${ventas}</div>
+            <div class="stat-value">${total}</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Total Recaudado</div>
-            <div class="stat-value">$${dinero.toLocaleString('es-ES', {maximumFractionDigits: 2})}</div>
+            <div class="stat-label">Recaudado USD</div>
+            <div class="stat-value">$${dinero.toFixed(2)}</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Validadas</div>
@@ -638,7 +145,7 @@
           </div>
           <div class="stat-card">
             <div class="stat-label">Conversión</div>
-            <div class="stat-value">${conversion}%</div>
+            <div class="stat-value">${conv}%</div>
           </div>
         </div>
         
@@ -646,22 +153,14 @@
         <div class="card">
           ${VENTAS.length === 0 ? '<div class="empty">Sin ventas</div>' : `
             <table class="table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Fecha</th>
-                  <th>Closer</th>
-                  <th>Monto USD</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
+              <thead><tr><th>ID</th><th>Fecha</th><th>Closer</th><th>Monto</th><th>Estado</th></tr></thead>
               <tbody>
-                ${VENTAS.slice(-10).reverse().map(v => `
+                ${VENTAS.slice(-5).reverse().map(v => `
                   <tr>
                     <td>${v[0]}</td>
-                    <td>${new Date(v[1]).toLocaleDateString('es-ES')}</td>
+                    <td>${v[1]}</td>
                     <td>${v[2]}</td>
-                    <td>$${parseFloat(v[4]).toLocaleString('es-ES', {maximumFractionDigits: 2})}</td>
+                    <td>$${parseFloat(v[4]).toFixed(2)}</td>
                     <td><span class="badge ${v[9] === 'VALIDADA' ? 'badge-success' : 'badge-warning'}">${v[9]}</span></td>
                   </tr>
                 `).join('')}
@@ -670,37 +169,24 @@
           `}
         </div>
       `;
-      
       document.getElementById('content').innerHTML = html;
     }
-    
+
     function renderVentas() {
       let html = `
         <div class="card">
           ${VENTAS.length === 0 ? '<div class="empty">Sin ventas</div>' : `
             <table class="table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Fecha</th>
-                  <th>Closer</th>
-                  <th>Equipo</th>
-                  <th>Monto</th>
-                  <th>Moneda</th>
-                  <th>Método</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
+              <thead><tr><th>ID</th><th>Fecha</th><th>Closer</th><th>Equipo</th><th>Monto</th><th>Moneda</th><th>Estado</th></tr></thead>
               <tbody>
                 ${VENTAS.map(v => `
                   <tr>
                     <td>${v[0]}</td>
-                    <td>${new Date(v[1]).toLocaleDateString('es-ES')}</td>
+                    <td>${v[1]}</td>
                     <td>${v[2]}</td>
                     <td>${v[3]}</td>
-                    <td>$${parseFloat(v[4]).toLocaleString('es-ES', {maximumFractionDigits: 2})}</td>
+                    <td>$${parseFloat(v[4]).toFixed(2)}</td>
                     <td>${v[5]}</td>
-                    <td>${v[7]}</td>
                     <td><span class="badge ${v[9] === 'VALIDADA' ? 'badge-success' : 'badge-warning'}">${v[9]}</span></td>
                   </tr>
                 `).join('')}
@@ -709,200 +195,99 @@
           `}
         </div>
       `;
-      
       document.getElementById('content').innerHTML = html;
     }
-    
+
+    function renderRegistrar() {
+      let html = `
+        <div class="card" style="max-width: 500px;">
+          <div style="font-weight: 600; margin-bottom: 16px;">Registrar Venta</div>
+          <div style="display: grid; gap: 12px;">
+            <input type="number" placeholder="Monto USD" id="montoUSD">
+            <input type="text" placeholder="Moneda (VES, BRL, etc)" id="moneda">
+            <input type="number" placeholder="Monto Original" id="montoOrig">
+            <input type="text" placeholder="Método Pago" id="metodo">
+            <button class="btn" onclick="saveVenta()" style="width: 100%;">Guardar Venta</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('content').innerHTML = html;
+    }
+
+    async function saveVenta() {
+      const monto = document.getElementById('montoUSD').value;
+      const moneda = document.getElementById('moneda').value;
+      const montoOrig = document.getElementById('montoOrig').value;
+      const metodo = document.getElementById('metodo').value;
+      
+      if (!monto || !moneda || !montoOrig || !metodo) {
+        toast('Completa todos los campos', 'error');
+        return;
+      }
+      
+      try {
+        const id = 'V-' + Date.now();
+        const url = APPS_SCRIPT + '?action=createVenta&callback=cb&data=' + encodeURIComponent(JSON.stringify({
+          id, fecha: new Date().toISOString(), closerEmail: 'gustavo@tradestars.com',
+          equipo: 'comercial', montoUSD: monto, moneda, montoOriginal: montoOrig,
+          metodoPago: metodo, comprobante: '', estado: 'PENDIENTE', compra3ro: false
+        }));
+        
+        const script = document.createElement('script');
+        window.cb = (result) => {
+          if (result.success) {
+            toast('✅ Venta guardada');
+            document.getElementById('montoUSD').value = '';
+            document.getElementById('moneda').value = '';
+            document.getElementById('montoOrig').value = '';
+            document.getElementById('metodo').value = '';
+            loadData();
+          } else {
+            toast('Error: ' + result.error, 'error');
+          }
+          document.head.removeChild(script);
+        };
+        script.src = url;
+        document.head.appendChild(script);
+      } catch(err) {
+        toast('Error: ' + err.message, 'error');
+      }
+    }
+
     function renderClosers() {
       let html = `
-        <button class="btn btn-primary" onclick="openModalCloser()">+ Nuevo Closer</button>
-        <div style="margin-top: 16px;">
-          ${CLOSERS.length === 0 ? '<div class="empty">Sin closers</div>' : `
-            <div class="grid">
-              ${CLOSERS.filter(c => c[5] === 'Activo').map(c => `
-                <div class="card">
-                  <div style="display: flex; gap: 12px; align-items: flex-start;">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #4f46e5, #7c3aed); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">${(c[2]||'?')[0].toUpperCase()}</div>
-                    <div style="flex: 1;">
-                      <div style="font-weight: 600;">${c[2]} ${c[3]}</div>
-                      <div style="font-size: 12px; color: var(--text2);">${c[1]}</div>
-                      <div style="font-size: 12px; color: var(--text2); margin-top: 4px;">Equipo: <strong>${c[4]}</strong></div>
-                    </div>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          `}
-        </div>
-      `;
-      
-      document.getElementById('content').innerHTML = html;
-    }
-    
-    function renderMetodos() {
-      let html = `
-        <button class="btn btn-primary" onclick="openModalMetodo()">+ Nuevo Método</button>
-        <div style="margin-top: 16px;">
-          ${METODOS.length === 0 ? '<div class="empty">Sin métodos</div>' : `
-            <div>
-              ${METODOS.map(m => `
-                <div class="card">
-                  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-                    <div>
-                      <div style="font-weight: 600;">${m[2]}</div>
-                      <div style="font-size: 12px; color: var(--text2);">${m[3]} • ${m[1]}</div>
-                    </div>
-                  </div>
-                  <div style="font-size: 12px; padding: 8px; background: var(--bg3); border-radius: 4px; color: var(--text2); font-family: monospace;">
-                    ${m[4]}
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          `}
-        </div>
-      `;
-      
-      document.getElementById('content').innerHTML = html;
-    }
-    
-    function renderValidar() {
-      const pendientes = VENTAS.filter(v => v[9] === 'PENDIENTE');
-      
-      let html = `
-        ${pendientes.length === 0 ? '<div class="empty"><div class="empty-icon">✅</div><p>No hay ventas pendientes</p></div>' : `
-          <div>
-            ${pendientes.map(v => `
+        ${CLOSERS.length === 0 ? '<div class="empty">Sin closers</div>' : `
+          <div class="grid">
+            ${CLOSERS.map(c => `
               <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-                  <div>
-                    <div style="font-weight: 600;">${v[2]}</div>
-                    <div style="font-size: 12px; color: var(--text2);">${new Date(v[1]).toLocaleDateString('es-ES')}</div>
-                  </div>
-                  <span class="badge badge-warning">PENDIENTE</span>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                  <div>
-                    <div style="font-size: 11px; color: var(--text2); text-transform: uppercase;">Monto</div>
-                    <div style="font-weight: 600;">$${parseFloat(v[4]).toLocaleString('es-ES', {maximumFractionDigits: 2})}</div>
-                  </div>
-                  <div>
-                    <div style="font-size: 11px; color: var(--text2); text-transform: uppercase;">Método</div>
-                    <div style="font-weight: 600;">${v[7]}</div>
-                  </div>
-                </div>
-                <button class="btn btn-success" onclick="validateVenta('${v[0]}')" style="width: 100%; margin-bottom: 8px;">✓ Validar</button>
-                <button class="btn btn-danger" style="width: 100%;">✕ Rechazar</button>
+                <div style="font-weight: 600;">${c[2]} ${c[3]}</div>
+                <div style="font-size: 12px; color: var(--text2);">${c[1]}</div>
+                <div style="font-size: 12px; color: var(--text2); margin-top: 4px;">Equipo: <strong>${c[4]}</strong></div>
+                <div style="font-size: 12px; color: var(--text2); margin-top: 4px;">Estado: ${c[5]}</div>
               </div>
             `).join('')}
           </div>
         `}
       `;
-      
       document.getElementById('content').innerHTML = html;
     }
-    
-    // ==========================================
-    // ACCIONES
-    // ==========================================
-    
-    async function saveVenta() {
-      const montoUSD = parseFloat(document.getElementById('montoUSD').value);
-      const moneda = document.getElementById('moneda').value;
-      const montoOriginal = parseFloat(document.getElementById('montoOriginal').value);
-      const metodoPago = document.getElementById('metodoPago').value;
-      const compra3ro = document.getElementById('compra3ro').value === 'si';
-      
-      if (!montoUSD || !moneda || !montoOriginal || !metodoPago) {
-        toast('Completa todos los campos obligatorios', 'error');
-        return;
-      }
-      
-      try {
-        const data = {
-          closerEmail: USER.email,
-          equipo: USER.equipo || 'comercial',
-          montoUSD,
-          moneda,
-          montoOriginal,
-          metodoPago,
-          compra3ro,
-          receptorNombre: document.getElementById('receptorNombre').value || '',
-          receptorEmail: document.getElementById('receptorEmail').value || '',
-          receptorTelefono: document.getElementById('receptorTelefono').value || ''
-        };
-        
-        await apiCall('createVenta', data);
-        toast('✅ Venta registrada', 'success');
-        closeModal('modalVenta');
-        await loadData();
-        renderDashboard();
-      } catch (err) {
-        toast('Error: ' + err.message, 'error');
-      }
+
+    function renderMetodos() {
+      let html = `
+        ${METODOS.length === 0 ? '<div class="empty">Sin métodos</div>' : `
+          <div>
+            ${METODOS.map(m => `
+              <div class="card">
+                <div style="font-weight: 600;">${m[2]}</div>
+                <div style="font-size: 12px; color: var(--text2);">${m[3]} • ${m[1]}</div>
+              </div>
+            `).join('')}
+          </div>
+        `}
+      `;
+      document.getElementById('content').innerHTML = html;
     }
-    
-    async function validateVenta(id) {
-      try {
-        await apiCall('validateVenta', { id });
-        toast('✅ Venta validada', 'success');
-        await loadData();
-        renderValidar();
-      } catch (err) {
-        toast('Error: ' + err.message, 'error');
-      }
-    }
-    
-    function toggleCompra3ro() {
-      const valor = document.getElementById('compra3ro').value;
-      document.getElementById('receptor3ro').classList.toggle('hidden', valor !== 'si');
-    }
-    
-    function openModalCloser() {
-      const nombre = prompt('Nombre:');
-      if (!nombre) return;
-      const apellido = prompt('Apellido:');
-      const email = prompt('Email:');
-      const equipo = prompt('Equipo (comercial/revenue):');
-      
-      if (nombre && email && equipo) {
-        apiCall('createCloser', { nombre, apellido, email, equipo })
-          .then(() => {
-            toast('✅ Closer creado', 'success');
-            loadData();
-          })
-          .catch(err => toast('Error: ' + err.message, 'error'));
-      }
-    }
-    
-    function openModalMetodo() {
-      const nombre = prompt('Nombre:');
-      if (!nombre) return;
-      const tipo = prompt('Tipo (Banco/Crypto/etc):');
-      const pais = prompt('País:');
-      
-      if (nombre && tipo && pais) {
-        apiCall('createMetodo', { nombre, tipo, pais, datos: {} })
-          .then(() => {
-            toast('✅ Método creado', 'success');
-            loadData();
-          })
-          .catch(err => toast('Error: ' + err.message, 'error'));
-      }
-    }
-    
-    // ==========================================
-    // HELPERS
-    // ==========================================
-    
-    function openModal(id) {
-      document.getElementById(id).classList.add('active');
-    }
-    
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('active');
-    }
-    
+
     function toast(msg, type = 'success') {
       const el = document.createElement('div');
       el.className = 'toast ' + (type === 'error' ? 'error' : '');
@@ -910,18 +295,11 @@
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 3000);
     }
-    
-    function updateUI() {
-      document.getElementById('avatar').textContent = (USER.nombre || 'U')[0];
-      document.getElementById('userName').textContent = USER.nombre;
-      document.getElementById('userRole').textContent = USER.rol;
-    }
-    
-    function logout() {
-      if (confirm('¿Cerrar sesión?')) {
-        location.reload();
-      }
-    }
+
+    // INIT
+    loadData();
+    goPage('dashboard');
+    setInterval(loadData, 5000); // Sincronizar cada 5 segundos
   </script>
 </body>
 </html>
