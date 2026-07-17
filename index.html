@@ -193,6 +193,9 @@ input,select,button{font-family:'Outfit',sans-serif;}
       <button class="nav-btn" id="nb-metodos" onclick="navTo('metodos')">
         <span class="ic">💳</span>Métodos
       </button>
+      <button class="nav-btn" id="nb-productos" onclick="navTo('productos')">
+        <span class="ic">📦</span>Productos
+      </button>
       <button class="nav-btn" id="nb-validar" onclick="navTo('validar')" style="display:none;">
         <span class="ic">✓</span>Validar
       </button>
@@ -376,14 +379,20 @@ input,select,button{font-family:'Outfit',sans-serif;}
         <div id="paso-2-venta" class="paso-venta" style="display:none;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
             <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Closer *</label>
-              <input type="text" id="form-venta-closer" placeholder="Nombre del closer" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Fuente de Venta *</label>
+              <select id="form-venta-fuente" onchange="cambiarFuenteProducto()" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+                <option value="">Seleccionar...</option>
+                <option value="perpetuo">Perpetuo</option>
+                <option value="lanzamiento">Lanzamiento</option>
+                <option value="redes">Redes Sociales</option>
+                <option value="referido">Referido</option>
+                <option value="otro">Otro</option>
+              </select>
             </div>
             <div>
-              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Equipo *</label>
-              <select id="form-venta-equipo" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-                <option value="comercial">Comercial</option>
-                <option value="revenue">Revenue</option>
+              <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Producto *</label>
+              <select id="form-venta-producto" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+                <option value="">Seleccionar fuente primero</option>
               </select>
             </div>
           </div>
@@ -525,7 +534,55 @@ input,select,button{font-family:'Outfit',sans-serif;}
       </div>
     </section>
 
-    <!-- ── VALIDAR PAGOS ── -->
+    <!-- ── PRODUCTOS ── -->
+    <section class="page" id="sec-productos">
+      <div class="ph">
+        <h1>📦 Productos</h1>
+        <p>Gestionar Perpetuos y Lanzamientos</p>
+      </div>
+      
+      <!-- PERPETUOS -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="ctitle">♾️ Perpetuos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre Perpetuo</label>
+            <input type="text" id="form-perpetuo-nombre" placeholder="Ej: Plan Premium" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
+            <select id="form-perpetuo-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="guardarPerpetuo()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Perpetuo</button>
+        <div id="msg-perpetuo" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
+        <div id="perpetuosContent" style="margin-top:16px;"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+
+      <!-- LANZAMIENTOS -->
+      <div class="card">
+        <div class="ctitle">🚀 Lanzamientos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Nombre Lanzamiento</label>
+            <input type="text" id="form-lanzamiento-nombre" placeholder="Ej: Curso Python 2024" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:6px;">Estado</label>
+            <select id="form-lanzamiento-estado" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="guardarLanzamiento()" style="padding:12px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Guardar Lanzamiento</button>
+        <div id="msg-lanzamiento" style="margin-top:12px;padding:10px;border-radius:8px;display:none;"></div>
+        <div id="lanzamientosContent" style="margin-top:16px;"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+    </section>
     <section class="page" id="sec-validar">
       <div class="ph">
         <h1>✓ Validar Pagos</h1>
@@ -546,6 +603,8 @@ const CSV_USUARIOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5e
 const CSV_VENTAS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=0';
 const CSV_CLOSERS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=1837437345';
 const CSV_METODOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=878625665';
+const CSV_PERPETUOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=1175362657';
+const CSV_LANZAMIENTOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6p8RVY5emhNgjqFlN3s3fVQ3vPDNfQ8UpTZz47RXvhjY3pWmq1VfummfS3tDjqm3kjW_sInC7rHCm/pub?output=csv&gid=656087647';
 
 // ════ APPS SCRIPT ════
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJGvgCRmXMHj4c7WU42VqsFSQdBtBWgjLwZqB70RY89cgvB9G3R2m8OSgFtlRbMTIb6A/exec';
@@ -556,6 +615,8 @@ let USUARIOS = [];
 let VENTAS = [];
 let CLOSERS = [];
 let METODOS = [];
+let PERPETUOS = [];
+let LANZAMIENTOS = [];
 
 // ════ CSV LOADER ════
 async function loadCSV(url) {
@@ -575,6 +636,8 @@ async function loadData() {
   VENTAS = await loadCSV(CSV_VENTAS);
   CLOSERS = await loadCSV(CSV_CLOSERS);
   METODOS = await loadCSV(CSV_METODOS);
+  PERPETUOS = await loadCSV(CSV_PERPETUOS);
+  LANZAMIENTOS = await loadCSV(CSV_LANZAMIENTOS);
 }
 
 // ════ AUTH ════
@@ -642,6 +705,7 @@ function navTo(page) {
   else if (page === 'ventas') renderVentas();
   else if (page === 'closers') renderClosers();
   else if (page === 'metodos') renderMetodos();
+  else if (page === 'productos') { renderPerpetues(); renderLanzamientos(); }
   else if (page === 'validar') renderValidar();
 }
 
@@ -861,11 +925,18 @@ async function guardarVentaCompleta() {
     }
   }
 
-  // Validar venta
-  const closer = document.getElementById('form-venta-closer').value.trim();
+  // Validar venta - NUEVA ESTRUCTURA
+  const fuente = document.getElementById('form-venta-fuente').value;
+  const producto = document.getElementById('form-venta-producto').value;
   const monto = document.getElementById('form-venta-monto').value;
-  if (!closer || !monto) {
-    mostrarMensajVenta('❌ Faltan datos de la venta', false);
+  
+  if (!fuente || !monto) {
+    mostrarMensajVenta('❌ Completa Fuente y Monto', false);
+    return;
+  }
+  
+  if ((fuente === 'perpetuo' || fuente === 'lanzamiento') && !producto) {
+    mostrarMensajVenta('❌ Selecciona un producto', false);
     return;
   }
 
@@ -887,6 +958,133 @@ async function guardarVentaCompleta() {
     return new Promise((resolve) => {
       reader.onload = async function() {
         comprobantBase64 = reader.result;
+        
+        // Guardar venta
+        const payload = new FormData();
+        payload.append('action', 'crearVenta');
+        payload.append('id', 'V-' + Date.now());
+        payload.append('fecha', document.getElementById('form-venta-fecha').value || new Date().toISOString().split('T')[0]);
+        payload.append('closer', CU.nombre || CU.email); // El closer es el usuario logueado
+        payload.append('equipo', CU.rol === 'lider_comercial' ? 'comercial' : (CU.rol === 'lider_revenue' ? 'revenue' : 'comercial'));
+        payload.append('monto', monto);
+        payload.append('estado', 'PENDIENTE');
+        payload.append('clienteNombre', nombre);
+        payload.append('clienteEmail', email);
+        payload.append('fuente', fuente);
+        payload.append('producto', producto);
+        payload.append('esTercero', esTercero ? 'SÍ' : 'NO');
+        
+        if (esTercero) {
+          payload.append('beneficiarioNombre', beneficiarioNombre);
+          payload.append('beneficiarioEmail', beneficiarioEmail);
+        }
+        
+        if (comprobantBase64) {
+          payload.append('comprobante', comprobantBase64);
+          payload.append('nombreArchivo', nombreArchivo);
+        }
+        
+        try {
+          const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
+          const result = await response.json();
+          
+          if (result.ok) {
+            mostrarMensajVenta('✅ Venta guardada correctamente', true);
+            
+            // Limpiar formulario
+            document.getElementById('form-cliente-nombre').value = '';
+            document.getElementById('form-cliente-apellido').value = '';
+            document.getElementById('form-cliente-email').value = '';
+            document.getElementById('form-cliente-telefono').value = '';
+            document.getElementById('form-cliente-pais').value = '';
+            document.getElementById('toggle-tercero').checked = false;
+            document.getElementById('form-beneficiario-nombre').value = '';
+            document.getElementById('form-beneficiario-apellido').value = '';
+            document.getElementById('form-beneficiario-email').value = '';
+            document.getElementById('form-beneficiario-telefono').value = '';
+            document.getElementById('seccion-beneficiario').style.display = 'none';
+            document.getElementById('form-venta-fuente').value = '';
+            document.getElementById('form-venta-producto').value = '';
+            document.getElementById('form-venta-monto').value = '';
+            document.getElementById('form-venta-fecha').value = '';
+            document.getElementById('form-pago-metodo').value = '';
+            document.getElementById('form-pago-comprobante').value = '';
+            document.getElementById('form-pago-notas').value = '';
+            limpiarComprobante();
+            
+            // Volver al paso 1
+            setTimeout(() => { cambiarPasoventa(1); loadData(); renderDash(); }, 2000);
+          } else {
+            mostrarMensajVenta('❌ Error: ' + (result.error || 'desconocido'), false);
+          }
+        } catch (e) {
+          mostrarMensajVenta('❌ Error de conexión: ' + e.message, false);
+        }
+        
+        resolve();
+      };
+      
+      reader.readAsDataURL(archivoComprobante);
+    });
+  } else {
+    // Sin archivo, guardar normalmente
+    const payload = new FormData();
+    payload.append('action', 'crearVenta');
+    payload.append('id', 'V-' + Date.now());
+    payload.append('fecha', document.getElementById('form-venta-fecha').value || new Date().toISOString().split('T')[0]);
+    payload.append('closer', CU.nombre || CU.email);
+    payload.append('equipo', CU.rol === 'lider_comercial' ? 'comercial' : (CU.rol === 'lider_revenue' ? 'revenue' : 'comercial'));
+    payload.append('monto', monto);
+    payload.append('estado', 'PENDIENTE');
+    payload.append('clienteNombre', nombre);
+    payload.append('clienteEmail', email);
+    payload.append('fuente', fuente);
+    payload.append('producto', producto);
+    payload.append('esTercero', esTercero ? 'SÍ' : 'NO');
+    
+    if (esTercero) {
+      payload.append('beneficiarioNombre', beneficiarioNombre);
+      payload.append('beneficiarioEmail', beneficiarioEmail);
+    }
+
+    try {
+      const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
+      const result = await response.json();
+      
+      if (result.ok) {
+        mostrarMensajVenta('✅ Venta guardada correctamente', true);
+        
+        // Limpiar formulario
+        document.getElementById('form-cliente-nombre').value = '';
+        document.getElementById('form-cliente-apellido').value = '';
+        document.getElementById('form-cliente-email').value = '';
+        document.getElementById('form-cliente-telefono').value = '';
+        document.getElementById('form-cliente-pais').value = '';
+        document.getElementById('toggle-tercero').checked = false;
+        document.getElementById('form-beneficiario-nombre').value = '';
+        document.getElementById('form-beneficiario-apellido').value = '';
+        document.getElementById('form-beneficiario-email').value = '';
+        document.getElementById('form-beneficiario-telefono').value = '';
+        document.getElementById('seccion-beneficiario').style.display = 'none';
+        document.getElementById('form-venta-fuente').value = '';
+        document.getElementById('form-venta-producto').value = '';
+        document.getElementById('form-venta-monto').value = '';
+        document.getElementById('form-venta-fecha').value = '';
+        document.getElementById('form-pago-metodo').value = '';
+        document.getElementById('form-pago-comprobante').value = '';
+        document.getElementById('form-pago-notas').value = '';
+        limpiarComprobante();
+        
+        // Volver al paso 1
+        setTimeout(() => { cambiarPasoventa(1); loadData(); renderDash(); }, 2000);
+      } else {
+        mostrarMensajVenta('❌ Error: ' + (result.error || 'desconocido'), false);
+      }
+    } catch (e) {
+      mostrarMensajVenta('❌ Error de conexión: ' + e.message, false);
+    }
+  }
+}
         
         // Guardar venta
         const payload = new FormData();
@@ -1016,6 +1214,168 @@ function mostrarMensajVenta(msg, ok) {
   el.style.color = ok ? '#4ade80' : '#f87171';
   el.style.display = 'block';
   setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+// ════ PRODUCTOS ════
+function cambiarFuenteProducto() {
+  const fuente = document.getElementById('form-venta-fuente').value;
+  const selectProducto = document.getElementById('form-venta-producto');
+  
+  selectProducto.innerHTML = '';
+  
+  if (fuente === 'perpetuo') {
+    const activos = PERPETUOS.filter(p => p[1] === 'Activo');
+    selectProducto.innerHTML = '<option value="">Seleccionar perpetuo...</option>' +
+      activos.map(p => `<option value="${p[0]}">${p[0]}</option>`).join('');
+  } else if (fuente === 'lanzamiento') {
+    const activos = LANZAMIENTOS.filter(l => l[1] === 'Activo');
+    selectProducto.innerHTML = '<option value="">Seleccionar lanzamiento...</option>' +
+      activos.map(l => `<option value="${l[0]}">${l[0]}</option>`).join('');
+  } else {
+    selectProducto.innerHTML = '<option value="">No requiere producto</option>';
+  }
+}
+
+async function guardarPerpetuo() {
+  const nombre = document.getElementById('form-perpetuo-nombre').value.trim();
+  const estado = document.getElementById('form-perpetuo-estado').value;
+  const msg = document.getElementById('msg-perpetuo');
+
+  if (!nombre) {
+    msg.style.background = 'rgba(239,68,68,.15)';
+    msg.style.color = '#f87171';
+    msg.textContent = '❌ Completa el nombre';
+    msg.style.display = 'block';
+    return;
+  }
+
+  const payload = new FormData();
+  payload.append('action', 'crearPerpetuo');
+  payload.append('nombre', nombre);
+  payload.append('estado', estado);
+
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
+    const result = await response.json();
+    
+    if (result.ok) {
+      msg.style.background = 'rgba(34,197,94,.15)';
+      msg.style.color = '#4ade80';
+      msg.textContent = '✅ Perpetuo guardado';
+      msg.style.display = 'block';
+      
+      document.getElementById('form-perpetuo-nombre').value = '';
+      setTimeout(() => { msg.style.display = 'none'; loadData(); renderPerpetues(); }, 2000);
+    } else {
+      msg.style.background = 'rgba(239,68,68,.15)';
+      msg.style.color = '#f87171';
+      msg.textContent = '❌ Error: ' + result.error;
+      msg.style.display = 'block';
+    }
+  } catch (e) {
+    msg.style.background = 'rgba(239,68,68,.15)';
+    msg.style.color = '#f87171';
+    msg.textContent = '❌ Error: ' + e.message;
+    msg.style.display = 'block';
+  }
+}
+
+async function guardarLanzamiento() {
+  const nombre = document.getElementById('form-lanzamiento-nombre').value.trim();
+  const estado = document.getElementById('form-lanzamiento-estado').value;
+  const msg = document.getElementById('msg-lanzamiento');
+
+  if (!nombre) {
+    msg.style.background = 'rgba(239,68,68,.15)';
+    msg.style.color = '#f87171';
+    msg.textContent = '❌ Completa el nombre';
+    msg.style.display = 'block';
+    return;
+  }
+
+  const payload = new FormData();
+  payload.append('action', 'crearLanzamiento');
+  payload.append('nombre', nombre);
+  payload.append('estado', estado);
+
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: payload });
+    const result = await response.json();
+    
+    if (result.ok) {
+      msg.style.background = 'rgba(34,197,94,.15)';
+      msg.style.color = '#4ade80';
+      msg.textContent = '✅ Lanzamiento guardado';
+      msg.style.display = 'block';
+      
+      document.getElementById('form-lanzamiento-nombre').value = '';
+      setTimeout(() => { msg.style.display = 'none'; loadData(); renderLanzamientos(); }, 2000);
+    } else {
+      msg.style.background = 'rgba(239,68,68,.15)';
+      msg.style.color = '#f87171';
+      msg.textContent = '❌ Error: ' + result.error;
+      msg.style.display = 'block';
+    }
+  } catch (e) {
+    msg.style.background = 'rgba(239,68,68,.15)';
+    msg.style.color = '#f87171';
+    msg.textContent = '❌ Error: ' + e.message;
+    msg.style.display = 'block';
+  }
+}
+
+function renderPerpetues() {
+  const content = document.getElementById('perpetuosContent');
+  if (PERPETUOS.length === 0) {
+    content.innerHTML = '<div class="empty"><div class="ei">♾️</div><p>Sin perpetuos registrados</p></div>';
+    return;
+  }
+
+  content.innerHTML = `
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${PERPETUOS.map(p => `
+          <tr>
+            <td><strong>${p[0]}</strong></td>
+            <td><span class="badge">${p[1]}</span></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderLanzamientos() {
+  const content = document.getElementById('lanzamientosContent');
+  if (LANZAMIENTOS.length === 0) {
+    content.innerHTML = '<div class="empty"><div class="ei">🚀</div><p>Sin lanzamientos registrados</p></div>';
+    return;
+  }
+
+  content.innerHTML = `
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${LANZAMIENTOS.map(l => `
+          <tr>
+            <td><strong>${l[0]}</strong></td>
+            <td><span class="badge">${l[1]}</span></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
 }
 
 function renderValidar() {
