@@ -163,6 +163,7 @@ let CLOSERS = [];
 let METODOS = [];
 let PERPETUOS = [];
 let LANZAMIENTOS = [];
+let dataLoaded = false; // Flag para saber si los datos están cargados
 
 // ════ CSV LOADER ════
 async function loadCSV(url) {
@@ -184,6 +185,7 @@ async function loadData() {
   METODOS = await loadCSV(CSV_METODOS);
   PERPETUOS = await loadCSV(CSV_PERPETUOS);
   LANZAMIENTOS = await loadCSV(CSV_LANZAMIENTOS);
+  dataLoaded = true; // ✅ Marcar que los datos están listos
 }
 
 // ════ AUTH ════
@@ -197,6 +199,14 @@ async function doLogin() {
     err.textContent = 'Completa email y contraseña.';
     err.style.display = 'block';
     return;
+  }
+
+  // ✅ Esperar a que los datos se carguen si aún no están listos
+  if (!dataLoaded) {
+    err.textContent = 'Cargando datos... por favor espera.';
+    err.style.display = 'block';
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return doLogin(); // Reintentar
   }
 
   const user = USUARIOS.find(u => u[0] === email && u[2] === password);
