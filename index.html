@@ -689,6 +689,7 @@ window.verV=(id)=>{
     ${puedePagar?`<hr class="divider"><button class="btn btn-primary btn-full" onclick="openMPago('${v.id}')">+ Agregar pago parcial</button>`:''}
     ${vencida&&v.estadoPago==='PARCIAL'&&isLdr()?`<hr class="divider"><button class="btn btn-warning btn-full" onclick="openExtend('${v.id}')">📅 Extender fecha límite</button>`:''}
     ${vencida&&v.estadoPago==='PARCIAL'&&isClsr()?`<hr class="divider"><div class="alert ae">⚠️ El plazo de pago venció el ${fDate(v.fechaLimitePago)}. Contacta a tu líder para extender la fecha.</div>`:''}
+    ${ROLE==='gustavo'?`<hr class="divider"><button class="btn btn-danger btn-full" onclick="delVenta('${v.id}','${v.clienteNombre} ${v.clienteApellido||''}')">🗑 Eliminar venta permanentemente</button>`:''}
   `;
   openM('mVerV');
 };
@@ -821,6 +822,14 @@ window.confirmExtend=async()=>{
   await updateDoc(doc(db,'ventas',EXTEND_VID),{fechaLimitePago:f,notasFinanciero:`Fecha extendida al ${fDate(f)} — ${document.getElementById('extMotivo').value}`});
   const i=VENTAS.findIndex(x=>x.id===EXTEND_VID);VENTAS[i].fechaLimitePago=f;
   closeM('mExtend');closeM('mVerV');renderVentas();toast('📅 Fecha extendida correctamente','s');
+};
+window.delVenta=async(id,nombre)=>{
+  if(!confirm(`¿Eliminar PERMANENTEMENTE la venta de ${nombre}? Esta acción no se puede deshacer.`))return;
+  try{
+    await deleteDoc(doc(db,'ventas',id));
+    VENTAS=VENTAS.filter(v=>v.id!==id);
+    closeM('mVerV');renderVentas();renderDash();checkNotif();toast('🗑 Venta eliminada','s');
+  }catch(e){toast('Error: '+e.message,'e');}
 };
 function renderClientes(){
   const s=(document.getElementById('fCS')?.value||'').toLowerCase();
