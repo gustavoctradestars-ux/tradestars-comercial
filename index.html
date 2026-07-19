@@ -574,8 +574,14 @@ async function loadVentas(){
   else if(ROLE==='lider_comercial') q=query(collection(db,'ventas'),where('equipoCloser','==','comercial'),orderBy('fechaCreacion','desc'));
   else if(ROLE==='lider_revenue') q=query(collection(db,'ventas'),where('equipoCloser','==','revenue'),orderBy('fechaCreacion','desc'));
   else q=query(collection(db,'ventas'),orderBy('fechaCreacion','desc'));
-  const s=await getDocs(q);
-  VENTAS=s.docs.map(d=>({id:d.id,...d.data()}));
+  try{
+    const s=await getDocs(q);
+    VENTAS=s.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){
+    console.error('❌ Error cargando ventas:',e);
+    toast('⚠️ Error cargando ventas: '+e.message,'e');
+    VENTAS=[];
+  }
   renderDash();renderVentas();checkNotif();
 }
 async function loadClosers(){
@@ -1010,7 +1016,7 @@ window.togglePais=(id)=>{const content=document.getElementById('pc_'+id),toggle=
 window.copyText=(text)=>{navigator.clipboard.writeText(text);toast('Copiado al portapapeles','s');};
 window.cambiarFiltroEquipo=()=>{FILTRO_EQUIPO=document.getElementById('filtroEquipo').value||null;const sub=document.getElementById('dashSubtitle');if(FILTRO_EQUIPO==='comercial')sub.textContent='Resumen del equipo comercial';else if(FILTRO_EQUIPO==='revenue')sub.textContent='Resumen del equipo revenue';else sub.textContent='Resumen de todos los equipos';renderDash();};
 window.delCl=async(id,nombre)=>{if(!confirm(`¿Eliminar a ${nombre} del equipo? Esta acción no se puede deshacer.`))return;try{await deleteDoc(doc(db,'closers',id));CLOSERS=CLOSERS.filter(c=>c.id!==id);document.getElementById('fVC').querySelectorAll('option').forEach(opt=>{if(opt.value&&CLOSERS.every(c=>c.email!==opt.value))opt.remove();});renderClosers();renderLideres();toast('Miembro eliminado del sistema','s');}catch(e){toast('Error: '+e.message,'e');}};
-window.saveCreateLd=async()=>{const N=document.getElementById('ldN').value.trim(),A=document.getElementById('ldA').value.trim(),E=document.getElementById('ldE').value.trim(),R=document.getElementById('ldRol').value;if(!N||!E){toast('Nombre y correo obligatorios','e');return;}const btn=document.getElementById('btnCreateLd');btn.disabled=true;btn.textContent='Creando...';try{const {initializeApp:ia3}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js");const {getAuth:ga3,createUserWithEmailAndPassword:cu3,signOut:so3}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js");const a3=ia3(FC,'sec-'+Date.now());const au3=ga3(a3);await cu3(au3,E,'Tradestars2026*');await so3(au3);const data={nombre:N,apellido:A,email:E,rol:R,equipo:null,activo:true,fechaCreacion:new Date().toISOString()};const ref2=await addDoc(collection(db,'closers'),data);CLOSERS.push({id:ref2.id,...data});closeM('mCreateLd');renderClosers();renderLideres();toast(`✅ Líder ${N} creado`,'s');['ldN','ldA','ldE'].forEach(id=>document.getElementById(id).value='');}catch(e){toast('Error: '+e.message,'e');}finally{btn.disabled=false;btn.textContent='Crear líder';}};
+window.saveCreateLd=async()=>{const N=document.getElementById('ldN').value.trim(),A=document.getElementById('ldA').value.trim(),E=document.getElementById('ldE').value.trim(),R=document.getElementById('ldRol').value;if(!N||!E){toast('Nombre y correo obligatorios','e');return;}const btn=document.getElementById('btnCreateLd');btn.disabled=true;btn.textContent='Creando...';try{const {initializeApp:ia3}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js");const {getAuth:ga3,createUserWithEmailAndPassword:cu3,signOut:so3}=await import("https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js");const a3=ia3(FC,'sec-'+Date.now());const au3=ga3(a3);await cu3(au3,E,'Tradestars2026*');await so3(au3);const equipoLd=R==='lider_comercial'?'comercial':(R==='lider_revenue'?'revenue':null);const data={nombre:N,apellido:A,email:E,rol:R,equipo:equipoLd,activo:true,fechaCreacion:new Date().toISOString()};const ref2=await addDoc(collection(db,'closers'),data);CLOSERS.push({id:ref2.id,...data});closeM('mCreateLd');renderClosers();renderLideres();toast(`✅ Líder ${N} creado`,'s');['ldN','ldA','ldE'].forEach(id=>document.getElementById(id).value='');}catch(e){toast('Error: '+e.message,'e');}finally{btn.disabled=false;btn.textContent='Crear líder';}};
 window.editLd=(id,nombre,apellido)=>{EDIT_LD_ID=id;document.getElementById('elN').value=nombre;document.getElementById('elA').value=apellido;openM('mEditLd');};
 window.saveEditLd=async()=>{if(!EDIT_LD_ID)return;const N=document.getElementById('elN').value.trim(),A=document.getElementById('elA').value.trim();if(!N){toast('Nombre es requerido','e');return;}const btn=document.getElementById('btnEditLd');btn.disabled=true;try{await updateDoc(doc(db,'closers',EDIT_LD_ID),{nombre:N,apellido:A});const idx=CLOSERS.findIndex(c=>c.id===EDIT_LD_ID);if(idx>=0){CLOSERS[idx].nombre=N;CLOSERS[idx].apellido=A;}closeM('mEditLd');renderLideres();toast('✅ Líder actualizado','s');}catch(e){toast('Error: '+e.message,'e');}finally{btn.disabled=false;EDIT_LD_ID=null;}};
 window.checkDupAndNext=async()=>{
