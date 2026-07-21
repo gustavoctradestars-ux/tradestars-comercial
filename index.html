@@ -557,7 +557,7 @@ function setupNav(){
   if(canMng()){document.getElementById('snLz').style.display='flex';document.getElementById('snPerp').style.display='flex';document.getElementById('snCl').style.display='flex';}
   if(ROLE==='gustavo'){document.getElementById('snLd').style.display='flex';}
   if(['gustavo','lider_financiero'].includes(ROLE)){const btn=document.getElementById('btnNewMetodo');if(btn)btn.style.display='block';}
-  if(isClsr())document.getElementById('dMV').style.display='block';
+  if(isClsr()){document.getElementById('dMV').style.display='block';const fvc=document.getElementById('fVC');if(fvc)fvc.style.display='none';}
 }
 window.toggleCompra3ro=()=>{const el=document.getElementById('vReceptor'),check=document.getElementById('vCompra3ro').checked;el.style.display=check?'block':'none';if(!check){document.getElementById('vRN').value='';document.getElementById('vRA').value='';document.getElementById('vRC').value='';document.getElementById('vRT').value='';}};
 window.go=p=>{
@@ -585,6 +585,7 @@ async function loadVentas(){
   renderDash();renderVentas();checkNotif();
 }
 async function loadClosers(){
+  if(isClsr()){CLOSERS=[];return;}
   let q;
   if(ROLE==='lider_comercial') q=query(collection(db,'closers'),where('equipo','==','comercial'));
   else if(ROLE==='lider_revenue') q=query(collection(db,'closers'),where('equipo','==','revenue'));
