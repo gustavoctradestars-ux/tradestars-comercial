@@ -1142,7 +1142,7 @@ function bEst(e){const m={PENDIENTE:'by',VALIDADA:'bg',RECHAZADA:'br'};return `<
 function flbl(f){return {PERPETUO:'Perpetuo',LANZAMIENTO:'Lanzamiento',REDES_SOCIALES:'Redes Sociales',REFERIDO:'Referido',OTRO:'Otro'}[f]||f||'—';}
 function mlbl(m){return {BANCOLOMBIA:'Bancolombia',BCP_PERU:'BCP Perú',BANESCO_PANAMA:'Banesco Panamá',IFB_USA:'IFB USA',ZELLE:'Zelle',BANCO_VENEZUELA:'Banco Venezuela',CIELO_BRASIL:'Cielo',BRADESCO:'Bradesco',CRYPTO:'Crypto',HOTMART:'Hotmart',PAYPAL:'PayPal',OTRO:'Otro'}[m]||m||'—';}
 function fDate(d){if(!d)return '—';try{return new Date(d+(d.length===10?'T12:00':'')).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'});}catch{return d;}}
-function fmt(n){return Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fmt(n){return Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
 window.prevComp=(inp)=>{const f=inp.files[0];if(!f)return;const p=document.getElementById('compPrev');if(f.type.startsWith('image/')){const r=new FileReader();r.onload=e=>p.innerHTML=`<img src="${e.target.result}" style="max-height:100px;border-radius:6px">`;r.readAsDataURL(f);}else p.innerHTML=`<div style="font-size:22px">📄</div><div class="f12 c2">${f.name}</div>`;};
 window.prevComp2=(inp)=>{const f=inp.files[0];if(!f)return;const p=document.getElementById('compPrev2');if(f.type.startsWith('image/')){const r=new FileReader();r.onload=e=>p.innerHTML=`<img src="${e.target.result}" style="max-height:100px;border-radius:6px">`;r.readAsDataURL(f);}else p.innerHTML=`<div style="font-size:22px">📄</div><div class="f12 c2">${f.name}</div>`;};
 window.openM=id=>document.getElementById(id).classList.add('open');
